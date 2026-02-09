@@ -1,0 +1,201 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --yellow: #FFD700;
+  --yellow-bright: #FFF200;
+  --yellow-dark: #E6C200;
+  --black: #0A0A0A;
+  --black-light: #1A1A1A;
+  --black-lighter: #2A2A2A;
+  --white: #FFFFFF;
+  --gray: #666666;
+  --success: #00FF88;
+  --danger: #FF3366;
+}
+
+body {
+  font-family: 'Space Mono', monospace;
+  background: var(--black);
+  color: var(--white);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.background-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Common Button Styles */
+.btn {
+  padding: 15px 40px;
+  border: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--yellow);
+  color: var(--black);
+}
+
+.btn-primary:hover {
+  background: var(--yellow-bright);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--yellow);
+  border: 2px solid var(--yellow);
+}
+
+.btn-secondary:hover {
+  background: var(--yellow);
+  color: var(--black);
+}
+
+/* Form Inputs */
+.form-input {
+  width: 100%;
+  padding: 15px;
+  background: var(--black);
+  border: 2px solid var(--black-lighter);
+  color: var(--white);
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--yellow);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.form-input::placeholder {
+  color: var(--gray);
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+}
+
+.status-parked {
+  background: rgba(0, 255, 136, 0.2);
+  color: var(--success);
+  border: 1px solid var(--success);
+}
+
+.status-exited {
+  background: rgba(255, 215, 0, 0.2);
+  color: var(--yellow);
+  border: 1px solid var(--yellow);
+}
+
+/* Loading & Messages */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--yellow);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.error-message {
+  background: rgba(255, 51, 102, 0.2);
+  border: 2px solid var(--danger);
+  color: var(--danger);
+  padding: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background: rgba(0, 255, 136, 0.2);
+  border: 2px solid var(--success);
+  color: var(--success);
+  padding: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .btn {
+    padding: 12px 30px;
+    font-size: 0.9rem;
+  }
+}

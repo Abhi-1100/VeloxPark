@@ -1,0 +1,233 @@
+.dashboard {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+.header {
+    background: var(--black-light);
+    border-bottom: 3px solid var(--yellow);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+}
+
+.logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--yellow);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-name {
+    color: var(--white);
+    font-weight: 700;
+}
+
+.btn-logout {
+    background: transparent;
+    color: var(--yellow);
+    border: 2px solid var(--yellow);
+    padding: 10px 25px;
+}
+
+.btn-logout:hover {
+    background: var(--yellow);
+    color: var(--black);
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: var(--black-light);
+    border: 2px solid var(--yellow);
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
+    border-color: var(--yellow-bright);
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100px;
+    height: 100px;
+    background: var(--yellow);
+    opacity: 0.05;
+    transform: rotate(45deg) translate(50%, -50%);
+}
+
+.stat-label {
+    color: var(--gray);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--yellow);
+}
+
+.controls {
+    background: var(--black-light);
+    border: 2px solid var(--black-lighter);
+    padding: 25px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+}
+
+.date-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.date-box input {
+    min-width: 150px;
+}
+
+.btn-export {
+    background: var(--yellow);
+    color: var(--black);
+    padding: 12px 30px;
+}
+
+.btn-export:hover {
+    background: var(--yellow-bright);
+}
+
+.table-container {
+    background: var(--black-light);
+    border: 2px solid var(--yellow);
+    overflow-x: auto;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: var(--yellow);
+    color: var(--black);
+}
+
+th {
+    padding: 20px 15px;
+    text-align: left;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+td {
+    padding: 20px 15px;
+    border-bottom: 1px solid var(--black-lighter);
+}
+
+tbody tr {
+    transition: all 0.2s ease;
+}
+
+tbody tr:hover {
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.no-data {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--gray);
+    font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .header {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .date-box {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .date-box input {
+        width: 100%;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    th,
+    td {
+        padding: 12px 10px;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+}
