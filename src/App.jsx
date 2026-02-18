@@ -5,6 +5,7 @@ import { auth } from './config/firebase';
 import Home from './components/Home';
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
+import AnalyticsDashboard from './components/AnalyticsDashboard';
 import UserPanel from './components/UserPanel';
 import './App.css';
 
@@ -39,12 +40,24 @@ function App() {
         {/* User Panel - Public Route */}
         <Route path="/user" element={<UserPanel />} />
 
-        {/* Admin Routes */}
+        {/* Admin Dashboard */}
         <Route
           path="/admin"
           element={
             user ? (
               <AdminDashboard user={user} />
+            ) : (
+              <Login onLoginSuccess={() => { }} />
+            )
+          }
+        />
+
+        {/* Analytics Dashboard — protected, same auth guard */}
+        <Route
+          path="/admin/analytics"
+          element={
+            user ? (
+              <AnalyticsDashboard user={user} />
             ) : (
               <Login onLoginSuccess={() => { }} />
             )
