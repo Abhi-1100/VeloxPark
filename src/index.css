@@ -1,4 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+
+/* ─── Tailwind v4 custom theme tokens ─────────────────────────── */
+@theme {
+  --color-primary: #f9d006;
+  --color-background-dark: #0a0a0a;
+  --color-card-dark: #161616;
+  --color-accent-dark: #1f1f1f;
+  --color-sidebar-dark: #0f0f0f;
+  --font-display: 'Space Grotesk', sans-serif;
+}
 
 * {
   margin: 0;

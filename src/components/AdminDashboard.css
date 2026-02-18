@@ -1,233 +1,1416 @@
-.dashboard {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
+/* ═══════════════════════════════════════════════════════════════════════════
+   ParkFlow Enterprise – Admin Dashboard Styles
+   All class names prefixed with "pf-" to avoid collisions with other pages.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Google Material Symbols font feature settings ─────────────────────── */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    font-family: 'Material Symbols Outlined', sans-serif;
+    display: inline-block;
+    line-height: 1;
+    vertical-align: middle;
+    user-select: none;
 }
 
-.header {
-    background: var(--black-light);
-    border-bottom: 3px solid var(--yellow);
-    padding: 20px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;
+/* ── Custom scrollbar ───────────────────────────────────────────────────── */
+.pf-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.pf-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.pf-scrollbar::-webkit-scrollbar-thumb {
+    background: #2a2a2a;
+    border-radius: 10px;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────────── */
+.pf-sidebar {
+    position: fixed;
+    left: 0;
     top: 0;
-    z-index: 100;
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    width: 72px;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    background: #0f0f0f;
+    border-right: 1px solid #1f1f1f;
+    box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 800;
-    color: var(--yellow);
-    text-transform: uppercase;
-    letter-spacing: 2px;
+.pf-sidebar:hover {
+    width: 240px;
 }
 
-.user-info {
+/* Sidebar label – hidden until hover */
+.pf-sidebar-label {
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.2s ease-in-out;
+    pointer-events: none;
+}
+
+.pf-sidebar:hover .pf-sidebar-label {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Logo row */
+.pf-sidebar-logo {
+    height: 80px;
     display: flex;
     align-items: center;
+    padding: 0 22px;
+    margin-bottom: 16px;
+    flex-shrink: 0;
+}
+
+.pf-logo-icon {
+    width: 28px;
+    height: 28px;
+    background: #f9d006;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0a0a0a;
+    flex-shrink: 0;
+    box-shadow: 0 0 15px rgba(249, 208, 6, 0.3);
+}
+
+.pf-logo-text {
+    margin-left: 16px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #f1f5f9;
+}
+
+/* Nav */
+.pf-nav {
+    flex: 1;
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: hidden;
+}
+
+.pf-nav-item {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.pf-nav-active {
+    color: #f9d006;
+    background: rgba(249, 208, 6, 0.05);
+}
+
+.pf-nav-inactive {
+    color: #64748b;
+}
+
+.pf-nav-inactive:hover {
+    color: #f9d006;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.pf-nav-icon-wrap {
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pf-glow-icon {
+    text-shadow: 0 0 10px rgba(249, 208, 6, 0.5);
+}
+
+.pf-active-bar {
+    position: absolute;
+    left: 0;
+    width: 3px;
+    height: 24px;
+    background: #f9d006;
+    border-radius: 0 4px 4px 0;
+}
+
+/* Sidebar bottom */
+.pf-sidebar-bottom {
+    padding: 12px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.pf-online-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: pf-pulse 2s infinite;
+    display: inline-block;
+}
+
+@keyframes pf-pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.3);
+    }
+}
+
+.pf-online-text {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(34, 197, 94, 0.8);
+}
+
+.pf-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(249, 208, 6, 0.3);
+    background: #1f1f1f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.pf-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.pf-user-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #f1f5f9;
+}
+
+.pf-user-role {
+    font-size: 0.65rem;
+    color: #475569;
+    font-weight: 500;
+}
+
+.pf-logout-btn {
+    color: #64748b;
+}
+
+.pf-logout-btn:hover {
+    color: #f9d006;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* ── Root layout wrapper ────────────────────────────────────────────────── */
+.pf-root {
+    display: flex;
+    min-height: 100vh;
+    background: #0a0a0a;
+}
+
+/* ── Main content area ──────────────────────────────────────────────────── */
+.pf-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin-left: 72px;
+    overflow-x: hidden;
+}
+
+/* ── Top bar ────────────────────────────────────────────────────────────── */
+.pf-topbar {
+    position: relative;
+    z-index: 40;
+    padding: 20px 32px 12px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+}
+
+.pf-brand-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(22, 22, 22, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 16px;
+    border-radius: 9999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.pf-brand-name {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    color: #f9d006;
+    text-transform: uppercase;
+}
+
+.pf-brand-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.pf-brand-version {
+    font-size: 0.6rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Command / search bar */
+.pf-command-bar {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    background: rgba(22, 22, 22, 0.4);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    box-shadow: 0 0 20px rgba(249, 208, 6, 0.04), 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.pf-cmd-icon {
+    color: rgba(249, 208, 6, 0.7);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.pf-cmd-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pf-cmd-input::placeholder {
+    color: #475569;
+}
+
+.pf-cmd-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pf-kbd {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.65rem;
+    color: #64748b;
+}
+
+.pf-cmd-divider {
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.pf-icon-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pf-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f1f5f9;
+}
+
+/* Top-bar right section */
+.pf-topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.pf-date-input {
+    background: rgba(22, 22, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 9999px;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    padding: 8px 14px;
+    outline: none;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: border-color 0.2s;
+    color-scheme: dark;
+}
+
+.pf-date-input:focus {
+    border-color: rgba(249, 208, 6, 0.4);
+}
+
+.pf-new-entry-btn {
+    background: rgba(249, 208, 6, 0.1);
+    color: #f9d006;
+    border: 1px solid rgba(249, 208, 6, 0.2);
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pf-new-entry-btn:hover {
+    background: rgba(249, 208, 6, 0.2);
+}
+
+/* ── Body / scroll area ─────────────────────────────────────────────────── */
+.pf-body {
+    padding: 8px 32px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ── Filter row ─────────────────────────────────────────────────────────── */
+.pf-filter-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.pf-filter-pills {
+    display: flex;
+    background: #161616;
+    border: 1px solid #1f1f1f;
+    border-radius: 8px;
+    padding: 4px;
+    gap: 2px;
+}
+
+.pf-filter-pill {
+    padding: 8px 18px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pf-filter-pill:hover {
+    color: #f9d006;
+}
+
+.pf-filter-pill-active {
+    background: rgba(249, 208, 6, 0.12);
+    color: #f9d006;
+}
+
+.pf-record-count {
+    font-size: 0.72rem;
+    color: #475569;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* ── Stats grid ─────────────────────────────────────────────────────────── */
+.pf-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 20px;
 }
 
-.user-name {
-    color: var(--white);
+@media (max-width: 1200px) {
+    .pf-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .pf-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pf-stat-card {
+    background: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 24px;
+    transition: border-color 0.3s;
+}
+
+.pf-stat-card:hover {
+    border-color: rgba(249, 208, 6, 0.2);
+}
+
+.pf-stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.pf-stat-icon {
+    color: #f9d006;
+    background: rgba(249, 208, 6, 0.06);
+    padding: 8px;
+    border-radius: 10px;
+    font-size: 22px;
+    transition: transform 0.3s;
+}
+
+.pf-stat-card:hover .pf-stat-icon {
+    transform: scale(1.1);
+}
+
+.pf-stat-badge {
+    font-size: 0.6rem;
+    font-weight: 900;
+    padding: 3px 8px;
+    border-radius: 9999px;
+}
+
+.pf-badge-green {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+}
+
+.pf-badge-neutral {
+    background: rgba(255, 255, 255, 0.05);
+    color: #64748b;
+}
+
+.pf-stat-label {
+    font-size: 0.65rem;
     font-weight: 700;
-}
-
-.btn-logout {
-    background: transparent;
-    color: var(--yellow);
-    border: 2px solid var(--yellow);
-    padding: 10px 25px;
-}
-
-.btn-logout:hover {
-    background: var(--yellow);
-    color: var(--black);
-}
-
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 40px 20px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 25px;
-    margin-bottom: 40px;
-}
-
-.stat-card {
-    background: var(--black-light);
-    border: 2px solid var(--yellow);
-    padding: 30px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease-out;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 40px rgba(255, 215, 0, 0.2);
-    border-color: var(--yellow-bright);
-}
-
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100px;
-    height: 100px;
-    background: var(--yellow);
-    opacity: 0.05;
-    transform: rotate(45deg) translate(50%, -50%);
-}
-
-.stat-label {
-    color: var(--gray);
-    font-size: 0.85rem;
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    letter-spacing: 0.18em;
+    color: #475569;
+    margin-bottom: 8px;
 }
 
-.stat-value {
-    font-family: 'Syne', sans-serif;
-    font-size: 2.5rem;
+.pf-stat-value {
+    font-size: 2.2rem;
     font-weight: 800;
-    color: var(--yellow);
+    color: #f1f5f9;
+    line-height: 1;
 }
 
-.controls {
-    background: var(--black-light);
-    border: 2px solid var(--black-lighter);
-    padding: 25px;
-    margin-bottom: 30px;
+.pf-stat-sub {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #334155;
+}
+
+/* ── Middle grid: Zone Map + Traffic ────────────────────────────────────── */
+.pf-mid-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    min-height: 480px;
+}
+
+@media (max-width: 1100px) {
+    .pf-mid-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Zone card */
+.pf-zone-card {
+    background: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
     display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    align-items: center;
-    animation: fadeInUp 0.6s ease-out 0.2s both;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-.search-box {
+.pf-zone-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.pf-zone-legend {
+    display: flex;
+    gap: 20px;
+}
+
+.pf-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+.pf-legend-avail {
+    color: #f9d006;
+}
+
+.pf-legend-occ {
+    color: #334155;
+}
+
+.pf-legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.pf-dot-avail {
+    background: #f9d006;
+    box-shadow: 0 0 8px rgba(249, 208, 6, 0.6);
+}
+
+.pf-dot-occ {
+    background: #1e293b;
+}
+
+.pf-zone-body {
     flex: 1;
-    min-width: 250px;
-}
-
-.date-box {
+    padding: 28px;
+    background: #0d0d0d;
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 0;
+}
+
+.pf-slot-row {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.pf-slot {
+    height: 52px;
+    border-radius: 6px;
+    display: flex;
     align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
 }
 
-.date-box input {
-    min-width: 150px;
+.pf-slot-avail {
+    background: rgba(249, 208, 6, 0.08);
+    border: 1px solid rgba(249, 208, 6, 0.35);
 }
 
-.btn-export {
-    background: var(--yellow);
-    color: var(--black);
-    padding: 12px 30px;
+.pf-slot-avail:hover {
+    background: rgba(249, 208, 6, 0.15);
+    border-color: rgba(249, 208, 6, 0.6);
 }
 
-.btn-export:hover {
-    background: var(--yellow-bright);
+.pf-slot-occ {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.table-container {
-    background: var(--black-light);
-    border: 2px solid var(--yellow);
+.pf-slot-label {
+    font-size: 0.6rem;
+    font-weight: 900;
+    color: rgba(249, 208, 6, 0.7);
+    letter-spacing: 0.05em;
+}
+
+.pf-zone-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.06), transparent);
+    margin: 12px 0;
+}
+
+/* Traffic card */
+.pf-traffic-card {
+    background: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    overflow-y: auto;
+}
+
+.pf-traffic-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.pf-live-badge {
+    background: rgba(249, 208, 6, 0.1);
+    border: 1px solid rgba(249, 208, 6, 0.2);
+    color: #f9d006;
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+
+/* Bar chart */
+.pf-chart {
+    height: 120px;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 0 4px;
+}
+
+.pf-chart-bar-wrap {
+    flex: 1;
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 3px 3px 0 0;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.pf-chart-bar-wrap:hover {
+    background: rgba(249, 208, 6, 0.15);
+}
+
+.pf-chart-bar {
+    position: absolute;
+    inset: 0;
+    background: rgba(249, 208, 6, 0.55);
+    border-radius: 3px 3px 0 0;
+    transition: background 0.2s;
+}
+
+.pf-chart-bar-wrap:hover .pf-chart-bar {
+    background: #f9d006;
+}
+
+.pf-chart-labels {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 4px 0;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #334155;
+}
+
+/* Trend bars */
+.pf-trends {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.pf-trend-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pf-trend-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #475569;
+}
+
+.pf-trend-pct {
+    color: #f1f5f9;
+}
+
+.pf-trend-track {
+    height: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 9999px;
+    overflow: hidden;
+}
+
+.pf-trend-fill {
+    height: 100%;
+    background: #f9d006;
+    border-radius: 9999px;
+    box-shadow: 0 0 8px rgba(249, 208, 6, 0.4);
+    transition: width 0.6s ease;
+}
+
+/* Export button */
+.pf-export-btn {
+    width: 100%;
+    padding: 14px;
+    background: #f9d006;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    font-family: 'Space Grotesk', sans-serif;
+    margin-top: auto;
+}
+
+.pf-export-btn:hover {
+    box-shadow: 0 0 20px rgba(249, 208, 6, 0.3);
+    transform: translateY(-1px);
+}
+
+/* ── Section titles ─────────────────────────────────────────────────────── */
+.pf-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.2;
+}
+
+.pf-section-sub {
+    font-size: 0.72rem;
+    color: #475569;
+    margin-top: 2px;
+}
+
+/* ── Activity Log Table ─────────────────────────────────────────────────── */
+.pf-table-card {
+    background: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.pf-table-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pf-history-btn {
+    background: none;
+    border: none;
+    color: #f9d006;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pf-history-btn:hover {
+    opacity: 0.7;
+}
+
+.pf-table-wrap {
     overflow-x: auto;
-    animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
-table {
+.pf-table {
     width: 100%;
     border-collapse: collapse;
+    font-family: 'Space Grotesk', sans-serif;
 }
 
-thead {
-    background: var(--yellow);
-    color: var(--black);
+.pf-table thead {
+    background: rgba(255, 255, 255, 0.02);
 }
 
-th {
-    padding: 20px 15px;
+.pf-table th {
+    padding: 14px 24px;
     text-align: left;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
+    font-size: 0.62rem;
+    font-weight: 900;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 0.9rem;
+    letter-spacing: 0.18em;
+    color: #475569;
+    white-space: nowrap;
 }
 
-td {
-    padding: 20px 15px;
-    border-bottom: 1px solid var(--black-lighter);
+.pf-th-center {
+    text-align: center;
 }
 
-tbody tr {
-    transition: all 0.2s ease;
+.pf-tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
 }
 
-tbody tr:hover {
-    background: rgba(255, 215, 0, 0.05);
+.pf-tr:hover {
+    background: rgba(255, 255, 255, 0.025);
 }
 
-.no-data {
+.pf-table td {
+    padding: 16px 24px;
+    color: #94a3b8;
+    font-size: 0.82rem;
+    vertical-align: middle;
+}
+
+.pf-plate-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pf-plate-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.pf-tr:hover .pf-plate-icon {
+    color: #f9d006;
+}
+
+.pf-plate-num {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    letter-spacing: 0.05em;
+}
+
+.pf-td-mono {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.pf-td-amount {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    color: #f9d006;
+}
+
+/* Status badges */
+.pf-status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.62rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.pf-badge-parked {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.pf-badge-exited {
+    background: rgba(255, 255, 255, 0.04);
+    color: #475569;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Action button */
+.pf-action-btn {
+    background: none;
+    border: none;
+    color: #334155;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.pf-action-btn:hover {
+    color: #f9d006;
+    background: rgba(249, 208, 6, 0.08);
+}
+
+/* Table footer */
+.pf-table-footer {
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(10, 10, 10, 0.3);
+}
+
+.pf-record-info {
+    font-size: 0.72rem;
+    color: #334155;
+    font-family: 'Space Mono', monospace;
+}
+
+.pf-pagination {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.pf-page-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: #334155;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+}
+
+.pf-page-btn:hover:not(:disabled) {
+    color: #f9d006;
+}
+
+.pf-page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pf-page-active {
+    background: #f9d006;
+    color: #0a0a0a;
+}
+
+.pf-page-active:hover {
+    background: #f9d006 !important;
+    color: #0a0a0a !important;
+}
+
+/* Empty / loading state */
+.pf-empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: var(--gray);
-    font-size: 1.1rem;
+    color: #334155;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Responsive */
+.pf-empty-icon {
+    font-size: 48px;
+    color: #1e293b;
+}
+
+.pf-empty-sub {
+    font-size: 0.75rem;
+    color: #1e293b;
+}
+
+@keyframes pf-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.pf-spin {
+    animation: pf-spin 1.2s linear infinite;
+}
+
+/* ── Vehicle Records Card ───────────────────────────────────────────────── */
+.pf-records-card {
+    background: #161616;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+/* Card header */
+.pf-records-header {
+    padding: 20px 28px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pf-records-title-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pf-records-icon {
+    font-size: 22px;
+    color: #f9d006;
+    background: rgba(249, 208, 6, 0.08);
+    padding: 8px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+/* Date chip inside the title */
+.pf-date-chip {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 10px;
+    background: rgba(249, 208, 6, 0.1);
+    border: 1px solid rgba(249, 208, 6, 0.25);
+    border-radius: 9999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #f9d006;
+    letter-spacing: 0.05em;
+    vertical-align: middle;
+}
+
+/* Inline export button */
+.pf-export-inline-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    background: #f9d006;
+    color: #0a0a0a;
+    border: none;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-family: 'Space Grotesk', sans-serif;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.pf-export-inline-btn:hover {
+    box-shadow: 0 0 18px rgba(249, 208, 6, 0.35);
+    transform: translateY(-1px);
+}
+
+/* Table wrapper */
+.pf-records-wrap {
+    overflow-x: auto;
+}
+
+/* The table itself */
+.pf-records-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+/* ── Yellow header — matches reference screenshot ── */
+.pf-records-table thead {
+    background: #f9d006;
+}
+
+.pf-records-table thead th {
+    padding: 14px 24px;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #0a0a0a;
+    white-space: nowrap;
+}
+
+.pf-records-table thead th:last-child {
+    text-align: center;
+}
+
+/* ── Dark body rows ── */
+.pf-rec-row {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    transition: background 0.15s;
+}
+
+.pf-rec-row:hover {
+    background: rgba(249, 208, 6, 0.04);
+}
+
+.pf-rec-row:last-child {
+    border-bottom: none;
+}
+
+.pf-records-table td {
+    padding: 16px 24px;
+    vertical-align: middle;
+}
+
+/* Plate number — bold monospace */
+.pf-rec-plate {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #f1f5f9;
+    letter-spacing: 0.06em;
+}
+
+/* Time / duration cells */
+.pf-rec-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: #64748b;
+}
+
+/* Dash for missing exit */
+.pf-rec-dash {
+    color: #334155;
+    font-size: 1rem;
+}
+
+/* Amount */
+.pf-rec-amount {
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: #f9d006;
+}
+
+/* Status badges */
+.pf-rec-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pf-rec-parked {
+    background: rgba(34, 197, 94, 0.12);
+    color: #22c55e;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+.pf-rec-exited {
+    background: rgba(255, 255, 255, 0.04);
+    color: #64748b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-    .header {
-        padding: 15px 20px;
+    .pf-topbar {
+        padding: 14px 16px 10px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .pf-brand-pill {
+        display: none;
+    }
+
+    .pf-topbar-right {
+        gap: 6px;
+    }
+
+    .pf-body {
+        padding: 8px 16px 32px;
+    }
+
+    .pf-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .pf-mid-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pf-records-table thead th,
+    .pf-records-table td {
+        padding: 12px 14px;
+    }
+
+    .pf-stat-value {
+        font-size: 1.8rem;
+    }
+
+    .pf-kbd {
+        display: none;
+    }
+
+    .pf-records-header {
         flex-direction: column;
-        gap: 15px;
+        align-items: flex-start;
     }
 
-    .logo {
-        font-size: 1.5rem;
+    .pf-export-inline-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .pf-stats-grid {
+        grid-template-columns: 1fr;
     }
 
-    .controls {
+    .pf-slot-row {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    /* Hide duration + amount on very small screens */
+    .pf-records-table th:nth-child(4),
+    .pf-records-table td:nth-child(4),
+    .pf-records-table th:nth-child(5),
+    .pf-records-table td:nth-child(5),
+    .pf-records-table th:nth-child(7),
+    .pf-records-table td:nth-child(7) {
+        display: none;
+    }
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────── */
+.pf-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 8px;
+    padding: 28px 0 12px;
+}
+
+.pf-footer-inner {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pf-footer-copy {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.35;
+    color: #f1f5f9;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.pf-footer-links {
+    display: flex;
+    gap: 28px;
+}
+
+.pf-footer-link {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #f1f5f9;
+    opacity: 0.35;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.pf-footer-link:hover {
+    opacity: 1;
+    color: #f9d006;
+}
+
+@media (max-width: 600px) {
+    .pf-footer-inner {
         flex-direction: column;
-    }
-
-    .search-box {
-        width: 100%;
-    }
-
-    .date-box {
-        width: 100%;
-        flex-direction: column;
-    }
-
-    .date-box input {
-        width: 100%;
-    }
-
-    table {
-        font-size: 0.85rem;
-    }
-
-    th,
-    td {
-        padding: 12px 10px;
-    }
-
-    .stat-value {
-        font-size: 2rem;
+        align-items: flex-start;
+        gap: 12px;
     }
 }
