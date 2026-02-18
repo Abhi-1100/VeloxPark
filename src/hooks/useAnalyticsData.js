@@ -20,80 +20,88 @@ import {
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-/** Returns a Date set to midnight (start of day) for `daysAgo` days before today. */
-const startOfDayOffset = (daysAgo = 0) => {
+/** Returns a Date set to noon (avoids DST/UTC-offset edge cases) for `daysAgo` days before today. */
+const dayAtNoon = (daysAgo = 0) => {
     const d = new Date();
     d.setDate(d.getDate() - daysAgo);
-    d.setHours(0, 0, 0, 0);
+    d.setHours(12, 0, 0, 0); // noon — safe from any UTC-offset shift
     return d;
 };
 
-/** yyyy-mm-dd string for a Date. */
-const toDateStr = (d) => d.toISOString().split('T')[0];
+/**
+ * Local yyyy-mm-dd string — uses LOCAL date parts, NOT toISOString() which
+ * converts to UTC and shifts the date by -5:30 in IST (causing wrong day labels).
+ */
+const toLocalDateStr = (d) => {
+    const y  = d.getFullYear();
+    const m  = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+};
 
 /** Short day label (MON…SUN) for a Date. */
 const dayLabel = (d) => ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'][d.getDay()];
 
 /**
- * Returns { start: Date, end: Date, barCount, barLabel(i) }
+ * Returns { start, end, barCount, barLabel(i), barDate(i), prevBarDate(i) }
  * for the selected period string.
+ * i=0 is always the OLDEST day, i=barCount-1 is TODAY → ascending order.
  */
 const getPeriodWindow = (period) => {
     const now = new Date();
-    now.setHours(23, 59, 59, 999); // end of today
+    now.setHours(23, 59, 59, 999);
 
     if (period === 'Last 30 Days') {
-        const start = startOfDayOffset(29);
+        // i=0 → 29 days ago (oldest), i=29 → today (newest)
+        const start = dayAtNoon(29);
         return {
             start,
             end: now,
             barCount: 30,
+            // Show date number every 4 bars so labels don't crowd
             barLabel: (i) => {
-                const d = startOfDayOffset(29 - i);
-                // Show date number every ~5 bars to avoid crowding
-                return i % 5 === 0 ? String(d.getDate()) : '';
+                const d = dayAtNoon(29 - i);
+                return i % 4 === 0 ? String(d.getDate()) : '';
             },
-            barDate: (i) => startOfDayOffset(29 - i),
-            prevBarDate: (i) => startOfDayOffset(59 - i),
+            barDate:     (i) => dayAtNoon(29 - i),
+            prevBarDate: (i) => dayAtNoon(59 - i),
         };
     }
 
     if (period === 'Monthly View') {
-        const start = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-        const daysInMonth = now.getDate(); // days elapsed so far
+        const now2 = new Date();
+        const daysElapsed = now2.getDate(); // 1-based day of month
+        // i=0 → day 1 of month, i=daysElapsed-1 → today
         return {
-            start,
-            end: now,
-            barCount: daysInMonth,
-            barLabel: (i) => (i % 5 === 0 ? String(i + 1) : ''),
-            barDate: (i) => new Date(now.getFullYear(), now.getMonth(), i + 1, 12, 0, 0),
-            prevBarDate: (i) => new Date(now.getFullYear(), now.getMonth() - 1, i + 1, 12, 0, 0),
+            start: new Date(now2.getFullYear(), now2.getMonth(), 1, 12, 0, 0),
+            end:   now,
+            barCount: daysElapsed,
+            barLabel: (i) => (i % 4 === 0 ? String(i + 1) : ''),
+            barDate:     (i) => new Date(now2.getFullYear(), now2.getMonth(),     i + 1, 12, 0, 0),
+            prevBarDate: (i) => new Date(now2.getFullYear(), now2.getMonth() - 1, i + 1, 12, 0, 0),
         };
     }
 
-    // Default: Last 7 Days
-    const start = startOfDayOffset(6);
+    // Default: Last 7 Days — i=0 → 6 days ago, i=6 → today
+    const start = dayAtNoon(6);
     return {
         start,
         end: now,
         barCount: 7,
-        barLabel: (i) => {
-            const d = startOfDayOffset(6 - i);
-            return dayLabel(d);
-        },
-        barDate: (i) => startOfDayOffset(6 - i),
-        prevBarDate: (i) => startOfDayOffset(13 - i),
+        barLabel: (i) => dayLabel(dayAtNoon(6 - i)),
+        barDate:     (i) => dayAtNoon(6 - i),
+        prevBarDate: (i) => dayAtNoon(13 - i),
     };
 };
 
-/** Sums revenue for vehicles whose exit falls on the same calendar day as `targetDate`. */
+/** Sums revenue for vehicles whose exit falls on the same LOCAL calendar day as `targetDate`. */
 const revenueForDay = (data, targetDate) => {
-    const target = toDateStr(targetDate);
+    const target = toLocalDateStr(targetDate);
     return data
         .filter((v) => {
             if (!v.exit) return false;
             const d = parseToDate(v.exit);
-            return d && toDateStr(d) === target;
+            return d && toLocalDateStr(d) === target;
         })
         .reduce((s, v) => s + (v.amount || 0), 0);
 };
@@ -102,7 +110,10 @@ const revenueForDay = (data, targetDate) => {
 const filterByWindow = (data, start, end) =>
     data.filter((v) => {
         const d = parseToDate(v.entry);
-        return d && d >= start && d <= end;
+        // Compare using local date strings to avoid UTC-offset issues
+        if (!d) return false;
+        const ds = toLocalDateStr(d);
+        return ds >= toLocalDateStr(start) && ds <= toLocalDateStr(end);
     });
 
 // ── Hook ───────────────────────────────────────────────────────────────────────
@@ -149,11 +160,17 @@ const useAnalyticsData = () => {
         const periodData = filterByWindow(processedData, start, end);
 
         // ── Bar chart: revenue per bar slot (current vs previous period) ─────
-        const barChartData = Array.from({ length: barCount }, (_, i) => ({
-            label:    barLabel(i),
-            current:  revenueForDay(processedData, barDate(i)),
-            previous: revenueForDay(processedData, prevBarDate(i)),
-        }));
+        const barChartData = Array.from({ length: barCount }, (_, i) => {
+            const d = barDate(i);
+            // Human-readable date for tooltip: "18 Feb"
+            const dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            return {
+                label:    barLabel(i),
+                date:     dateStr,          // ← always set, used by tooltip
+                current:  revenueForDay(processedData, d),
+                previous: revenueForDay(processedData, prevBarDate(i)),
+            };
+        });
 
         // ── Total revenue for the period (sum of current bars) ───────────────
         const totalRevenue = barChartData.reduce((s, b) => s + b.current, 0);
@@ -199,7 +216,7 @@ const useAnalyticsData = () => {
         ];
 
         // ── Human-readable period label for the header subtitle ───────────────
-        const periodLabel = `${toDateStr(start)} → ${toDateStr(end)}`;
+        const periodLabel = `${toLocalDateStr(start)} → ${toLocalDateStr(end)}`;
 
         return {
             analyticsStats: { totalRevenue, occupancyRate, activeSessions, avgTurnoverHrs },

@@ -418,68 +418,31 @@
     background: #334155;
 }
 
-.an-bar-chart {
-    height: 220px;
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-    padding: 0 4px;
-}
-
-.an-bar-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    height: 100%;
-}
-
-.an-bar-pair {
-    flex: 1;
+/* ── SVG chart wrapper ──────────────────────────────────────────────────── */
+.an-svg-wrap {
     width: 100%;
-    display: flex;
-    align-items: flex-end;
-    gap: 3px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    margin-bottom: 4px;
 }
 
-.an-bar {
-    flex: 1;
-    border-radius: 4px 4px 0 0;
-    transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), filter 0.2s;
-    cursor: pointer;
-    min-height: 4px;
+.an-svg {
+    display: block;
+    width: 100%;
+    /* height is driven by viewBox aspect ratio */
+    height: auto;
+    min-height: 180px;
+    max-height: 320px;
+    /* Smooth bar transitions via CSS filter */
+    transition: filter 0.2s;
 }
 
-.an-bar:hover {
-    filter: brightness(1.2);
+.an-svg rect:hover {
+    filter: brightness(1.25);
 }
 
-.an-bar-curr {
-    background: var(--an-yellow);
-}
-
-.an-bar-prev {
-    background: #334155;
-}
-
-.an-bar-label {
-    font-size: 0.65rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--an-muted);
-    flex-shrink: 0;
-}
-
-.an-chart-y-hint {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 4px 0;
-    font-size: 0.6rem;
-    color: var(--an-muted);
-    font-weight: 600;
-}
 
 /* Period total row below the chart */
 .an-chart-total {
