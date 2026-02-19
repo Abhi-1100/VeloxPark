@@ -7,6 +7,9 @@ import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import UserPanel from './components/UserPanel';
+import UserParkingInfo from './components/UserParkingInfo';
+import UserPaymentPage from './components/UserPaymentPage';
+import UserPaymentSuccess from './components/UserPaymentSuccess';
 import './App.css';
 
 function App() {
@@ -37,8 +40,13 @@ function App() {
         {/* Home Page */}
         <Route path="/" element={<Home />} />
 
-        {/* User Panel - Public Route */}
-        <Route path="/user" element={<UserPanel />} />
+        {/* User Panel - New split pages (Page 1: Info, Page 2: QR, Page 3: Success) */}
+        <Route path="/user" element={<UserParkingInfo />} />
+        <Route path="/user/payment" element={<UserPaymentPage />} />
+        <Route path="/user/payment/success" element={<UserPaymentSuccess />} />
+
+        {/* Legacy user panel fallback (kept for reference) */}
+        <Route path="/user/legacy" element={<UserPanel />} />
 
         {/* Admin Dashboard */}
         <Route
