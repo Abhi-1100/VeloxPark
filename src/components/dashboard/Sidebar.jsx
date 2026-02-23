@@ -17,7 +17,7 @@ const NAV_ITEMS = [
     { key: 'analytics', to: '/admin/analytics', icon: 'monitoring', label: 'Analytics' },
     { key: 'map', to: '#', icon: 'map', label: 'Zone Map' },
     { key: 'users', to: '#', icon: 'group', label: 'Users' },
-    { key: 'settings', to: '#', icon: 'settings', label: 'Settings' },
+    { key: 'settings', to: '/admin/settings', icon: 'settings', label: 'Settings' },
 ];
 
 const Sidebar = ({ adminName, onLogout, activePage = 'dashboard' }) => (

@@ -9,13 +9,14 @@
  * changes here, nowhere else.
  */
 
-import { ref, onValue, off } from 'firebase/database';
+import { ref, onValue, off, push } from 'firebase/database';
 import { signOut } from 'firebase/auth';
 import { auth, database } from '../config/firebase';
 import { processParkingData } from '../utils/parkingUtils';
+import { getRateForVehicleType } from './settingsService';
 
 /**
- * Normalises a raw Firebase / JSON entry into a flat { id, plate, timestamp } object.
+ * Normalises a raw Firebase / JSON entry into a flat { id, plate, timestamp, rate_at_entry } object.
  * Returns null when the plate value is missing or "NULL".
  */
 const normaliseEntry = (key, entry) => {
@@ -30,6 +31,7 @@ const normaliseEntry = (key, entry) => {
             entry.dateTime ||
             entry.timestamp ||
             entry.time,
+        rate_at_entry: entry.rate_at_entry || entry.rateAtEntry || null,
     };
 };
 
@@ -98,6 +100,43 @@ export const loadLocalFallback = async (onSuccess, onError) => {
         console.error('Failed to load local data:', err);
         onError(err);
     }
+};
+
+/**
+ * Manually pushes a new vehicle entry to Firebase `numberplate` node.
+ * Mirrors the exact payload written by the hardware sensor.
+ * IMPORTANT: Stores the current rate at entry time (rateAtEntry) so that
+ * future rate changes don't affect this parking session's pricing.
+ *
+ * @param {string} plate   Licence plate string (will be uppercased)
+ * @param {string} type    Vehicle type label (e.g. 'Car', 'Bike')
+ * @param {string} zone    Parking zone label (e.g. 'Zone A')
+ * @returns {Promise<string>}  Resolves with the new Firebase key.
+ */
+export const pushManualEntry = async (plate, type, zone) => {
+    const numberplateRef = ref(database, 'numberplate');
+    const now = new Date();
+    // Format: "DD Mon YYYY, HH:MM am/pm"  — same as hardware timestamps
+    const formatted = now.toLocaleString('en-IN', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true,
+    }).replace(',', '');
+
+    // Fetch the current rate for this vehicle type
+    const vehicleType = type || 'Car';
+    const currentRate = await getRateForVehicleType(vehicleType);
+
+    const payload = {
+        number_plate: plate.toUpperCase().trim(),
+        date_time: formatted,
+        vehicle_type: vehicleType,
+        zone: zone || 'Zone A',
+        manual_entry: true,
+        rate_at_entry: currentRate, // Store rate at entry time
+    };
+
+    const newRef = await push(numberplateRef, payload);
+    return newRef.key;
 };
 
 /**

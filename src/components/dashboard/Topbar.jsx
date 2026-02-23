@@ -17,7 +17,7 @@
  *   setDateFilter {function}  Updates date filter in the parent hook
  */
 
-const Topbar = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter }) => (
+const Topbar = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter, onOpenEntry }) => (
     <div className="pf-topbar">
         {/* Brand pill */}
         <div className="pf-brand-pill">
@@ -61,7 +61,9 @@ const Topbar = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter }) => (
                 onChange={(e) => setDateFilter(e.target.value)}
                 title="Filter by date"
             />
-            <button className="pf-new-entry-btn">NEW ENTRY</button>
+            <button className="pf-new-entry-btn" onClick={onOpenEntry}>
+                + NEW ENTRY
+            </button>
         </div>
     </div>
 );

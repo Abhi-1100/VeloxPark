@@ -25,6 +25,9 @@
 import useDashboardData from '../hooks/useDashboardData';
 import useExportPDF from '../hooks/useExportPDF';
 import { logoutAdmin } from '../services/firebaseService';
+import { useState } from 'react';
+
+import ManualEntryModal from './dashboard/ManualEntryModal';
 
 import Sidebar from './dashboard/Sidebar';
 import Topbar from './dashboard/Topbar';
@@ -51,6 +54,9 @@ const AdminDashboard = ({ user }) => {
     // ── PDF export handler ─────────────────────────────────────────────────────
     const { handleExportPDF } = useExportPDF({ visibleData, dateFilter });
 
+    // ── Modal state ────────────────────────────────────────────────────────────
+    const [entryModalOpen, setEntryModalOpen] = useState(false);
+
     // ── Derived display values ─────────────────────────────────────────────────
     const adminName = user?.email?.split('@')[0] || 'Admin';
     const occupancyPct = stats.total > 0
@@ -63,6 +69,12 @@ const AdminDashboard = ({ user }) => {
             className="pf-root"
             style={{ fontFamily: "'Space Grotesk', sans-serif", background: '#0a0a0a', color: '#f1f5f9' }}
         >
+            {/* Manual entry modal — overlays everything */}
+            <ManualEntryModal
+                isOpen={entryModalOpen}
+                onClose={() => setEntryModalOpen(false)}
+            />
+
             {/* Slim sidebar */}
             <Sidebar adminName={adminName} onLogout={logoutAdmin} activePage="dashboard" />
 
@@ -75,6 +87,7 @@ const AdminDashboard = ({ user }) => {
                     setSearchTerm={setSearchTerm}
                     dateFilter={dateFilter}
                     setDateFilter={setDateFilter}
+                    onOpenEntry={() => setEntryModalOpen(true)}
                 />
 
                 {/* Page body — natural scroll */}

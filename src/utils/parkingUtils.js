@@ -13,7 +13,9 @@ export const calculateDuration = (entry, exit) => {
 };
 
 // Calculate parking amount
-export const calculateAmount = (duration) => {
+// Uses the rate that was active at entry time (rateAtEntry)
+// If rateAtEntry is not provided, falls back to default ₹20
+export const calculateAmount = (duration, rateAtEntry = 20) => {
   if (!duration) return 0;
   
   const totalMinutes = duration.totalMinutes;
@@ -21,11 +23,11 @@ export const calculateAmount = (duration) => {
   // First 30 minutes free
   if (totalMinutes <= 30) return 0;
   
-  // ₹20 per hour after 30 minutes
+  // Use rateAtEntry per hour after 30 minutes
   const chargeableMinutes = totalMinutes - 30;
   const hours = Math.ceil(chargeableMinutes / 60);
   
-  return hours * 20;
+  return hours * rateAtEntry;
 };
 
 // Format duration for display
@@ -95,6 +97,8 @@ export const processParkingData = (data) => {
 
   data.forEach(entry => {
     const plate = entry.plate;
+    // Extract rate_at_entry if it exists, otherwise use default
+    const rateAtEntry = entry.rate_at_entry || entry.rateAtEntry || 20;
 
     if (!plateMap[plate]) {
       // First occurrence - Entry
@@ -102,16 +106,17 @@ export const processParkingData = (data) => {
         plate: plate,
         entry: entry.timestamp,
         exit: null,
-        status: 'Parked'
+        status: 'Parked',
+        rateAtEntry: rateAtEntry, // Store rate for this parking session
       };
     } else if (plateMap[plate].status === 'Parked') {
       // Second occurrence - Exit
       plateMap[plate].exit = entry.timestamp;
       plateMap[plate].status = 'Exited';
       
-      // Calculate duration and amount
+      // Calculate duration and amount using the rate stored at entry
       const duration = calculateDuration(plateMap[plate].entry, plateMap[plate].exit);
-      const amount = calculateAmount(duration);
+      const amount = calculateAmount(duration, plateMap[plate].rateAtEntry);
       
       plateMap[plate].duration = duration;
       plateMap[plate].amount = amount;
@@ -126,7 +131,8 @@ export const processParkingData = (data) => {
         plate: plate,
         entry: entry.timestamp,
         exit: null,
-        status: 'Parked'
+        status: 'Parked',
+        rateAtEntry: rateAtEntry,
       };
     }
   });

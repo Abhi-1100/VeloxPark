@@ -6,6 +6,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
+import Settings from './components/Settings';
 import UserPanel from './components/UserPanel';
 import UserParkingInfo from './components/UserParkingInfo';
 import UserPaymentPage from './components/UserPaymentPage';
@@ -66,6 +67,18 @@ function App() {
           element={
             user ? (
               <AnalyticsDashboard user={user} />
+            ) : (
+              <Login onLoginSuccess={() => { }} />
+            )
+          }
+        />
+
+        {/* Settings — protected, same auth guard */}
+        <Route
+          path="/admin/settings"
+          element={
+            user ? (
+              <Settings user={user} />
             ) : (
               <Login onLoginSuccess={() => { }} />
             )
