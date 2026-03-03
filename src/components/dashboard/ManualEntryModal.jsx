@@ -47,11 +47,25 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
         setStatus('loading');
 
         try {
-            await pushManualEntry(cleanPlate, type, zone);
+            console.log('Submitting manual entry:', { plate: cleanPlate, type, zone });
+            const entryKey = await pushManualEntry(cleanPlate, type, zone);
+            console.log('Entry created successfully with ID:', entryKey);
             setStatus('success');
         } catch (err) {
             console.error('Manual entry failed:', err);
-            setErrMsg('Failed to register entry. Check your connection and try again.');
+            let errorMessage = 'Failed to register entry. ';
+            
+            if (err.message) {
+                errorMessage += err.message;
+            } else if (err.code === 'PERMISSION_DENIED') {
+                errorMessage += 'Database permission denied. Please check Firebase rules.';
+            } else if (err.code === 'NETWORK_ERROR' || err.message.includes('network')) {
+                errorMessage += 'Network error. Please check your internet connection.';
+            } else {
+                errorMessage += 'Please try again or contact support.';
+            }
+            
+            setErrMsg(errorMessage);
             setStatus('error');
         }
     };

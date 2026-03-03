@@ -40,26 +40,45 @@ const useDashboardData = () => {
 
     // ── Effect 1: Firebase subscription (unchanged logic) ──────────────────────
     useEffect(() => {
+        console.log('useDashboardData: Setting up Firebase subscription...');
+        
         const handleSuccess = ({ rawData, processedData: pd }) => {
+            console.log('Data loaded successfully:', { 
+                rawCount: rawData.length, 
+                processedCount: pd.length 
+            });
             setParkingData(rawData);
             setProcessedData(pd);
             setLoading(false);
         };
 
-        const handleError = () => {
+        const handleError = (error) => {
+            console.error('Firebase subscription failed:', error);
+            console.log('Attempting to load local fallback data...');
+            
             // Firebase failed — try local JSON fallback
             loadLocalFallback(
                 ({ rawData, processedData: pd }) => {
+                    console.log('Local fallback data loaded:', { 
+                        rawCount: rawData.length, 
+                        processedCount: pd.length 
+                    });
                     setParkingData(rawData);
                     setProcessedData(pd);
                     setLoading(false);
                 },
-                () => setLoading(false)
+                (fallbackError) => {
+                    console.error('Local fallback also failed:', fallbackError);
+                    setLoading(false);
+                }
             );
         };
 
         const unsubscribe = subscribeToNumberplates(handleSuccess, handleError);
-        return unsubscribe; // calls off(numberplateRef) on unmount
+        return () => {
+            console.log('useDashboardData: Cleaning up Firebase subscription');
+            unsubscribe();
+        };
     }, []);
 
     // ── Effect 2: Apply filters + compute stats (unchanged logic) ──────────────

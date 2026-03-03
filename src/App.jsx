@@ -11,6 +11,7 @@ import UserPanel from './components/UserPanel';
 import UserParkingInfo from './components/UserParkingInfo';
 import UserPaymentPage from './components/UserPaymentPage';
 import UserPaymentSuccess from './components/UserPaymentSuccess';
+import NotFound from './components/NotFound';
 import './App.css';
 
 function App() {
@@ -85,8 +86,8 @@ function App() {
           }
         />
 
-        {/* Redirect unknown routes to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* 404 Page - Catch all unknown routes */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
