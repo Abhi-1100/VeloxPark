@@ -126,13 +126,24 @@ const useAnalyticsData = () => {
     // ── Firebase subscription ─────────────────────────────────────────────────
     useEffect(() => {
         const handleSuccess = ({ processedData: pd }) => {
+            console.log('[Analytics] Data loaded from Firebase:', pd.length, 'sessions');
+            console.log('[Analytics] Processed data:', pd);
             setProcessedData(pd);
             setLoading(false);
         };
         const handleError = () => {
+            console.log('[Analytics] Firebase failed - loading fallback');
             loadLocalFallback(
-                ({ processedData: pd }) => { setProcessedData(pd); setLoading(false); },
-                () => setLoading(false)
+                ({ processedData: pd }) => { 
+                    console.log('[Analytics] Data loaded from fallback:', pd.length, 'sessions');
+                    console.log('[Analytics] Fallback processed data:', pd);
+                    setProcessedData(pd); 
+                    setLoading(false); 
+                },
+                () => {
+                    console.error('[Analytics] Fallback also failed');
+                    setLoading(false);
+                }
             );
         };
         const unsub = subscribeToNumberplates(handleSuccess, handleError);
@@ -150,7 +161,12 @@ const useAnalyticsData = () => {
             periodLabel: '',
         };
 
-        if (!processedData.length) return empty;
+        if (!processedData.length) {
+            console.log('[Analytics] No processed data available');
+            return empty;
+        }
+
+        console.log('[Analytics] Computing metrics for period:', period, 'with', processedData.length, 'records');
 
         // ── Window boundaries ────────────────────────────────────────────────
         const window = getPeriodWindow(period);
@@ -158,22 +174,27 @@ const useAnalyticsData = () => {
 
         // ── Data filtered to the selected window ─────────────────────────────
         const periodData = filterByWindow(processedData, start, end);
+        console.log('[Analytics] Period data (filtered):', periodData.length, 'records');
 
         // ── Bar chart: revenue per bar slot (current vs previous period) ─────
         const barChartData = Array.from({ length: barCount }, (_, i) => {
             const d = barDate(i);
             // Human-readable date for tooltip: "18 Feb"
             const dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            const current = revenueForDay(processedData, d);
+            const previous = revenueForDay(processedData, prevBarDate(i));
             return {
                 label:    barLabel(i),
                 date:     dateStr,          // ← always set, used by tooltip
-                current:  revenueForDay(processedData, d),
-                previous: revenueForDay(processedData, prevBarDate(i)),
+                current,
+                previous,
             };
         });
+        console.log('[Analytics] Bar chart data:', barChartData);
 
         // ── Total revenue for the period (sum of current bars) ───────────────
         const totalRevenue = barChartData.reduce((s, b) => s + b.current, 0);
+        console.log('[Analytics] Total revenue:', totalRevenue);
 
         // ── Active sessions (currently Parked — always live, not period-scoped) ──
         const activeSessions = processedData.filter((v) => v.status === 'Parked').length;

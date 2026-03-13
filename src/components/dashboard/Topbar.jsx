@@ -54,13 +54,35 @@ const Topbar = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter, onOpenEn
 
         {/* Right controls */}
         <div className="pf-topbar-right">
-            <input
-                type="date"
-                className="pf-date-input"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
-                title="Filter by date"
-            />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <input
+                    type="date"
+                    className="pf-date-input"
+                    value={dateFilter}
+                    onChange={(e) => setDateFilter(e.target.value)}
+                    title="Filter by date (clear to show all)"
+                />
+                {dateFilter && (
+                    <button
+                        onClick={() => setDateFilter('')}
+                        title="Show all dates"
+                        style={{
+                            background: 'rgba(255,255,255,0.07)',
+                            border: '1px solid rgba(255,255,255,0.15)',
+                            borderRadius: '8px',
+                            color: '#94a3b8',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            fontWeight: 700,
+                            letterSpacing: '0.5px',
+                            padding: '6px 10px',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        ALL DATES
+                    </button>
+                )}
+            </div>
             <button className="pf-new-entry-btn" onClick={onOpenEntry}>
                 + NEW ENTRY
             </button>

@@ -28,7 +28,7 @@ const useDashboardData = () => {
     const [processedData, setProcessedData]   = useState([]);
     const [visibleData, setVisibleData]       = useState([]);
     const [searchTerm, setSearchTerm]         = useState('');
-    const [dateFilter, setDateFilter]         = useState(getTodayDateStr());
+    const [dateFilter, setDateFilter]         = useState(getTodayDateStr());  // default to today's date
     const [statusFilter, setStatusFilter]     = useState('All');
     const [loading, setLoading]               = useState(true);
     const [stats, setStats]                   = useState({
@@ -41,12 +41,9 @@ const useDashboardData = () => {
     // ── Effect 1: Firebase subscription (unchanged logic) ──────────────────────
     useEffect(() => {
         console.log('useDashboardData: Setting up Firebase subscription...');
-        
+
         const handleSuccess = ({ rawData, processedData: pd }) => {
-            console.log('Data loaded successfully:', { 
-                rawCount: rawData.length, 
-                processedCount: pd.length 
-            });
+            console.log('Data loaded:', rawData.length, 'raw \u2192', pd.length, 'sessions');
             setParkingData(rawData);
             setProcessedData(pd);
             setLoading(false);
@@ -54,15 +51,9 @@ const useDashboardData = () => {
 
         const handleError = (error) => {
             console.error('Firebase subscription failed:', error);
-            console.log('Attempting to load local fallback data...');
-            
-            // Firebase failed — try local JSON fallback
             loadLocalFallback(
                 ({ rawData, processedData: pd }) => {
-                    console.log('Local fallback data loaded:', { 
-                        rawCount: rawData.length, 
-                        processedCount: pd.length 
-                    });
+                    console.log('Local fallback loaded:', pd.length, 'sessions');
                     setParkingData(rawData);
                     setProcessedData(pd);
                     setLoading(false);
@@ -75,10 +66,7 @@ const useDashboardData = () => {
         };
 
         const unsubscribe = subscribeToNumberplates(handleSuccess, handleError);
-        return () => {
-            console.log('useDashboardData: Cleaning up Firebase subscription');
-            unsubscribe();
-        };
+        return unsubscribe;
     }, []);
 
     // ── Effect 2: Apply filters + compute stats (unchanged logic) ──────────────
@@ -108,17 +96,12 @@ const useDashboardData = () => {
         const parked  = filtered.filter((v) => v.status === 'Parked').length;
         const exited  = filtered.filter((v) => v.status === 'Exited').length;
 
-        let revenue = 0;
-        if (dateFilter) {
-            revenue = filtered
-                .filter((v) => v.exit && isSameDate(v.exit, dateFilter))
-                .reduce((sum, v) => sum + (v.amount || 0), 0);
-        } else {
-            const today = getTodayDateStr();
-            revenue = processedData
-                .filter((v) => v.exit && isSameDate(v.exit, today))
-                .reduce((sum, v) => sum + (v.amount || 0), 0);
-        }
+        // Revenue: sum of amounts for vehicles whose exit falls on the active
+        // date filter.  When no date filter, use today as the revenue window.
+        const revenueDate = dateFilter || getTodayDateStr();
+        const revenue = processedData
+            .filter((v) => v.exit && isSameDate(v.exit, revenueDate))
+            .reduce((sum, v) => sum + (v.amount || 0), 0);
 
         setStats({ total: filtered.length, parked, exited, revenue });
     }, [processedData, searchTerm, dateFilter, statusFilter]);

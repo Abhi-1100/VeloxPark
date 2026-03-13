@@ -10,7 +10,7 @@
  *   onClose   {function}  Called when the user dismisses the modal
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { pushManualEntry } from '../../services/firebaseService';
 
 const ManualEntryModal = ({ isOpen, onClose }) => {
@@ -19,8 +19,6 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
     const [zone, setZone] = useState('');
     const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
     const [errMsg, setErrMsg] = useState('');
-
-    if (!isOpen) return null;
 
     const reset = () => {
         setPlate('');
@@ -34,6 +32,18 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
         reset();
         onClose();
     };
+
+    // Auto-close modal 2.5 seconds after successful entry
+    useEffect(() => {
+        if (status === 'success') {
+            const timer = setTimeout(() => {
+                handleClose();
+            }, 2500);
+            return () => clearTimeout(timer);
+        }
+    }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    if (!isOpen) return null;
 
     const handleSubmit = async (e) => {
         e.preventDefault();

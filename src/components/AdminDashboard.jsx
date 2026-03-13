@@ -112,7 +112,7 @@ const AdminDashboard = ({ user }) => {
                     </div>
 
                     {/* KPI stat cards */}
-                    <StatCards stats={stats} />
+                    <StatCards stats={stats} dateFilter={dateFilter} />
 
                     {/* Zone Map + Traffic Panel */}
                     <div className="pf-mid-grid">

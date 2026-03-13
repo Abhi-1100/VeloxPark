@@ -1,10 +1,165 @@
 {
-    "sample_1": {
+    "today_001": {
         "number_plate": "TS15EL5671",
-        "date_time": "29/1/26 14:00"
+        "date_time": "13/3/26 08:00"
     },
-    "sample_2": {
+    "today_002": {
         "number_plate": "TS15EL5671",
-        "date_time": "29/1/26 16:30"
+        "date_time": "13/3/26 10:15"
+    },
+    "today_003": {
+        "number_plate": "TS22AB2341",
+        "date_time": "13/3/26 09:30"
+    },
+    "today_004": {
+        "number_plate": "TS22AB2341",
+        "date_time": "13/3/26 11:45"
+    },
+    "today_005": {
+        "number_plate": "AP14CD5678",
+        "date_time": "13/3/26 07:45"
+    },
+    "today_006": {
+        "number_plate": "AP14CD5678",
+        "date_time": "13/3/26 09:00"
+    },
+    "today_007": {
+        "number_plate": "KA01EV1234",
+        "date_time": "13/3/26 10:00"
+    },
+    "today_008": {
+        "number_plate": "KA01EV1234",
+        "date_time": "13/3/26 13:30"
+    },
+    "today_009": {
+        "number_plate": "MH02XY3456",
+        "date_time": "13/3/26 11:00"
+    },
+    "today_010": {
+        "number_plate": "MH02XY3456",
+        "date_time": "13/3/26 14:20"
+    },
+    "today_011": {
+        "number_plate": "TS15UV7890",
+        "date_time": "13/3/26 08:30"
+    },
+    "today_012": {
+        "number_plate": "TS19FG4567",
+        "date_time": "13/3/26 12:00"
+    },
+    
+    "yesterday_001": {
+        "number_plate": "TS15EL5671",
+        "date_time": "12/3/26 08:00"
+    },
+    "yesterday_002": {
+        "number_plate": "TS15EL5671",
+        "date_time": "12/3/26 10:30"
+    },
+    "yesterday_003": {
+        "number_plate": "TS22AB2341",
+        "date_time": "12/3/26 09:15"
+    },
+    "yesterday_004": {
+        "number_plate": "TS22AB2341",
+        "date_time": "12/3/26 12:45"
+    },
+    "yesterday_005": {
+        "number_plate": "AP14CD5678",
+        "date_time": "12/3/26 07:30"
+    },
+    "yesterday_006": {
+        "number_plate": "AP14CD5678",
+        "date_time": "12/3/26 09:20"
+    },
+    "yesterday_007": {
+        "number_plate": "KA01EV1234",
+        "date_time": "12/3/26 10:45"
+    },
+    "yesterday_008": {
+        "number_plate": "KA01EV1234",
+        "date_time": "12/3/26 14:00"
+    },
+    "yesterday_009": {
+        "number_plate": "MH02XY3456",
+        "date_time": "12/3/26 11:30"
+    },
+    "yesterday_010": {
+        "number_plate": "MH02XY3456",
+        "date_time": "12/3/26 15:20"
+    },
+    
+    "week_ago_001": {
+        "number_plate": "TS15EL5671",
+        "date_time": "6/3/26 08:00"
+    },
+    "week_ago_002": {
+        "number_plate": "TS15EL5671",
+        "date_time": "6/3/26 10:20"
+    },
+    "week_ago_003": {
+        "number_plate": "TS22AB2341",
+        "date_time": "6/3/26 09:00"
+    },
+    "week_ago_004": {
+        "number_plate": "TS22AB2341",
+        "date_time": "6/3/26 13:00"
+    },
+    "week_ago_005": {
+        "number_plate": "AP14CD5678",
+        "date_time": "6/3/26 07:15"
+    },
+    "week_ago_006": {
+        "number_plate": "AP14CD5678",
+        "date_time": "6/3/26 09:45"
+    },
+    "week_ago_007": {
+        "number_plate": "KA01EV1234",
+        "date_time": "6/3/26 11:00"
+    },
+    "week_ago_008": {
+        "number_plate": "KA01EV1234",
+        "date_time": "6/3/26 14:30"
+    },
+    
+    "two_weeks_001": {
+        "number_plate": "TS15EL5671",
+        "date_time": "27/2/26 08:00"
+    },
+    "two_weeks_002": {
+        "number_plate": "TS15EL5671",
+        "date_time": "27/2/26 10:15"
+    },
+    "two_weeks_003": {
+        "number_plate": "TS22AB2341",
+        "date_time": "27/2/26 09:30"
+    },
+    "two_weeks_004": {
+        "number_plate": "TS22AB2341",
+        "date_time": "27/2/26 12:30"
+    },
+    "two_weeks_005": {
+        "number_plate": "AP14CD5678",
+        "date_time": "27/2/26 07:45"
+    },
+    "two_weeks_006": {
+        "number_plate": "AP14CD5678",
+        "date_time": "27/2/26 10:00"
+    },
+    "two_weeks_007": {
+        "number_plate": "KA01EV1234",
+        "date_time": "27/2/26 11:15"
+    },
+    "two_weeks_008": {
+        "number_plate": "KA01EV1234",
+        "date_time": "27/2/26 13:45"
+    },
+    "two_weeks_009": {
+        "number_plate": "MH02XY3456",
+        "date_time": "27/2/26 10:00"
+    },
+    "two_weeks_010": {
+        "number_plate": "MH02XY3456",
+        "date_time": "27/2/26 15:30"
     }
 }
