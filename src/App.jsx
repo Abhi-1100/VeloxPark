@@ -13,6 +13,7 @@ import UserPaymentPage from './components/UserPaymentPage';
 import UserPaymentSuccess from './components/UserPaymentSuccess';
 import NotFound from './components/NotFound';
 import LoadingScreen from './components/LoadingScreen';
+import RoleSelect from './components/RoleSelect';
 import './App.css';
 
 function App() {
@@ -37,6 +38,9 @@ function App() {
       <Routes>
         {/* Home Page */}
         <Route path="/" element={<Home />} />
+
+        {/* Role Selection Page */}
+        <Route path="/select" element={<RoleSelect />} />
 
         {/* User Panel - New split pages (Page 1: Info, Page 2: QR, Page 3: Success) */}
         <Route path="/user" element={<UserParkingInfo />} />
