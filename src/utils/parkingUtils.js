@@ -1,14 +1,18 @@
 // Calculate duration between entry and exit
 export const calculateDuration = (entry, exit) => {
   if (!exit) return null;
-  
-  const entryTime = new Date(entry);
-  const exitTime = new Date(exit);
+
+  // Use parseToDate to handle all formats (legacy "27/2/26 08:00", ISO, etc.)
+  // new Date() alone cannot parse "DD/MM/YY HH:MM" and returns NaN.
+  const entryTime = parseToDate(entry) || new Date(entry);
+  const exitTime  = parseToDate(exit)  || new Date(exit);
   const diffMs = exitTime - entryTime;
-  
+
+  if (isNaN(diffMs) || diffMs < 0) return { hours: 0, minutes: 0, totalMinutes: 0 };
+
   const hours = Math.floor(diffMs / (1000 * 60 * 60));
   const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-  
+
   return { hours, minutes, totalMinutes: Math.floor(diffMs / (1000 * 60)) };
 };
 

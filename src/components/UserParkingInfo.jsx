@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ref, onValue } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { database } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -19,7 +19,7 @@ const UserParkingInfo = () => {
     const [vehicleData, setVehicleData] = useState(null);
     const [upiConfig, setUpiConfig] = useState({
         upiId: 'parking@upi',
-        upiName: 'Smart Parking System'
+        upiName: 'VeloxPark'
     });
 
     // Load UPI config — identical to original UserPanel
@@ -33,36 +33,79 @@ const UserParkingInfo = () => {
             .catch(() => { /* Use defaults */ });
     }, []);
 
-    // Identical Firebase search logic from original UserPanel
-    const searchVehicle = async (plate) => {
-        const numberplateRef = ref(database, 'numberplate');
-        return new Promise((resolve, reject) => {
-            onValue(numberplateRef, (snapshot) => {
-                const data = snapshot.val();
-                if (!data) { resolve(null); return; }
-
-                const entries = [];
-                Object.keys(data).forEach(key => {
-                    const entry = data[key];
-                    if (entry.number_plate === plate && entry.number_plate !== 'NULL') {
-                        entries.push({ id: key, plate: entry.number_plate, timestamp: entry.date_time });
-                    }
-                });
-
-                if (entries.length === 0) { resolve(null); return; }
-                entries.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-                let vehicleInfo = { plate, entry: entries[0].timestamp, exit: null, status: 'Parked' };
-                if (entries.length >= 2) {
-                    vehicleInfo.exit = entries[1].timestamp;
-                    vehicleInfo.status = 'Exited';
-                    const dur = calculateDuration(vehicleInfo.entry, vehicleInfo.exit);
-                    vehicleInfo.duration = dur;
-                    vehicleInfo.amount = calculateAmount(dur);
-                }
-                resolve(vehicleInfo);
-            }, reject);
+    /** Parse raw numberplate data object and find the most recent session for a plate. */
+    const findVehicleInData = (data, plate) => {
+        if (!data) return null;
+        const scans = [];
+        Object.keys(data).forEach(key => {
+            const entry = data[key];
+            const entryPlate = entry.number_plate || entry.plate || '';
+            if (entryPlate === plate && entryPlate !== 'NULL') {
+                const ts = entry.date_time || entry.inTime || entry.timestamp;
+                if (ts) scans.push({ id: key, plate: entryPlate, timestamp: ts });
+            }
         });
+        if (scans.length === 0) return null;
+
+        // Sort all scans ascending (oldest → newest)
+        scans.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+        // Group into sessions: scan[0]=entry, scan[1]=exit, scan[2]=entry, scan[3]=exit …
+        // The most recent session is the LAST complete or ongoing pair.
+        const lastIdx = scans.length - 1;
+        const isOddCount = scans.length % 2 !== 0;
+
+        // If odd number of scans, last scan is a dangling entry (vehicle still parked)
+        if (isOddCount) {
+            // Most recent entry = last scan
+            return { plate, entry: scans[lastIdx].timestamp, exit: null, status: 'Parked' };
+        }
+
+        // Even: last two scans form the most recent session
+        const sessionEntry = scans[lastIdx - 1].timestamp;
+        const sessionExit  = scans[lastIdx].timestamp;
+        const dur = calculateDuration(sessionEntry, sessionExit);
+        return {
+            plate,
+            entry:    sessionEntry,
+            exit:     sessionExit,
+            status:   'Exited',
+            duration: dur,
+            amount:   calculateAmount(dur),
+        };
+    };
+
+    // One-shot Firebase read with local JSON fallback.
+    // Falls back to /numberplate.json if Firebase returns a permission error
+    // (common when database rules require auth for the numberplate node).
+    const searchVehicle = async (plate) => {
+        // ── Try Firebase first ───────────────────────────────────────────────
+        try {
+            const numberplateRef = ref(database, 'numberplate');
+            const snapshot = await get(numberplateRef);
+            const result = findVehicleInData(snapshot.val(), plate);
+            // Also check parkingLogs node if not found in numberplate
+            if (!result) {
+                try {
+                    const logsRef = ref(database, 'parkingLogs');
+                    const logsSnap = await get(logsRef);
+                    return findVehicleInData(logsSnap.val(), plate);
+                } catch { /* fall through to local */ }
+            }
+            return result;
+        } catch (firebaseErr) {
+            console.warn('[UserParkingInfo] Firebase read failed, using local fallback:', firebaseErr.code);
+        }
+
+        // ── Local JSON fallback ──────────────────────────────────────────────
+        try {
+            const res = await fetch('/numberplate.json');
+            const data = await res.json();
+            return findVehicleInData(data, plate);
+        } catch (localErr) {
+            console.error('[UserParkingInfo] Local fallback also failed:', localErr);
+            throw localErr; // propagate so handleSubmit shows error
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -495,7 +538,7 @@ const UserParkingInfo = () => {
                             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>local_parking</span>
                         </div>
                         <span style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '0.5px' }}>
-                            PARK<span style={{ color: '#f9d006' }}>PORTAL</span>
+                            VELOX<span style={{ color: '#f9d006' }}>PARK</span>
                         </span>
                     </div>
 
@@ -725,7 +768,7 @@ const UserParkingInfo = () => {
             <footer style={styles.footer}>
                 <div style={styles.footerCopy}>
                     <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>copyright</span>
-                    2024 ParkPortal Systems Inc.
+                    2024 VeloxPark
                 </div>
                 <div style={styles.footerLinks}>
                     {['TERMS', 'PRIVACY', 'COOKIES'].map(item => (

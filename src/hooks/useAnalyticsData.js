@@ -116,6 +116,16 @@ const filterByWindow = (data, start, end) =>
         return ds >= toLocalDateStr(start) && ds <= toLocalDateStr(end);
     });
 
+/** Filters processedData to vehicles whose EXIT falls within [start, end]. */
+const filterByExitWindow = (data, start, end) =>
+    data.filter((v) => {
+        if (!v.exit) return false;
+        const d = parseToDate(v.exit);
+        if (!d) return false;
+        const ds = toLocalDateStr(d);
+        return ds >= toLocalDateStr(start) && ds <= toLocalDateStr(end);
+    });
+
 // ── Hook ───────────────────────────────────────────────────────────────────────
 
 const useAnalyticsData = () => {
@@ -176,13 +186,22 @@ const useAnalyticsData = () => {
         const periodData = filterByWindow(processedData, start, end);
         console.log('[Analytics] Period data (filtered):', periodData.length, 'records');
 
+        // ── Data filtered to the selected window (exit-scoped for revenue) ──────
+        // exitData: vehicles that exited within the current period window
+        const exitData     = filterByExitWindow(processedData, start, end);
+        // prevStart / prevEnd: the mirror window immediately before `start`
+        const windowMs     = end.getTime() - start.getTime();
+        const prevEnd      = new Date(start.getTime() - 1);      // 1 ms before window start
+        const prevStart    = new Date(prevEnd.getTime() - windowMs);
+        const prevExitData = filterByExitWindow(processedData, prevStart, prevEnd);
+
         // ── Bar chart: revenue per bar slot (current vs previous period) ─────
         const barChartData = Array.from({ length: barCount }, (_, i) => {
             const d = barDate(i);
             // Human-readable date for tooltip: "18 Feb"
             const dateStr = d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-            const current = revenueForDay(processedData, d);
-            const previous = revenueForDay(processedData, prevBarDate(i));
+            const current  = revenueForDay(exitData, d);
+            const previous = revenueForDay(prevExitData, prevBarDate(i));
             return {
                 label:    barLabel(i),
                 date:     dateStr,          // ← always set, used by tooltip

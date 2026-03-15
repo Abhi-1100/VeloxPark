@@ -12,6 +12,7 @@ import UserParkingInfo from './components/UserParkingInfo';
 import UserPaymentPage from './components/UserPaymentPage';
 import UserPaymentSuccess from './components/UserPaymentSuccess';
 import NotFound from './components/NotFound';
+import LoadingScreen from './components/LoadingScreen';
 import './App.css';
 
 function App() {
@@ -28,12 +29,7 @@ function App() {
   }, []);
 
   if (loading) {
-    return (
-      <>
-        <div className="background-grid"></div>
-        <div className="loading">Loading...</div>
-      </>
-    );
+    return <LoadingScreen />;
   }
 
   return (

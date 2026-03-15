@@ -6,13 +6,11 @@ const Home = () => {
             {/* Header */}
             <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-b border-[#f9f906]/10 bg-[#181811]/80 backdrop-blur-md px-10 py-4">
                 <div className="flex items-center gap-3 text-[#f9f906]">
-                    <div className="size-6">
-                        <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
-                        </svg>
+                    <div className="size-6 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-2xl font-bold">local_parking</span>
                     </div>
                     <h2 className="text-slate-100 text-xl font-bold tracking-tight">
-                        Smart Parking <span className="text-[#f9f906]">OS</span>
+                        VeloxPark
                     </h2>
                 </div>
                 <div className="flex items-center gap-6">
@@ -100,7 +98,7 @@ const Home = () => {
                     <a className="hover:text-[#f9f906] transition-colors" href="#">Legal</a>
                     <a className="hover:text-[#f9f906] transition-colors" href="#">API</a>
                 </div>
-                <p>© 2024 Smart Parking Systems Intl.</p>
+                <p>© 2025 VeloxPark</p>
                 <div className="flex gap-4 pointer-events-auto">
                     <a className="hover:text-[#f9f906] transition-colors" href="#"><span className="material-symbols-outlined text-base">language</span></a>
                     <a className="hover:text-[#f9f906] transition-colors" href="#"><span className="material-symbols-outlined text-base">share</span></a>

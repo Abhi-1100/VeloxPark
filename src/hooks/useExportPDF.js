@@ -36,7 +36,7 @@ const useExportPDF = ({ visibleData, dateFilter }) => {
             doc.setFontSize(18);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(20, 20, 20);
-            doc.text('Smart Parking - Vehicle Records Report', 14, 18);
+            doc.text('VeloxPark - Vehicle Records Report', 14, 18);
 
             // Subtitle
             doc.setFontSize(10);
@@ -105,7 +105,7 @@ const useExportPDF = ({ visibleData, dateFilter }) => {
                     doc.setFontSize(8);
                     doc.setTextColor(150, 150, 150);
                     doc.text(
-                        `Page ${data.pageNumber}  |  Smart Parking System`,
+                        `Page ${data.pageNumber}  |  VeloxPark`,
                         pageWidth / 2,
                         pageHeight - 8,
                         { align: 'center' }

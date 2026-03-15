@@ -12,7 +12,7 @@ function NotFound() {
           <div className="notfound-icon">
             <span className="material-symbols-outlined">local_parking</span>
           </div>
-          <h2 className="notfound-title">Smart Parking Admin</h2>
+          <h2 className="notfound-title">VeloxPark Admin</h2>
         </div>
         <div className="notfound-header-right">
           <nav className="notfound-nav">

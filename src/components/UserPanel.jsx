@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ref, onValue } from 'firebase/database';
+import { ref, get } from 'firebase/database';
 import { database } from '../config/firebase';
 import {
     calculateDuration,
@@ -18,7 +18,7 @@ const UserPanel = () => {
     const [vehicleData, setVehicleData] = useState(null);
     const [upiConfig, setUpiConfig] = useState({
         upiId: 'parking@upi',
-        upiName: 'Smart Parking System'
+        upiName: 'VeloxPark'
     });
 
     // Load UPI config
@@ -34,63 +34,48 @@ const UserPanel = () => {
             });
     }, []);
 
-    const searchVehicle = async (plate) => {
-        const numberplateRef = ref(database, 'numberplate');
-
-        return new Promise((resolve, reject) => {
-            onValue(numberplateRef, (snapshot) => {
-                const data = snapshot.val();
-
-                if (!data) {
-                    resolve(null);
-                    return;
-                }
-
-                // Find all entries for this plate
-                const entries = [];
-                Object.keys(data).forEach(key => {
-                    const entry = data[key];
-                    if (entry.number_plate === plate && entry.number_plate !== 'NULL') {
-                        entries.push({
-                            id: key,
-                            plate: entry.number_plate,
-                            timestamp: entry.date_time
-                        });
-                    }
-                });
-
-                if (entries.length === 0) {
-                    resolve(null);
-                    return;
-                }
-
-                // Sort by timestamp
-                entries.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-                // Determine entry/exit
-                let vehicleInfo = {
-                    plate: plate,
-                    entry: entries[0].timestamp,
-                    exit: null,
-                    status: 'Parked'
-                };
-
-                // If there are 2 or more entries, the second one is exit
-                if (entries.length >= 2) {
-                    vehicleInfo.exit = entries[1].timestamp;
-                    vehicleInfo.status = 'Exited';
-
-                    // Calculate duration and amount
-                    const dur = calculateDuration(vehicleInfo.entry, vehicleInfo.exit);
-                    vehicleInfo.duration = dur;
-                    vehicleInfo.amount = calculateAmount(dur);
-                }
-
-                resolve(vehicleInfo);
-            }, (error) => {
-                reject(error);
-            });
+    /** Parse raw numberplate data object and find the most recent session for a plate. */
+    const findVehicleInData = (data, plate) => {
+        if (!data) return null;
+        const scans = [];
+        Object.keys(data).forEach(key => {
+            const entry = data[key];
+            const entryPlate = entry.number_plate || entry.plate || '';
+            if (entryPlate === plate && entryPlate !== 'NULL') {
+                const ts = entry.date_time || entry.inTime || entry.timestamp;
+                if (ts) scans.push({ id: key, plate: entryPlate, timestamp: ts });
+            }
         });
+        if (scans.length === 0) return null;
+        scans.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        const lastIdx = scans.length - 1;
+        const isOddCount = scans.length % 2 !== 0;
+        if (isOddCount) {
+            return { plate, entry: scans[lastIdx].timestamp, exit: null, status: 'Parked' };
+        }
+        const sessionEntry = scans[lastIdx - 1].timestamp;
+        const sessionExit  = scans[lastIdx].timestamp;
+        const dur = calculateDuration(sessionEntry, sessionExit);
+        return { plate, entry: sessionEntry, exit: sessionExit, status: 'Exited', duration: dur, amount: calculateAmount(dur) };
+    };
+
+    const searchVehicle = async (plate) => {
+        // Try Firebase first
+        try {
+            const numberplateRef = ref(database, 'numberplate');
+            const snapshot = await get(numberplateRef);
+            return findVehicleInData(snapshot.val(), plate);
+        } catch (firebaseErr) {
+            console.warn('[UserPanel] Firebase read failed, using local fallback:', firebaseErr.code);
+        }
+        // Local JSON fallback
+        try {
+            const res = await fetch('/numberplate.json');
+            const data = await res.json();
+            return findVehicleInData(data, plate);
+        } catch (localErr) {
+            throw localErr;
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -125,7 +110,7 @@ const UserPanel = () => {
             <div className="user-container">
                 {/* Header */}
                 <div className="user-header">
-                    <h1 className="user-logo">Smart Parking</h1>
+                    <h1 className="user-logo">VeloxPark</h1>
                     <p className="tagline">Check Your Parking Status</p>
                 </div>
 

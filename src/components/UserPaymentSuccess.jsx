@@ -281,7 +281,7 @@ const UserPaymentSuccess = () => {
                                     </p>
                                     <p style={{ fontSize: '12px', color: '#64748b', display: 'flex', alignItems: 'center', gap: '4px' }}>
                                         <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>location_on</span>
-                                        Smart Parking System
+                                        VeloxPark Parking System
                                     </p>
                                 </div>
                             </div>

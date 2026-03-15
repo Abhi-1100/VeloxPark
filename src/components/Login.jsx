@@ -54,7 +54,7 @@ const Login = ({ onLoginSuccess }) => {
                                 local_parking
                             </span>
                         </div>
-                        <h1 className="lp-title">Smart Parking</h1>
+                        <h1 className="lp-title">VeloxPark</h1>
                         <p className="lp-subtitle">Admin Portal: Sign in to manage your facility.</p>
                     </div>
 
@@ -181,7 +181,7 @@ const Login = ({ onLoginSuccess }) => {
                 <div className="lp-footer">
                     <span>v2.4.0-Stable</span>
                     <span className="lp-footer-dot" aria-hidden="true" />
-                    <span>© 2025 Smart Parking Systems</span>
+                    <span>© 2025 VeloxPark</span>
                 </div>
             </div>
         </div>
