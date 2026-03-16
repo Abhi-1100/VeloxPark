@@ -45,6 +45,27 @@
 ::-webkit-scrollbar-track { background: #0a0a0b; }
 ::-webkit-scrollbar-thumb { background: #facc15; }
 
+.role-card {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
+}
+
+.role-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: #facc15;
+  transition: height 0.35s ease;
+}
+
+.role-card:hover::before {
+  height: 100%;
+}
+
 /* Mobile: disable shard clipping */
 @media (max-width: 768px) {
   .shard-right,
