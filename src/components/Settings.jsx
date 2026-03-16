@@ -106,7 +106,7 @@ const Settings = ({ user }) => {
                                 <span className="material-symbols-outlined">local_parking</span>
                             </div>
                             <h1 className="settings-title">
-                                SMART<span className="settings-title-accent">PARKING</span> ADMIN
+                                VELOX<span className="settings-title-accent">PARK</span> ADMIN
                             </h1>
                         </div>
                         <div className="settings-header-right">
@@ -395,7 +395,7 @@ const Settings = ({ user }) => {
 
                 {/* Footer */}
                 <footer className="settings-footer">
-                    <p>SMARTPARKING © 2024 ENTERPRISE MANAGEMENT SUITE</p>
+                    <p>VELOXPARK © 2024 ENTERPRISE MANAGEMENT SUITE</p>
                 </footer>
             </main>
         </div>

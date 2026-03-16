@@ -25,7 +25,7 @@ const useMonthlyReport = ({ monthlyData, analyticsStats }) => {
             doc.setFontSize(20);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(20, 20, 20);
-            doc.text('SmartPark — Monthly Analytics Report', 14, 18);
+            doc.text('VeloxPark — Monthly Analytics Report', 14, 18);
 
             doc.setFontSize(10);
             doc.setFont('helvetica', 'normal');
@@ -88,13 +88,13 @@ const useMonthlyReport = ({ monthlyData, analyticsStats }) => {
                     doc.setFontSize(8);
                     doc.setTextColor(150, 150, 150);
                     doc.text(
-                        `Page ${data.pageNumber}  |  SmartPark Analytics`,
+                        `Page ${data.pageNumber}  |  VeloxPark Analytics`,
                         pw / 2, ph - 8, { align: 'center' }
                     );
                 },
             });
 
-            doc.save(`smartpark-monthly-report-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}.pdf`);
+            doc.save(`veloxpark-monthly-report-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}.pdf`);
         } catch (err) {
             console.error('Monthly Report Error:', err);
             alert(`Report generation failed: ${err.message}`);

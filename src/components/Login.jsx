@@ -82,7 +82,7 @@ const Login = ({ onLoginSuccess }) => {
                                     id="lp-email"
                                     type="email"
                                     className="lp-input"
-                                    placeholder="admin@smartparking.io"
+                                    placeholder="admin@veloxpark.io"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required

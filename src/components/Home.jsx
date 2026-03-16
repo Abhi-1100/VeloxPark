@@ -88,14 +88,14 @@ const Home = () => {
 
               {/* BEGIN: Embedded Navigation Pill */}
               <nav className="glass-panel px-6 py-2 rounded-full flex items-center gap-8 shadow-2xl self-start border border-white/5" style={{ backgroundColor: '#141417' }}>
-                <a className="font-bold tracking-tighter text-xl" href="#" style={{ color: '#facc15' }}>S.PARK</a>
+                <a className="font-bold tracking-tighter text-xl" href="#" style={{ color: '#facc15' }}>VELOXPARK</a>
                 <div className="hidden md:flex gap-8 text-xs uppercase tracking-widest font-bold text-gray-300">
                   <a className="hover:text-white transition-colors" href="#nodes">Nodes</a>
                   <a className="hover:text-white transition-colors" href="#shards">Core</a>
                   <a className="hover:text-white transition-colors" href="#stats">Scale</a>
                 </div>
                 <button className="px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-tight hover:bg-yellow-400 transition-all flex-shrink-0"
-                  onClick={() => scrollToSection('roles')}
+                  onClick={() => navigate('/select')}
                   style={{ backgroundColor: '#facc15', color: '#000' }}>
                   Connect OS
                 </button>
@@ -103,7 +103,7 @@ const Home = () => {
               {/* END: Embedded Navigation Pill */}
             </div>
             <h2 className="text-6xl md:text-9xl font-bold leading-none mb-8">
-              SMART<br/><span style={{ color: '#facc15' }}>PARK</span>
+              VELOX<br/><span style={{ color: '#facc15' }}>PARK</span>
             </h2>
             <p className="max-w-md text-gray-400 text-lg md:text-xl leading-relaxed mb-12 border-l-2 pl-6" style={{ borderColor: '#facc15' }}>
               Architecting the future of urban density. Autonomous routing, predictive space allocation, and real-time kinetic mapping.
@@ -128,7 +128,7 @@ const Home = () => {
               </div>
               <button
                 type="button"
-                onClick={() => scrollToSection('shards')}
+                onClick={() => navigate('/select')}
                 className="uppercase self-center opacity-50 hover:opacity-90 transition-opacity"
                 style={{ fontSize: '10px', letterSpacing: '0.4em' }}
               >
@@ -291,7 +291,7 @@ const Home = () => {
               <p className="text-gray-400 mb-8">Find, reserve, and navigate to available parking spots in real-time. Never circle the block again.</p>
               <button
                 type="button"
-                onClick={() => scrollToSection('workflow')}
+                onClick={() => navigate('/select')}
                 className="px-5 py-2 text-xs uppercase tracking-widest transition-all duration-300 hover:text-black"
                 style={{ border: '1px solid #facc15', color: '#facc15' }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#facc15'; }}
@@ -311,7 +311,7 @@ const Home = () => {
               <p className="text-gray-400 mb-8">Manage your parking assets, optimize occupancy rates, and unlock revenue using predictive analytics.</p>
               <button
                 type="button"
-                onClick={() => scrollToSection('workflow')}
+                onClick={() => navigate('/select')}
                 className="px-5 py-2 text-xs uppercase tracking-widest transition-all duration-300 hover:text-black"
                 style={{ border: '1px solid #facc15', color: '#facc15' }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#facc15'; }}
@@ -331,7 +331,7 @@ const Home = () => {
               <p className="text-gray-400 mb-8">Deploy city-scale infrastructure, reduce congestion, and gain macro-level urban mobility intelligence.</p>
               <button
                 type="button"
-                onClick={() => scrollToSection('workflow')}
+                onClick={() => navigate('/select')}
                 className="px-5 py-2 text-xs uppercase tracking-widest transition-all duration-300 hover:text-black"
                 style={{ border: '1px solid #facc15', color: '#facc15' }}
                 onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#facc15'; }}
@@ -360,7 +360,7 @@ const Home = () => {
             <article className="p-8" style={{ backgroundColor: '#0a0a0b' }}>
               <p className="text-6xl font-bold mb-3" style={{ color: 'rgba(255,255,255,0.08)' }}>01</p>
               <h3 className="text-lg font-bold uppercase mb-3" style={{ color: '#facc15' }}>Connect Node</h3>
-              <p className="text-sm text-gray-400">Install SmartPark hardware module or integrate by API with your existing systems.</p>
+              <p className="text-sm text-gray-400">Install VeloxPark hardware module or integrate by API with your existing systems.</p>
             </article>
             <article className="p-8" style={{ backgroundColor: '#0a0a0b' }}>
               <p className="text-6xl font-bold mb-3" style={{ color: 'rgba(255,255,255,0.08)' }}>02</p>
@@ -387,7 +387,7 @@ const Home = () => {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
             <div className="col-span-1 md:col-span-2">
-              <h3 className="text-3xl font-bold mb-6" style={{ color: '#facc15' }}>SMARTPARK.OS</h3>
+              <h3 className="text-3xl font-bold mb-6" style={{ color: '#facc15' }}>VELOXPARK.OS</h3>
               <p className="text-gray-500 max-w-sm">The operating system for the next billion urban transitions. Built for cities, scaled for humanity.</p>
             </div>
             <div>
@@ -408,7 +408,7 @@ const Home = () => {
             </div>
           </div>
           <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-white/5">
-            <p className="uppercase text-gray-600" style={{ fontSize: '10px', letterSpacing: '0.1em' }}>© 2024 SmartPark Urban Mobility Corp. All Rights Reserved.</p>
+            <p className="uppercase text-gray-600" style={{ fontSize: '10px', letterSpacing: '0.1em' }}>© 2024 VeloxPark Urban Mobility Corp. All Rights Reserved.</p>
             <div className="flex gap-6 mt-4 md:mt-0">
               <span className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#facc15' }}></span>
               <p className="uppercase text-gray-600" style={{ fontSize: '10px', letterSpacing: '0.1em' }}>Server: London_Cluster_01</p>
