@@ -7,13 +7,13 @@ import Login from './components/Login';
 import AdminDashboard from './components/AdminDashboard';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import Settings from './components/Settings';
-import UserPanel from './components/UserPanel';
 import UserParkingInfo from './components/UserParkingInfo';
 import UserPaymentPage from './components/UserPaymentPage';
 import UserPaymentSuccess from './components/UserPaymentSuccess';
 import NotFound from './components/NotFound';
 import LoadingScreen from './components/LoadingScreen';
 import RoleSelect from './components/RoleSelect';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
 function App() {
@@ -34,62 +34,61 @@ function App() {
   }
 
   return (
-    <Router>
-      <Routes>
-        {/* Home Page */}
-        <Route path="/" element={<Home />} />
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          {/* Home Page */}
+          <Route path="/" element={<Home />} />
 
-        {/* Role Selection Page */}
-        <Route path="/select" element={<RoleSelect />} />
+          {/* Role Selection Page */}
+          <Route path="/select" element={<RoleSelect />} />
 
-        {/* User Panel - New split pages (Page 1: Info, Page 2: QR, Page 3: Success) */}
-        <Route path="/user" element={<UserParkingInfo />} />
-        <Route path="/user/payment" element={<UserPaymentPage />} />
-        <Route path="/user/payment/success" element={<UserPaymentSuccess />} />
+          {/* User Panel - New split pages (Page 1: Info, Page 2: QR, Page 3: Success) */}
+          <Route path="/user" element={<UserParkingInfo />} />
+          <Route path="/user/payment" element={<UserPaymentPage />} />
+          <Route path="/user/payment/success" element={<UserPaymentSuccess />} />
 
-        {/* Legacy user panel fallback (kept for reference) */}
-        <Route path="/user/legacy" element={<UserPanel />} />
+          {/* Admin Dashboard */}
+          <Route
+            path="/admin"
+            element={
+              user ? (
+                <AdminDashboard user={user} />
+              ) : (
+                <Login onLoginSuccess={() => { }} />
+              )
+            }
+          />
 
-        {/* Admin Dashboard */}
-        <Route
-          path="/admin"
-          element={
-            user ? (
-              <AdminDashboard user={user} />
-            ) : (
-              <Login onLoginSuccess={() => { }} />
-            )
-          }
-        />
+          {/* Analytics Dashboard — protected, same auth guard */}
+          <Route
+            path="/admin/analytics"
+            element={
+              user ? (
+                <AnalyticsDashboard user={user} />
+              ) : (
+                <Login onLoginSuccess={() => { }} />
+              )
+            }
+          />
 
-        {/* Analytics Dashboard — protected, same auth guard */}
-        <Route
-          path="/admin/analytics"
-          element={
-            user ? (
-              <AnalyticsDashboard user={user} />
-            ) : (
-              <Login onLoginSuccess={() => { }} />
-            )
-          }
-        />
+          {/* Settings — protected, same auth guard */}
+          <Route
+            path="/admin/settings"
+            element={
+              user ? (
+                <Settings user={user} />
+              ) : (
+                <Login onLoginSuccess={() => { }} />
+              )
+            }
+          />
 
-        {/* Settings — protected, same auth guard */}
-        <Route
-          path="/admin/settings"
-          element={
-            user ? (
-              <Settings user={user} />
-            ) : (
-              <Login onLoginSuccess={() => { }} />
-            )
-          }
-        />
-
-        {/* 404 Page - Catch all unknown routes */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </Router>
+          {/* 404 Page - Catch all unknown routes */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 }
 

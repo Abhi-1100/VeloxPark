@@ -38,7 +38,24 @@ A modern, feature-rich parking management system built with React, Firebase, and
 - **Authentication**: Firebase Auth
 - **QR Code**: qrcode.react
 - **PDF Generation**: jsPDF with autotable plugin
-- **Styling**: Vanilla CSS with custom design system
+- **Styling**: Tailwind CSS 4.1.18 + Custom CSS
+
+## 📚 Documentation
+
+**Comprehensive documentation is available in the [`/doc`](./doc) folder:**
+
+- **[Getting Started Guide](./doc/getting-started.md)** - Quick setup and installation
+- **[User Manual](./doc/user-manual.md)** - End-user guide for vehicle owners
+- **[Admin Manual](./doc/admin-manual.md)** - Administrator operations guide
+- **[API Reference](./doc/api-reference.md)** - Complete API documentation with examples
+- **[Database Schema](./doc/database-schema.md)** - Firebase database structure
+- **[Hardware Integration](./doc/hardware-integration.md)** - ESP32 + ANPR camera setup
+- **[System Architecture](./doc/architecture.md)** - Technical architecture overview
+- **[Testing Guide](./doc/testing-guide.md)** - Manual testing procedures
+- **[Troubleshooting](./doc/troubleshooting.md)** - Common issues and solutions
+- **[Deployment Guide](./doc/deployment.md)** - Production deployment instructions
+
+👉 **Start here:** [Documentation Index](./doc/README.md)
 
 ## Design System
 

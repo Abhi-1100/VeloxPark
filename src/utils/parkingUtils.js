@@ -65,42 +65,48 @@ const MONTH_MAP = {
 export const parseToDate = (dateTimeStr) => {
   if (!dateTimeStr) return null;
 
-  // ── 1. ISO / standard formats (most entries after the schema fix) ──────────
-  const iso = new Date(dateTimeStr);
-  if (!isNaN(iso)) return iso;
+  try {
+    // ── 1. ISO / standard formats (most entries after the schema fix) ──────────
+    const iso = new Date(dateTimeStr);
+    if (!isNaN(iso)) return iso;
 
-  // ── 2. "DD Mon YYYY HH:MM am/pm" — en-IN locale output ("03 Mar 2026 10:30 am") ──
-  const localeM = String(dateTimeStr).match(
-    /^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})[,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(am|pm)?/i
-  );
-  if (localeM) {
-    const monthIdx = MONTH_MAP[localeM[2].toLowerCase()];
-    if (monthIdx !== undefined) {
-      let hour = parseInt(localeM[4], 10);
-      const minute = parseInt(localeM[5], 10);
-      const sec    = localeM[6] ? parseInt(localeM[6], 10) : 0;
-      const ampm   = (localeM[7] || '').toLowerCase();
-      if (ampm === 'pm' && hour < 12) hour += 12;
-      if (ampm === 'am' && hour === 12) hour = 0;
-      const dt = new Date(parseInt(localeM[3], 10), monthIdx, parseInt(localeM[1], 10), hour, minute, sec);
+    // ── 2. "DD Mon YYYY HH:MM am/pm" — en-IN locale output ("03 Mar 2026 10:30 am") ──
+    const localeM = String(dateTimeStr).match(
+      /^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})[,\s]+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(am|pm)?/i
+    );
+    if (localeM) {
+      const monthIdx = MONTH_MAP[localeM[2].toLowerCase()];
+      if (monthIdx !== undefined) {
+        let hour = parseInt(localeM[4], 10);
+        const minute = parseInt(localeM[5], 10);
+        const sec    = localeM[6] ? parseInt(localeM[6], 10) : 0;
+        const ampm   = (localeM[7] || '').toLowerCase();
+        if (ampm === 'pm' && hour < 12) hour += 12;
+        if (ampm === 'am' && hour === 12) hour = 0;
+        const dt = new Date(parseInt(localeM[3], 10), monthIdx, parseInt(localeM[1], 10), hour, minute, sec);
+        if (!isNaN(dt)) return dt;
+      }
+    }
+
+    // ── 3. "DD/MM/YY HH:MM" or "DD-MM-YYYY HH:MM" — hardware / local JSON ────
+    const numM = String(dateTimeStr).match(
+      /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:[ T](\d{1,2}):(\d{2}))?/
+    );
+    if (numM) {
+      let year = parseInt(numM[3], 10);
+      if (year < 100) year += 2000;
+      const hour   = numM[4] ? parseInt(numM[4], 10) : 0;
+      const minute = numM[5] ? parseInt(numM[5], 10) : 0;
+      const dt = new Date(year, parseInt(numM[2], 10) - 1, parseInt(numM[1], 10), hour, minute);
       if (!isNaN(dt)) return dt;
     }
-  }
 
-  // ── 3. "DD/MM/YY HH:MM" or "DD-MM-YYYY HH:MM" — hardware / local JSON ────
-  const numM = String(dateTimeStr).match(
-    /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:[ T](\d{1,2}):(\d{2}))?/
-  );
-  if (numM) {
-    let year = parseInt(numM[3], 10);
-    if (year < 100) year += 2000;
-    const hour   = numM[4] ? parseInt(numM[4], 10) : 0;
-    const minute = numM[5] ? parseInt(numM[5], 10) : 0;
-    const dt = new Date(year, parseInt(numM[2], 10) - 1, parseInt(numM[1], 10), hour, minute);
-    if (!isNaN(dt)) return dt;
+    console.warn('[parkingUtils] Unable to parse date:', dateTimeStr);
+    return null;
+  } catch (error) {
+    console.error('[parkingUtils] Date parsing error:', dateTimeStr, error);
+    return null;
   }
-
-  return null;
 };
 
 // Check if a datetime string falls on a given yyyy-mm-dd date string.

@@ -268,6 +268,10 @@ export const pushManualEntry = async (plate, type, zone) => {
             zone:        zone || 'Zone A',
             rateAtEntry: rateAtEntry,
             manualEntry: true,
+            createdAt:   new Date().toISOString(),
+            createdBy:   auth.currentUser?.uid || 'system',
+            lastModified: new Date().toISOString(),
+            schemaVersion: 2
         };
 
         console.log('Pushing manual entry to parkingLogs:', payload);
