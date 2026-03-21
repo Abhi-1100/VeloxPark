@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -74,12 +75,39 @@ const Home = () => {
       <nav className="nav-wrapper">
         <div className="nav-inner">
           <div className="nav-logo">VELOX<span>.</span>PARK</div>
+
+          <button
+            className="nav-toggle"
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            <span className="material-symbols-outlined">
+              {mobileMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
+
           <ul className="nav-links">
             <li><button onClick={() => scrollToSection('node-network')}>Nodes</button></li>
             <li><button onClick={() => scrollToSection('features')}>Core</button></li>
             <li><button onClick={() => scrollToSection('stats')}>Scale</button></li>
           </ul>
           <button className="btn-connect" onClick={() => navigate('/select')}>CONNECT OS</button>
+        </div>
+
+        <div className={`nav-mobile ${mobileMenuOpen ? 'is-open' : ''}`}>
+          <button onClick={() => { scrollToSection('node-network'); setMobileMenuOpen(false); }}>
+            Nodes
+          </button>
+          <button onClick={() => { scrollToSection('features'); setMobileMenuOpen(false); }}>
+            Core
+          </button>
+          <button onClick={() => { scrollToSection('stats'); setMobileMenuOpen(false); }}>
+            Scale
+          </button>
+          <button className="btn-connect nav-mobile-cta" onClick={() => { navigate('/select'); setMobileMenuOpen(false); }}>
+            CONNECT OS
+          </button>
         </div>
       </nav>
 

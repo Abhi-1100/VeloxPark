@@ -56,6 +56,7 @@ const AdminDashboard = ({ user }) => {
 
     // ── Modal state ────────────────────────────────────────────────────────────
     const [entryModalOpen, setEntryModalOpen] = useState(false);
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
     // ── Derived display values ─────────────────────────────────────────────────
     const adminName = user?.email?.split('@')[0] || 'Admin';
@@ -76,7 +77,21 @@ const AdminDashboard = ({ user }) => {
             />
 
             {/* Slim sidebar */}
-            <Sidebar adminName={adminName} onLogout={logoutAdmin} activePage="dashboard" />
+            <Sidebar
+                adminName={adminName}
+                onLogout={logoutAdmin}
+                activePage="dashboard"
+                isMobileOpen={mobileSidebarOpen}
+                onClose={() => setMobileSidebarOpen(false)}
+            />
+
+            {mobileSidebarOpen && (
+                <button
+                    className="pf-sidebar-overlay"
+                    onClick={() => setMobileSidebarOpen(false)}
+                    aria-label="Close navigation menu"
+                />
+            )}
 
             {/* Main content area */}
             <main className="pf-main">
@@ -88,6 +103,7 @@ const AdminDashboard = ({ user }) => {
                     dateFilter={dateFilter}
                     setDateFilter={setDateFilter}
                     onOpenEntry={() => setEntryModalOpen(true)}
+                    onToggleSidebar={() => setMobileSidebarOpen((prev) => !prev)}
                 />
 
                 {/* Page body — natural scroll */}

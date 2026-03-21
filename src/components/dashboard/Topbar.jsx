@@ -17,8 +17,19 @@
  *   setDateFilter {function}  Updates date filter in the parent hook
  */
 
-const Topbar = ({ searchTerm, setSearchTerm, dateFilter, setDateFilter, onOpenEntry }) => (
+const Topbar = ({
+    searchTerm,
+    setSearchTerm,
+    dateFilter,
+    setDateFilter,
+    onOpenEntry,
+    onToggleSidebar,
+}) => (
     <div className="pf-topbar">
+        <button className="pf-menu-btn" onClick={onToggleSidebar} aria-label="Open navigation menu">
+            <span className="material-symbols-outlined">menu</span>
+        </button>
+
         {/* Brand pill */}
         <div className="pf-brand-pill">
             <span className="pf-brand-name">VeloxPark</span>

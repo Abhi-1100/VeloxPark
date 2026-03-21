@@ -13,6 +13,11 @@
     font-family: 'Space Grotesk', sans-serif;
 }
 
+.settings-sidebar-overlay,
+.settings-menu-btn {
+    display: none;
+}
+
 /* Main Content Area */
 .settings-main {
     flex: 1;
@@ -45,6 +50,18 @@
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+.settings-menu-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+    color: #f1f5f9;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
 }
 
 .settings-logo {
@@ -655,8 +672,39 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
+    .settings-root .pf-sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 50;
+    }
+
+    .settings-root .pf-sidebar .pf-sidebar-label {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .settings-root .pf-sidebar:hover {
+        width: 260px;
+    }
+
+    .settings-root .pf-sidebar-open {
+        transform: translateX(0);
+    }
+
+    .settings-sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        border: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(2px);
+    }
+
     .settings-body {
         flex-direction: column;
+        gap: 24px;
     }
 
     .settings-sidebar {
@@ -677,12 +725,25 @@
         margin-left: 0;
     }
 
+    .settings-menu-btn {
+        display: inline-flex;
+    }
+
     .settings-header {
-        padding: 16px 24px;
+        padding: 16px;
+    }
+
+    .settings-header-content {
+        gap: 12px;
+    }
+
+    .settings-title {
+        font-size: 16px;
+        line-height: 1.1;
     }
 
     .settings-body {
-        padding: 24px;
+        padding: 18px 16px 28px;
     }
 
     .settings-search {
@@ -697,5 +758,59 @@
     .settings-page-header {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .settings-content {
+        gap: 22px;
+        padding-bottom: 42px;
+    }
+
+    .settings-section-header,
+    .settings-section-body {
+        padding: 16px;
+    }
+
+    .settings-permission-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .settings-page-title {
+        font-size: 24px;
+    }
+
+    .settings-footer {
+        padding: 24px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .settings-logo {
+        padding: 5px;
+    }
+
+    .settings-logo .material-symbols-outlined {
+        font-size: 18px;
+    }
+
+    .settings-header-actions {
+        gap: 8px;
+    }
+
+    .settings-avatar {
+        width: 34px;
+        height: 34px;
+    }
+
+    .settings-save-btn {
+        width: 100%;
+        justify-content: center;
+        min-height: 42px;
+    }
+
+    .settings-security-grid,
+    .settings-rate-grid {
+        gap: 14px;
     }
 }

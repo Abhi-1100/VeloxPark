@@ -31,8 +31,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 14px 40px;
-  background: rgba(10,10,10,0.85);
-  backdrop-filter: blur(10px);
+  background: transparent;
 }
 
 .nav-inner {
@@ -43,6 +42,23 @@ body {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 30px;
   padding: 8px 14px 8px 20px;
+}
+
+.nav-toggle {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  color: var(--white);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.nav-mobile {
+  display: none;
 }
 
 .nav-logo {
@@ -805,8 +821,111 @@ footer {
   .steps-grid { grid-template-columns: 1fr 1fr; }
   footer { padding: 40px 24px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-  .nav-wrapper { padding: 10px 16px; min-width: 100%; border-radius: 0; }
-  .nav-links { gap: 16px; }
-  .nav-links li { display: none; } /* Hide some links on small screens to fit "Connect OS" inside */
+  .nav-wrapper {
+    padding: 10px 16px;
+    min-width: 100%;
+    border-radius: 0;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-inner {
+    width: min(100%, 560px);
+    justify-content: space-between;
+    gap: 10px;
+    border-radius: 16px;
+    padding: 8px 10px 8px 14px;
+  }
+
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .btn-connect {
+    display: none;
+  }
+
+  .nav-mobile {
+    display: grid;
+    width: min(100%, 560px);
+    gap: 8px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 8px;
+    padding: 0;
+    transform: translateY(-6px);
+    transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .nav-mobile.is-open {
+    max-height: 320px;
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .nav-mobile button {
+    width: 100%;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: rgba(20,20,20,0.95);
+    color: rgba(255,255,255,0.75);
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Barlow', sans-serif;
+  }
+
+  .nav-mobile-cta.btn-connect {
+    display: inline-block;
+    text-align: center;
+    background: var(--yellow);
+    color: #000;
+  }
+
+  .steps-grid { grid-template-columns: 1fr; }
+  .stats-header { margin-bottom: 36px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+
+@media (max-width: 480px) {
+  #hero { padding: 88px 16px 46px; }
+  .hero-title { font-size: clamp(42px, 18vw, 64px); }
+  .hero-subtitle { font-size: 12px; max-width: 100%; }
+  .feature-left,
+  .feature-right,
+  .node-content,
+  .role-card,
+  .step-card {
+    padding: 34px 20px;
+  }
+
+  .feature-num {
+    font-size: 56px;
+  }
+
+  .stat-num {
+    font-size: clamp(52px, 17vw, 72px);
+    letter-spacing: -1px;
+  }
+
+  .stat-item {
+    padding: 18px 0;
+  }
+
+  .stat-item[style] {
+    padding-left: 0 !important;
+  }
+
+  .node-img { height: 220px; }
+  #how-it-works { padding: 60px 16px; }
+  .roles-grid { gap: 0; }
 }
 

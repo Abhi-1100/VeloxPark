@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatDateTime, formatDuration } from '../utils/parkingUtils';
 import jsPDF from 'jspdf';
 
@@ -8,6 +8,18 @@ const UserPaymentSuccess = () => {
     const navigate = useNavigate();
     const [rating, setRating] = useState(4);
     const [hoverRating, setHoverRating] = useState(0);
+    const [windowWidth, setWindowWidth] = useState(
+        typeof window !== 'undefined' ? window.innerWidth : 1280
+    );
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const isTablet = windowWidth <= 1024;
+    const isMobile = windowWidth <= 768;
 
     const state = location.state;
 
@@ -154,7 +166,7 @@ const UserPaymentSuccess = () => {
             {/* ── Header ── */}
             <header style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '16px 80px', borderBottom: '1px solid rgba(255,255,255,0.08)',
+                padding: isMobile ? '12px 14px' : isTablet ? '14px 20px' : '16px 80px', borderBottom: '1px solid rgba(255,255,255,0.08)',
                 background: 'rgba(35,31,15,0.6)', backdropFilter: 'blur(12px)',
                 position: 'sticky', top: 0, zIndex: 50, flexWrap: 'wrap', gap: '12px',
             }}>
@@ -168,8 +180,8 @@ const UserPaymentSuccess = () => {
                     <h2 style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.3px' }}>VeloxPark</h2>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-                    <nav style={{ display: 'flex', gap: '32px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '32px' }}>
+                    <nav style={{ display: isMobile ? 'none' : 'flex', gap: isTablet ? '16px' : '32px' }}>
                         {['Dashboard', 'My Bookings', 'Settings'].map(item => (
                             <a key={item} href="#" style={{ fontSize: '14px', fontWeight: 500, color: '#94a3b8', textDecoration: 'none' }}
                                 onMouseEnter={e => (e.target.style.color = '#f9d006')}
@@ -190,7 +202,7 @@ const UserPaymentSuccess = () => {
             {/* ── Main ── */}
             <main style={{
                 flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
-                justifyContent: 'center', padding: '48px 16px',
+                justifyContent: 'center', padding: isMobile ? '24px 12px' : '48px 16px',
                 background: 'linear-gradient(180deg, rgba(249,208,6,0.05) 0%, transparent 40%)',
             }}>
 
@@ -212,7 +224,7 @@ const UserPaymentSuccess = () => {
                             }}>check</span>
                         </div>
                     </div>
-                    <h1 style={{ fontSize: '36px', fontWeight: 800, letterSpacing: '-0.5px', marginBottom: '8px' }}>
+                    <h1 style={{ fontSize: isMobile ? '30px' : '36px', fontWeight: 800, letterSpacing: '-0.5px', marginBottom: '8px' }}>
                         Payment Successful
                     </h1>
                     <p style={{ color: '#64748b', fontWeight: 500, fontSize: '15px' }}>
@@ -241,6 +253,8 @@ const UserPaymentSuccess = () => {
                         <div style={{
                             padding: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
                             borderBottom: '1px dashed rgba(255,255,255,0.1)',
+                            gap: '10px',
+                            flexWrap: isMobile ? 'wrap' : 'nowrap',
                         }}>
                             <div>
                                 <span style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '2px', color: '#64748b', fontWeight: 700 }}>
@@ -259,13 +273,14 @@ const UserPaymentSuccess = () => {
                         </div>
 
                         {/* Ticket Body */}
-                        <div style={{ padding: '24px' }}>
+                        <div style={{ padding: isMobile ? '16px' : '24px' }}>
 
                             {/* Location strip */}
                             <div style={{
                                 display: 'flex', gap: '16px', alignItems: 'center',
                                 background: 'rgba(0,0,0,0.2)', padding: '16px',
                                 borderRadius: '10px', marginBottom: '24px',
+                                flexWrap: isMobile ? 'wrap' : 'nowrap',
                             }}>
                                 <div style={{
                                     width: '64px', height: '64px', borderRadius: '8px', flexShrink: 0,
@@ -287,7 +302,7 @@ const UserPaymentSuccess = () => {
                             </div>
 
                             {/* Session Details Grid */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px 16px', marginBottom: '24px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '20px 16px', marginBottom: '24px' }}>
                                 {[
                                     { label: 'Entry Time', value: formatDateTime(vehicleData.entry) },
                                     { label: 'Exit Time', value: vehicleData.exit ? formatDateTime(vehicleData.exit) : '—' },
@@ -344,7 +359,7 @@ const UserPaymentSuccess = () => {
                                     onMouseEnter={() => setHoverRating(star)}
                                     onMouseLeave={() => setHoverRating(0)}
                                     style={{
-                                        width: '48px', height: '48px', borderRadius: '10px', cursor: 'pointer',
+                                        width: isMobile ? '42px' : '48px', height: isMobile ? '42px' : '48px', borderRadius: '10px', cursor: 'pointer',
                                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                                         border: '1px solid rgba(255,255,255,0.1)',
                                         background: active ? '#f9d006' : 'rgba(255,255,255,0.04)',
@@ -415,7 +430,7 @@ const UserPaymentSuccess = () => {
             {/* ── Footer ── */}
             <footer style={{ padding: '32px 24px', textAlign: 'center', color: '#64748b', fontSize: '12px' }}>
                 <p>© 2024 VeloxPark Management System. All rights reserved.</p>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '8px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '8px', flexWrap: 'wrap' }}>
                     {['Terms of Service', 'Privacy Policy', 'Support'].map(item => (
                         <a key={item} href="#" style={{
                             color: '#64748b', textDecoration: 'underline',

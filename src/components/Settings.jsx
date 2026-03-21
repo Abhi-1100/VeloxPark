@@ -29,6 +29,7 @@ const Settings = ({ user }) => {
         systemAlerts: true,
         vipArrival: false,
     });
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
     // Load current rates on mount
     useEffect(() => {
@@ -94,7 +95,21 @@ const Settings = ({ user }) => {
     return (
         <div className="settings-root">
             {/* Sidebar */}
-            <Sidebar adminName={adminName} onLogout={logoutAdmin} activePage="settings" />
+            <Sidebar
+                adminName={adminName}
+                onLogout={logoutAdmin}
+                activePage="settings"
+                isMobileOpen={mobileSidebarOpen}
+                onClose={() => setMobileSidebarOpen(false)}
+            />
+
+            {mobileSidebarOpen && (
+                <button
+                    className="settings-sidebar-overlay"
+                    onClick={() => setMobileSidebarOpen(false)}
+                    aria-label="Close navigation menu"
+                />
+            )}
 
             {/* Main Content */}
             <main className="settings-main">
@@ -102,6 +117,13 @@ const Settings = ({ user }) => {
                 <header className="settings-header">
                     <div className="settings-header-content">
                         <div className="settings-header-left">
+                            <button
+                                className="settings-menu-btn"
+                                onClick={() => setMobileSidebarOpen((prev) => !prev)}
+                                aria-label="Open navigation menu"
+                            >
+                                <span className="material-symbols-outlined">menu</span>
+                            </button>
                             <div className="settings-logo">
                                 <span className="material-symbols-outlined">local_parking</span>
                             </div>

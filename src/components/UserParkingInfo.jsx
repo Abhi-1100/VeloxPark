@@ -17,6 +17,9 @@ const UserParkingInfo = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [vehicleData, setVehicleData] = useState(null);
+    const [windowWidth, setWindowWidth] = useState(
+        typeof window !== 'undefined' ? window.innerWidth : 1280
+    );
     const [upiConfig, setUpiConfig] = useState({
         upiId: 'parking@upi',
         upiName: 'VeloxPark'
@@ -32,6 +35,16 @@ const UserParkingInfo = () => {
             })
             .catch(() => { /* Use defaults */ });
     }, []);
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const isTablet = windowWidth <= 1024;
+    const isMobile = windowWidth <= 768;
+    const isSmallMobile = windowWidth <= 480;
 
     /** Parse raw numberplate data object and find the most recent session for a plate. */
     const findVehicleInData = (data, plate) => {
@@ -150,11 +163,12 @@ const UserParkingInfo = () => {
         headerInner: {
             maxWidth: '1280px',
             margin: '0 auto',
-            padding: '0 32px',
+            padding: isMobile ? '0 14px' : isTablet ? '0 20px' : '0 32px',
             height: '72px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
+            gap: isMobile ? '8px' : '12px',
         },
         logo: {
             display: 'flex',
@@ -172,7 +186,7 @@ const UserParkingInfo = () => {
         nav: {
             display: 'flex',
             alignItems: 'center',
-            gap: '32px',
+            gap: isTablet ? '16px' : '32px',
         },
         navLink: {
             fontSize: '14px',
@@ -200,14 +214,14 @@ const UserParkingInfo = () => {
         main: {
             maxWidth: '1100px',
             margin: '0 auto',
-            padding: '60px 32px 80px',
+            padding: isMobile ? '34px 14px 40px' : isTablet ? '44px 20px 56px' : '60px 32px 80px',
         },
         heroSection: {
             textAlign: 'center',
             marginBottom: '48px',
         },
         heroTitle: {
-            fontSize: '48px',
+            fontSize: isSmallMobile ? '34px' : isMobile ? '40px' : '48px',
             fontWeight: 800,
             marginBottom: '12px',
             letterSpacing: '-0.5px',
@@ -226,9 +240,10 @@ const UserParkingInfo = () => {
             background: '#1c190e',
             border: '1.5px solid rgba(249,208,6,0.25)',
             borderRadius: '16px',
-            padding: '8px 8px 8px 16px',
+            padding: isMobile ? '8px' : '8px 8px 8px 16px',
             boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
             gap: '8px',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
         },
         searchInput: {
             flex: 1,
@@ -246,7 +261,7 @@ const UserParkingInfo = () => {
             color: '#0f0e09',
             border: 'none',
             borderRadius: '12px',
-            padding: '14px 36px',
+            padding: isMobile ? '13px 18px' : '14px 36px',
             fontWeight: 800,
             fontSize: '14px',
             letterSpacing: '1px',
@@ -254,6 +269,7 @@ const UserParkingInfo = () => {
             transition: 'opacity 0.2s, transform 0.15s',
             fontFamily: "'Space Grotesk', sans-serif",
             flexShrink: 0,
+            width: isMobile ? '100%' : 'auto',
         },
         errorBox: {
             maxWidth: '680px',
@@ -269,7 +285,7 @@ const UserParkingInfo = () => {
         /* Results grid */
         resultsGrid: {
             display: 'grid',
-            gridTemplateColumns: '300px 1fr',
+            gridTemplateColumns: isTablet ? '1fr' : '300px 1fr',
             gap: '24px',
             marginBottom: '28px',
         },
@@ -347,8 +363,10 @@ const UserParkingInfo = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            padding: '18px 28px',
+            padding: isMobile ? '16px 16px' : '18px 28px',
             borderBottom: '1px solid rgba(255,255,255,0.05)',
+            gap: '10px',
+            flexWrap: isMobile ? 'wrap' : 'nowrap',
         },
         rightCardBody: {
             flex: 1,
@@ -356,18 +374,20 @@ const UserParkingInfo = () => {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '40px 28px',
+            padding: isMobile ? '26px 14px' : '40px 28px',
             gap: '28px',
         },
         plateDisplay: {
             background: '#f9d006',
             color: '#0f0e09',
-            padding: '22px 44px',
+            padding: isMobile ? '16px 20px' : '22px 44px',
             borderRadius: '14px',
-            fontSize: '40px',
+            fontSize: isSmallMobile ? '24px' : isMobile ? '30px' : '40px',
             fontWeight: 900,
             letterSpacing: '0.22em',
             boxShadow: '0 12px 48px rgba(249,208,6,0.28)',
+            maxWidth: '100%',
+            textAlign: 'center',
         },
         amountBlock: {
             textAlign: 'center',
@@ -381,7 +401,7 @@ const UserParkingInfo = () => {
             marginBottom: '8px',
         },
         amountValue: {
-            fontSize: '64px',
+            fontSize: isSmallMobile ? '42px' : isMobile ? '50px' : '64px',
             fontWeight: 900,
             color: '#f9d006',
             lineHeight: 1,
@@ -408,7 +428,7 @@ const UserParkingInfo = () => {
             background: '#1c190e',
             border: '1px solid rgba(249,208,6,0.2)',
             borderRadius: '20px',
-            padding: '32px 40px',
+            padding: isMobile ? '20px 16px' : isTablet ? '26px 24px' : '32px 40px',
             marginBottom: '28px',
             display: 'flex',
             justifyContent: 'space-between',
@@ -416,9 +436,10 @@ const UserParkingInfo = () => {
             gap: '24px',
             position: 'relative',
             overflow: 'hidden',
+            flexWrap: isTablet ? 'wrap' : 'nowrap',
         },
         checkoutTitle: {
-            fontSize: '26px',
+            fontSize: isMobile ? '20px' : '26px',
             fontWeight: 800,
             marginBottom: '6px',
         },
@@ -437,9 +458,9 @@ const UserParkingInfo = () => {
             color: '#0f0e09',
             border: 'none',
             borderRadius: '14px',
-            padding: '18px 48px',
+            padding: isMobile ? '14px 20px' : '18px 48px',
             fontWeight: 900,
-            fontSize: '16px',
+            fontSize: isMobile ? '14px' : '16px',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -448,10 +469,12 @@ const UserParkingInfo = () => {
             transition: 'transform 0.15s, box-shadow 0.15s',
             flexShrink: 0,
             fontFamily: "'Space Grotesk', sans-serif",
+            width: isTablet ? '100%' : 'auto',
+            justifyContent: 'center',
         },
         quadGrid: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateColumns: isSmallMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
             gap: '14px',
         },
         quadCard: {
@@ -481,7 +504,7 @@ const UserParkingInfo = () => {
         footer: {
             maxWidth: '1280px',
             margin: '0 auto',
-            padding: '28px 32px',
+            padding: isMobile ? '20px 14px' : '28px 32px',
             borderTop: '1px solid rgba(255,255,255,0.05)',
             display: 'flex',
             justifyContent: 'space-between',
@@ -500,7 +523,8 @@ const UserParkingInfo = () => {
         },
         footerLinks: {
             display: 'flex',
-            gap: '28px',
+            gap: isMobile ? '12px' : '28px',
+            flexWrap: 'wrap',
         },
         footerLink: {
             fontSize: '11px',

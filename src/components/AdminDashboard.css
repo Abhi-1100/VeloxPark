@@ -1414,3 +1414,129 @@
         gap: 12px;
     }
 }
+
+.pf-sidebar-overlay {
+    display: none;
+}
+
+.pf-menu-btn {
+    display: none;
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(22, 22, 22, 0.75);
+    color: #f1f5f9;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+    .pf-sidebar {
+        width: 260px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .pf-sidebar .pf-sidebar-label {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .pf-sidebar:hover {
+        width: 260px;
+    }
+
+    .pf-sidebar-open {
+        transform: translateX(0);
+    }
+
+    .pf-sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        border: 0;
+        background: rgba(0, 0, 0, 0.55);
+        backdrop-filter: blur(2px);
+    }
+
+    .pf-main {
+        margin-left: 0;
+    }
+
+    .pf-topbar {
+        padding: 16px 20px 10px;
+    }
+
+    .pf-menu-btn {
+        display: inline-flex;
+    }
+
+    .pf-kbd,
+    .pf-cmd-divider {
+        display: none;
+    }
+
+    .pf-body {
+        padding: 8px 20px 42px;
+    }
+
+    .pf-records-wrap,
+    .pf-table-wrap {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 640px) {
+    .pf-command-bar {
+        min-width: 0;
+        padding: 8px 12px;
+    }
+
+    .pf-cmd-input {
+        min-width: 0;
+        font-size: 0.8rem;
+    }
+
+    .pf-topbar {
+        gap: 10px;
+    }
+
+    .pf-topbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .pf-date-input {
+        max-width: 160px;
+        font-size: 0.72rem;
+    }
+
+    .pf-new-entry-btn {
+        min-height: 40px;
+        padding: 8px 14px;
+    }
+
+    .pf-zone-header,
+    .pf-records-header,
+    .pf-table-header {
+        padding: 16px;
+    }
+
+    .pf-zone-body,
+    .pf-traffic-card {
+        padding: 16px;
+    }
+
+    .pf-slot {
+        height: 42px;
+    }
+
+    .pf-filter-pill {
+        min-height: 38px;
+        padding: 8px 12px;
+    }
+}

@@ -23,9 +23,11 @@ import ZoneHeatmap from './analytics/ZoneHeatmap';
 import TopZonesTable from './analytics/TopZonesTable';
 
 import './AnalyticsDashboard.css';
+import { useState } from 'react';
 
 // ── AnalyticsDashboard ─────────────────────────────────────────────────────────
 const AnalyticsDashboard = ({ user }) => {
+    const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
     // ── Data (period drives all metrics) ─────────────────────────────────────
     const {
         analyticsStats,
@@ -54,9 +56,31 @@ const AnalyticsDashboard = ({ user }) => {
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
         >
             {/* Shared sidebar — Analytics link is active */}
-            <Sidebar adminName={adminName} onLogout={logoutAdmin} activePage="analytics" />
+            <Sidebar
+                adminName={adminName}
+                onLogout={logoutAdmin}
+                activePage="analytics"
+                isMobileOpen={mobileSidebarOpen}
+                onClose={() => setMobileSidebarOpen(false)}
+            />
+
+            {mobileSidebarOpen && (
+                <button
+                    className="an-sidebar-overlay"
+                    onClick={() => setMobileSidebarOpen(false)}
+                    aria-label="Close navigation menu"
+                />
+            )}
 
             <main className="an-main">
+                <button
+                    className="an-menu-btn"
+                    onClick={() => setMobileSidebarOpen((prev) => !prev)}
+                    aria-label="Open navigation menu"
+                >
+                    <span className="material-symbols-outlined">menu</span>
+                </button>
+
                 {/* Loading overlay */}
                 {loading && (
                     <div className="an-loading">

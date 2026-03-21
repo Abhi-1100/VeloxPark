@@ -429,8 +429,13 @@
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 480px) {
+    .lp-root {
+        padding: 16px 0;
+    }
+
     .lp-card {
         padding: 32px 24px;
+        border-radius: 14px;
     }
 
     .lp-title {
@@ -439,5 +444,32 @@
 
     .lp-card-wrap {
         padding: 0 16px;
+        gap: 20px;
+    }
+
+    .lp-submit-btn,
+    .lp-input {
+        min-height: 44px;
+    }
+
+    .lp-footer {
+        letter-spacing: 0.12em;
+        gap: 10px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 360px) {
+    .lp-card {
+        padding: 26px 16px;
+    }
+
+    .lp-logo-icon {
+        width: 58px;
+        height: 58px;
+    }
+
+    .lp-subtitle {
+        font-size: 0.75rem;
     }
 }

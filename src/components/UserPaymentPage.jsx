@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { formatDuration } from '../utils/parkingUtils';
@@ -7,6 +8,18 @@ const UserPaymentPage = () => {
     const navigate = useNavigate();
 
     const state = location.state;
+    const [windowWidth, setWindowWidth] = useState(
+        typeof window !== 'undefined' ? window.innerWidth : 1280
+    );
+
+    useEffect(() => {
+        const handleResize = () => setWindowWidth(window.innerWidth);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    const isTablet = windowWidth <= 1024;
+    const isMobile = windowWidth <= 768;
 
     // Guard: redirect if landed without data
     if (!state || !state.vehicleData) {
@@ -53,7 +66,7 @@ const UserPaymentPage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '16px 80px',
+                padding: isMobile ? '12px 14px' : isTablet ? '14px 20px' : '16px 80px',
                 borderBottom: '1px solid rgba(255,255,255,0.08)',
                 background: 'rgba(35,31,15,0.6)',
                 backdropFilter: 'blur(12px)',
@@ -75,8 +88,8 @@ const UserPaymentPage = () => {
                 </div>
 
                 {/* Nav + Avatar */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-                    <nav style={{ display: 'flex', gap: '32px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '32px' }}>
+                    <nav style={{ display: isMobile ? 'none' : 'flex', gap: isTablet ? '16px' : '32px' }}>
                         {['Dashboard', 'My Bookings', 'Settings'].map(item => (
                             <a key={item} href="#" style={{ fontSize: '14px', fontWeight: 500, color: '#94a3b8', textDecoration: 'none', transition: 'color 0.2s' }}
                                 onMouseEnter={e => (e.target.style.color = '#f9d006')}
@@ -101,7 +114,7 @@ const UserPaymentPage = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '48px 16px',
+                padding: isMobile ? '24px 12px' : '48px 16px',
                 background: 'linear-gradient(180deg, rgba(249,208,6,0.05) 0%, transparent 40%)',
             }}>
                 <div style={{ width: '100%', maxWidth: '480px' }}>
@@ -115,7 +128,7 @@ const UserPaymentPage = () => {
                             Total Amount Due
                         </p>
                         <h1 style={{
-                            fontSize: '72px', fontWeight: 700, color: '#f9d006',
+                            fontSize: isMobile ? '52px' : '72px', fontWeight: 700, color: '#f9d006',
                             letterSpacing: '-3px', lineHeight: 1,
                         }}>
                             ₹{vehicleData.amount || 0}
@@ -132,7 +145,7 @@ const UserPaymentPage = () => {
                         position: 'relative',
                         background: '#2d2816',
                         borderRadius: '24px',
-                        padding: '32px',
+                        padding: isMobile ? '16px' : '32px',
                         boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
                         border: '1px solid rgba(255,255,255,0.05)',
                         display: 'flex',
@@ -155,7 +168,7 @@ const UserPaymentPage = () => {
                                     marginBottom: '24px',
                                 }}>
                                     <div style={{
-                                        width: '256px', height: '256px',
+                                        width: isMobile ? '220px' : '256px', height: isMobile ? '220px' : '256px',
                                         background: '#ffffff', display: 'flex',
                                         alignItems: 'center', justifyContent: 'center',
                                         borderRadius: '8px', overflow: 'hidden',
@@ -163,7 +176,7 @@ const UserPaymentPage = () => {
                                     }}>
                                         <QRCodeSVG
                                             value={upiLink}
-                                            size={240}
+                                            size={isMobile ? 204 : 240}
                                             level="H"
                                             bgColor="#ffffff"
                                             fgColor="#000000"
@@ -192,7 +205,7 @@ const UserPaymentPage = () => {
                             width: '100%',
                             background: 'rgba(0,0,0,0.2)',
                             borderRadius: '16px',
-                            padding: '24px',
+                            padding: isMobile ? '16px' : '24px',
                             border: '1px solid rgba(255,255,255,0.05)',
                         }}>
                             {/* Vehicle Number */}
@@ -247,7 +260,7 @@ const UserPaymentPage = () => {
                         </button>
 
                         {/* Secondary row */}
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', padding: '8px 0' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', padding: '8px 0', flexWrap: isMobile ? 'wrap' : 'nowrap' }}>
                             <button
                                 style={{
                                     background: 'none', border: 'none', cursor: 'pointer',
@@ -262,7 +275,7 @@ const UserPaymentPage = () => {
                                 Having trouble?
                             </button>
 
-                            <span style={{ color: '#334155' }}>|</span>
+                            {!isMobile && <span style={{ color: '#334155' }}>|</span>}
 
                             <button
                                 onClick={() => navigate('/user')}
@@ -284,11 +297,12 @@ const UserPaymentPage = () => {
                     {/* Payment icons strip */}
                     <div
                         style={{
-                            marginTop: '48px',
+                            marginTop: isMobile ? '28px' : '48px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
-                            gap: '32px', opacity: 0.4, filter: 'grayscale(1)',
+                            gap: isMobile ? '18px' : '32px', opacity: 0.4, filter: 'grayscale(1)',
                             transition: 'opacity 0.5s, filter 0.5s',
                             cursor: 'default',
+                            flexWrap: 'wrap',
                         }}
                         onMouseEnter={e => { e.currentTarget.style.opacity = 1; e.currentTarget.style.filter = 'grayscale(0)'; }}
                         onMouseLeave={e => { e.currentTarget.style.opacity = 0.4; e.currentTarget.style.filter = 'grayscale(1)'; }}

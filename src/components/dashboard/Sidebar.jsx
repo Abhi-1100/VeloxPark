@@ -20,8 +20,14 @@ const NAV_ITEMS = [
     { key: 'settings', to: '/admin/settings', icon: 'settings', label: 'Settings' },
 ];
 
-const Sidebar = ({ adminName, onLogout, activePage = 'dashboard' }) => (
-    <aside className="pf-sidebar group/sidebar">
+const Sidebar = ({
+    adminName,
+    onLogout,
+    activePage = 'dashboard',
+    isMobileOpen = false,
+    onClose,
+}) => (
+    <aside className={`pf-sidebar group/sidebar ${isMobileOpen ? 'pf-sidebar-open' : ''}`}>
         {/* Logo */}
         <div className="pf-sidebar-logo">
             <div className="pf-logo-icon">
@@ -43,6 +49,7 @@ const Sidebar = ({ adminName, onLogout, activePage = 'dashboard' }) => (
                     <Link
                         key={key}
                         to={to}
+                        onClick={onClose}
                         className={`pf-nav-item ${isActive ? 'pf-nav-active' : 'pf-nav-inactive'}`}
                         style={{ textDecoration: 'none' }}
                     >
