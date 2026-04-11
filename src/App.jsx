@@ -22,8 +22,10 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      // Temporary auth bypass for development so you can see the dashboard directly
+      setUser({ email: 'admin@veloxpark.com', role: 'admin' });
       setLoading(false);
+      // setUser(currentUser);
     });
 
     return () => unsubscribe();

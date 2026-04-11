@@ -1,146 +1,235 @@
 /* ── LoadingScreen.css ─────────────────────────────────────────────────────── */
 
-/* Root — full viewport, dark VeloxPark background */
+/* Root — full viewport */
 .ls-root {
     position: fixed;
     inset: 0;
-    background: #0f0e09;
+    background: #0f0e09; /* surface-container-lowest */
+    color: #e7e2d9; /* on-surface */
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 9999;
     overflow: hidden;
+    font-family: 'Manrope', sans-serif;
 }
 
-/* Subtle animated grid background */
-.ls-grid {
+/* Ambient Grid Overlay */
+.ls-grid-stitch {
     position: absolute;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(249, 208, 6, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(249, 208, 6, 0.04) 1px, transparent 1px);
-    background-size: 48px 48px;
-    animation: ls-grid-drift 8s linear infinite;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: radial-gradient(#f5c518 1px, transparent 1px);
+    background-size: 40px 40px;
 }
 
-@keyframes ls-grid-drift {
-    from { background-position: 0 0, 0 0; }
-    to   { background-position: 48px 48px, 48px 48px; }
+/* Texture Overlays */
+.ls-texture-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.ls-tonal-shift {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 33.333%;
+    background: linear-gradient(to bottom, rgba(43, 42, 36, 0.2), transparent);
+}
+.ls-grain {
+    position: absolute;
+    inset: 0;
+    opacity: 0.02;
+    mix-blend-mode: overlay;
+    background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCVyAWGGrs3F0TolSU01B63-HSFyYvQKe15RBcJr12KyEUqFncAnPaTt8taUCh3DYUlxpCjxwPL_lXMZJnocNVaHKD3HnKwc_rajk_-Kkwk4npMik26CSaPawZOoUOX9WcfXK6Z5MpIMh3Agcsbtd83NyJRP19ScqlPQLOTc-q_mFzkDu3CkzvJsdRbaZmorBfTB7Z0JHa1VwzndNxnTbLD6A5DJq9UyrPUsziF5Rx8IX9JFJ_eEY4ZsUPughLl-kR6bt9kDWcQ4IP6');
 }
 
-/* Centered content column */
-.ls-center {
+.ls-main-container {
     position: relative;
+    height: 100vh;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 28px;
+    justify-content: center;
 }
 
-/* ── Ring ────────────────────────────────────────────────────────────────── */
-.ls-ring-wrap {
+/* Centerpiece */
+.ls-kinetic-centerpiece {
     position: relative;
-    width: 96px;
-    height: 96px;
+    width: 256px;
+    height: 128px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
-.ls-ring {
+.ls-road-container {
     position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    border: 2.5px solid transparent;
-    border-top-color: #f9d006;
-    border-right-color: rgba(249, 208, 6, 0.3);
-    animation: ls-spin 1.1s cubic-bezier(0.6, 0.05, 0.4, 0.95) infinite;
+    bottom: 40px;
+    width: 100%;
+    height: 2px;
+    opacity: 0.2;
 }
 
-.ls-ring-2 {
-    inset: 10px;
-    border-top-color: transparent;
-    border-right-color: transparent;
-    border-bottom-color: rgba(249, 208, 6, 0.5);
-    border-left-color: rgba(249, 208, 6, 0.2);
-    animation-duration: 0.8s;
-    animation-direction: reverse;
+.ls-animate-road {
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(to right, #e7e2d9 50%, transparent 50%);
+    background-size: 40px 2px;
+    animation: road 1s linear infinite;
 }
 
-@keyframes ls-spin {
-    to { transform: rotate(360deg); }
-}
-
-/* Inner icon */
-.ls-icon {
+.ls-animate-drive {
+    position: absolute;
+    left: 0;
+    bottom: 40px; /* match road bottom */
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(249, 208, 6, 0.1);
-    border-radius: 50%;
-    width: 52px;
-    height: 52px;
-    animation: ls-pulse 2s ease-in-out infinite;
+    animation: drive 2.5s linear infinite;
+    transform: translateY(50%); /* align to road center */
 }
 
-.ls-icon .material-symbols-outlined {
-    color: #f9d006;
-    font-size: 26px;
+/* The styled car image with glow and yellow hue-rotate */
+.ls-car-img {
+    width: 64px;
+    height: auto;
+    filter: invert(85%) sepia(45%) saturate(2500%) hue-rotate(355deg) brightness(102%) contrast(106%);
 }
 
-@keyframes ls-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.7; transform: scale(0.92); }
+.ls-headlight-glow {
+    position: absolute;
+    left: 100%;
+    margin-left: -16px;
+    width: 48px;
+    height: 24px;
+    background: linear-gradient(to right, rgba(245, 197, 24, 0.4), transparent);
+    filter: blur(4px);
 }
 
-/* ── Brand text ──────────────────────────────────────────────────────────── */
-.ls-brand {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 22px;
-    font-weight: 900;
-    letter-spacing: 3px;
-    animation: ls-fadein 0.6s ease both;
+/* Animations */
+@keyframes drive {
+    0% { transform: translate(-100%, 50%); }
+    100% { transform: translate(400%, 50%); }
+}
+@keyframes road {
+    0% { background-position: 0% 0%; }
+    100% { background-position: -100% 0%; }
 }
 
-.ls-brand-velox {
-    color: #ffffff;
+/* Branding */
+.ls-branding-wrap {
+    margin-top: 32px;
+    text-align: center;
 }
-
-.ls-brand-park {
-    color: #f9d006;
-}
-
-@keyframes ls-fadein {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── Loading dots ────────────────────────────────────────────────────────── */
-.ls-dots {
+.ls-title {
+    font-family: 'Space Grotesk', 'Barlow Condensed', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -2px;
     display: flex;
-    gap: 7px;
     align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0;
+}
+.ls-velox { color: #e7e2d9; }
+.ls-park { color: #f5c518; } /* primary-container */
+
+/* Metadata / Status */
+.ls-meta-wrap {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
 }
 
-.ls-dot {
-    width: 6px;
-    height: 6px;
+.ls-status-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ls-status-pulse {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    background: rgba(249, 208, 6, 0.8);
-    animation: ls-bounce 1.2s ease-in-out infinite;
+    background: #bdefff; /* tertiary */
+    box-shadow: 0 0 8px #bdefff;
+    animation: ls-single-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.ls-dot-2 {
-    animation-delay: 0.2s;
-    background: rgba(249, 208, 6, 0.55);
+.ls-status-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px; /* tracking-widest */
+    color: #f5c518;
+    animation: pulse-text 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    margin: 0;
 }
 
-.ls-dot-3 {
-    animation-delay: 0.4s;
-    background: rgba(249, 208, 6, 0.3);
+.ls-node-status {
+    display: flex;
+    gap: 16px;
+    margin-top: 48px;
+    opacity: 0.3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: -1px;
 }
 
-@keyframes ls-bounce {
-    0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
-    40%            { transform: scale(1);   opacity: 1; }
+.ls-node-status span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.ls-sm-icon { font-size: 10px; }
+
+@keyframes pulse-text {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+}
+
+@keyframes ls-single-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1); }
+}
+
+/* Bottom elements */
+.ls-bottom-left {
+    position: fixed;
+    bottom: 48px;
+    left: 48px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8px;
+    color: #9a9078; /* outline */
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.6;
+}
+
+.ls-bottom-right {
+    position: fixed;
+    bottom: 48px;
+    right: 48px;
+    text-align: right;
+    font-family: 'Space Grotesk', 'Barlow Condensed', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    color: #d1c5ac; /* on-surface-variant */
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Responsive hiding */
+@media (max-width: 768px) {
+    .ls-bottom-left, .ls-bottom-right {
+        display: none;
+    }
 }
