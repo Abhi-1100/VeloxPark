@@ -1,0 +1,259 @@
+/* ZoneMapPage.css */
+
+.pf-map-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+}
+
+.pf-page-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: #e7e2d9;
+    letter-spacing: -0.04em;
+}
+
+.pf-page-subtitle {
+    font-family: 'Manrope', sans-serif;
+    color: #9a9078;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.pf-map-legend-pills {
+    display: flex;
+    gap: 1rem;
+}
+
+.pf-legend-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    background: #14130e;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9a9078;
+}
+
+.pf-chip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.pf-avail-chip .pf-chip-dot { background: #3b3933; }
+.pf-occ-chip .pf-chip-dot { background: #f5c518; }
+.pf-occ-chip {
+    color: #f5c518;
+}
+
+/* Canvas Area */
+.pf-map-canvas {
+    background: #14130e;
+    border-radius: 8px;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    position: relative;
+    /* subtle background noise/grid simulation could go here */
+}
+
+.pf-map-line {
+    display: flex;
+    align-items: stretch;
+    gap: 2rem;
+}
+
+.pf-map-row-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #e7e2d9;
+    width: 100px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.pf-slot-track {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #0f0e09;
+    border-radius: 4px;
+}
+
+.pf-big-slot {
+    flex: 1;
+    min-width: 60px;
+    height: 100px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: crosshair;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(78, 70, 51, 0.2); /* Ghost border */
+}
+
+.pf-big-slot:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(26, 25, 16, 0.4);
+}
+
+.pf-big-slot-avail {
+    background: #1d1c16;
+}
+
+.pf-big-slot-avail:hover {
+    background: #2b2a24;
+}
+
+.pf-big-slot-occ {
+    background: #241a00;
+    border-color: rgba(245, 197, 24, 0.3);
+}
+
+.pf-big-slot-occ:hover {
+    box-shadow: 0 12px 30px rgba(245, 197, 24, 0.15);
+}
+
+.pf-slot-id {
+    font-family: 'JetBrains Mono', 'Space Grotesk', monospace;
+    font-size: 0.875rem;
+    color: #9a9078;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.pf-big-slot-occ .pf-slot-id {
+    color: #f5c518;
+}
+
+.pf-slot-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f5c518;
+    box-shadow: 0 0 10px rgba(245, 197, 24, 0.6);
+}
+
+/* Floating Glass Telemetry Panel */
+.pf-glass-telemetry {
+    position: absolute;
+    bottom: -60px;
+    right: 3rem;
+    width: 320px;
+    background: rgba(54, 53, 46, 0.4);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(154, 144, 120, 0.15);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 30px 60px rgba(15, 14, 9, 0.6);
+    pointer-events: none;
+    z-index: 100;
+    animation: pf-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pf-fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.pf-telemetry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(154, 144, 120, 0.1);
+    padding-bottom: 0.75rem;
+}
+
+.pf-label-sm {
+    font-family: 'JetBrains Mono', 'Space Grotesk', monospace;
+    font-size: 0.7rem;
+    color: #bdefff;
+    letter-spacing: 0.1em;
+}
+
+.pf-status-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.pf-pulse-yellow {
+    background: #f5c518;
+    animation: pulse-y 2s infinite;
+}
+
+.pf-pulse-dark {
+    background: #4e4633;
+}
+
+@keyframes pulse-y {
+    0% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(245, 197, 24, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0); }
+}
+
+.pf-telemetry-slot {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: #e7e2d9;
+    margin: 0;
+    line-height: 1;
+}
+
+.pf-telemetry-state {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin: 0.5rem 0 2rem 0;
+}
+
+.pf-telemetry-data {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.pf-t-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pf-t-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 0.875rem;
+    color: #9a9078;
+}
+
+.pf-t-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    color: #e7e2d9;
+    font-weight: 500;
+}
+
+.pf-t-empty-msg {
+    font-family: 'Manrope', sans-serif;
+    color: #9a9078;
+    font-size: 0.875rem;
+    font-style: italic;
+    margin: 0;
+}

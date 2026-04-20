@@ -1,0 +1,166 @@
+/* UsersPage.css */
+
+.pf-usr-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 3rem;
+}
+
+.pf-btn-ignition {
+    background: linear-gradient(135deg, #ffe5a0 0%, #f5c518 100%);
+    color: #3d2f00;
+    border: none;
+    border-radius: 0.125rem;
+    padding: 0.75rem 1.5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 0.875rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+}
+
+.pf-btn-ignition:hover {
+    box-shadow: 0 8px 16px rgba(245, 197, 24, 0.2);
+    transform: translateY(-1px);
+}
+
+.pf-add-icon {
+    font-size: 1.25rem;
+}
+
+/* Borderless Table */
+.pf-usr-table-container {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    /* Soft ambient shadow instead of border */
+    box-shadow: 0 20px 40px rgba(26, 25, 16, 0.1);
+}
+
+.pf-usr-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Manrope', sans-serif;
+}
+
+.pf-usr-table th {
+    text-align: left;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    color: #9a9078;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1.5rem;
+    background: #0f0e09;
+}
+
+.pf-usr-table td {
+    padding: 1.25rem 1.5rem;
+}
+
+.pf-row-odd {
+    background: #14130e;
+}
+
+.pf-row-even {
+    background: #0f0e09;
+}
+
+.pf-usr-table tr:hover {
+    background: #1d1c16;
+}
+
+.pf-text-right {
+    text-align: right !important;
+}
+
+/* User Info Cell */
+.pf-usr-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pf-usr-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    background: #2b2a24;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: #f5c518;
+}
+
+.pf-usr-name-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.pf-usr-name {
+    color: #e7e2d9;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.pf-usr-email {
+    color: #9a9078;
+    font-size: 0.875rem;
+}
+
+.pf-usr-role {
+    color: #d1c5ac;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.pf-usr-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.pf-stat-active {
+    background: #005e70; /* tertiary container */
+    color: #bdefff; /* tertiary */
+}
+
+.pf-stat-susp {
+    background: #93000a; /* error container */
+    color: #ffb4ab; /* error */
+}
+
+.pf-usr-activity {
+    font-family: 'JetBrains Mono', monospace;
+    color: #9a9078;
+    font-size: 0.875rem;
+}
+
+.pf-btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(78, 70, 51, 0.2);
+    color: #9a9078;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+}
+
+.pf-btn-ghost:hover {
+    color: #f5c518;
+    border-color: rgba(245, 197, 24, 0.4);
+}

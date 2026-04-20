@@ -15,8 +15,8 @@ import { Link } from 'react-router-dom';
 const NAV_ITEMS = [
     { key: 'dashboard', to: '/admin', icon: 'dashboard', label: 'Dashboard' },
     { key: 'analytics', to: '/admin/analytics', icon: 'monitoring', label: 'Analytics' },
-    { key: 'map', to: '#', icon: 'map', label: 'Zone Map' },
-    { key: 'users', to: '#', icon: 'group', label: 'Users' },
+    { key: 'map', to: '/admin/map', icon: 'map', label: 'Zone Map' },
+    { key: 'users', to: '/admin/users', icon: 'group', label: 'Users' },
     { key: 'settings', to: '/admin/settings', icon: 'settings', label: 'Settings' },
 ];
 

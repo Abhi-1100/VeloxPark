@@ -11,6 +11,8 @@ import UserParkingInfo from './components/UserParkingInfo';
 import UserPaymentPage from './components/UserPaymentPage';
 import UserPaymentSuccess from './components/UserPaymentSuccess';
 import NotFound from './components/NotFound';
+import ZoneMapPage from './components/ZoneMapPage';
+import UsersPage from './components/UsersPage';
 import LoadingScreen from './components/LoadingScreen';
 import RoleSelect from './components/RoleSelect';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -80,6 +82,30 @@ function App() {
             element={
               user ? (
                 <Settings user={user} />
+              ) : (
+                <Login onLoginSuccess={() => { }} />
+              )
+            }
+          />
+
+          {/* Zone Map — protected */}
+          <Route
+            path="/admin/map"
+            element={
+              user ? (
+                <ZoneMapPage user={user} />
+              ) : (
+                <Login onLoginSuccess={() => { }} />
+              )
+            }
+          />
+
+          {/* Users — protected */}
+          <Route
+            path="/admin/users"
+            element={
+              user ? (
+                <UsersPage user={user} />
               ) : (
                 <Login onLoginSuccess={() => { }} />
               )
