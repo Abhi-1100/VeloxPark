@@ -1,121 +1,96 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './config/firebase';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { useAuth } from './context/useAuth';
+import ProtectedRoute from './routes/ProtectedRoute';
+import ErrorBoundary from './components/ErrorBoundary';
+import LoadingScreen from './components/LoadingScreen';
+import Login from './pages/Login';
 import Home from './components/Home';
-import Login from './components/Login';
+
+// Centralized User Mobile Pages
+import {
+  UserLayout,
+  Dashboard,
+  SearchLocation,
+  BookSlot,
+  MapView,
+  ConfirmParking,
+  BookingDetails,
+  Payment,
+  Profile,
+  History,
+} from './pages/user';
+
+// Admin Pages
 import AdminDashboard from './components/AdminDashboard';
 import AnalyticsDashboard from './components/AnalyticsDashboard';
 import Settings from './components/Settings';
-import UserParkingInfo from './components/UserParkingInfo';
-import UserPaymentPage from './components/UserPaymentPage';
-import UserPaymentSuccess from './components/UserPaymentSuccess';
-import NotFound from './components/NotFound';
 import ZoneMapPage from './components/ZoneMapPage';
 import UsersPage from './components/UsersPage';
-import LoadingScreen from './components/LoadingScreen';
-import RoleSelect from './components/RoleSelect';
-import ErrorBoundary from './components/ErrorBoundary';
+import NotFound from './components/NotFound';
 import './App.css';
 
+function UserRoute({ children }) {
+  return <ProtectedRoute role="user">{children}</ProtectedRoute>;
+}
+
+function AdminRoute({ children }) {
+  return <ProtectedRoute role="admin">{children}</ProtectedRoute>;
+}
+
+function RootRoute() {
+  const { user, role, loading } = useAuth();
+  if (loading) return <LoadingScreen />;
+  if (!user) return <Home />;
+  if (role === 'admin') return <Navigate to="/admin" replace />;
+  return (
+    <UserRoute>
+      <UserLayout>
+        <Dashboard />
+      </UserLayout>
+    </UserRoute>
+  );
+}
+
 function App() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      // Temporary auth bypass for development so you can see the dashboard directly
-      setUser({ email: 'admin@veloxpark.com', role: 'admin' });
-      setLoading(false);
-      // setUser(currentUser);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
-
   return (
     <ErrorBoundary>
-      <Router>
-        <Routes>
-          {/* Home Page */}
-          <Route path="/" element={<Home />} />
+      <ThemeProvider>
+        <AuthProvider>
+          <Router>
+            <Routes>
+              {/* Public & Root Routes */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<RootRoute />} />
 
-          {/* Role Selection Page */}
-          <Route path="/select" element={<RoleSelect />} />
+              {/* User Mobile View Pages */}
+              <Route element={<UserRoute><UserLayout /></UserRoute>}>
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/search" element={<SearchLocation />} />
+                <Route path="/book" element={<BookSlot />} />
+                <Route path="/map" element={<MapView />} />
+                <Route path="/confirm" element={<ConfirmParking />} />
+                <Route path="/booking/:id" element={<BookingDetails />} />
+                <Route path="/booking/:id/pay" element={<Payment />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/history" element={<History />} />
+              </Route>
 
-          {/* User Panel - New split pages (Page 1: Info, Page 2: QR, Page 3: Success) */}
-          <Route path="/user" element={<UserParkingInfo />} />
-          <Route path="/user/payment" element={<UserPaymentPage />} />
-          <Route path="/user/payment/success" element={<UserPaymentSuccess />} />
+              {/* Admin Pages */}
+              <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+              <Route path="/admin/analytics" element={<AdminRoute><AnalyticsDashboard /></AdminRoute>} />
+              <Route path="/admin/settings" element={<AdminRoute><Settings /></AdminRoute>} />
+              <Route path="/admin/map" element={<AdminRoute><ZoneMapPage /></AdminRoute>} />
+              <Route path="/admin/users" element={<AdminRoute><UsersPage /></AdminRoute>} />
 
-          {/* Admin Dashboard */}
-          <Route
-            path="/admin"
-            element={
-              user ? (
-                <AdminDashboard user={user} />
-              ) : (
-                <Login onLoginSuccess={() => { }} />
-              )
-            }
-          />
-
-          {/* Analytics Dashboard — protected, same auth guard */}
-          <Route
-            path="/admin/analytics"
-            element={
-              user ? (
-                <AnalyticsDashboard user={user} />
-              ) : (
-                <Login onLoginSuccess={() => { }} />
-              )
-            }
-          />
-
-          {/* Settings — protected, same auth guard */}
-          <Route
-            path="/admin/settings"
-            element={
-              user ? (
-                <Settings user={user} />
-              ) : (
-                <Login onLoginSuccess={() => { }} />
-              )
-            }
-          />
-
-          {/* Zone Map — protected */}
-          <Route
-            path="/admin/map"
-            element={
-              user ? (
-                <ZoneMapPage user={user} />
-              ) : (
-                <Login onLoginSuccess={() => { }} />
-              )
-            }
-          />
-
-          {/* Users — protected */}
-          <Route
-            path="/admin/users"
-            element={
-              user ? (
-                <UsersPage user={user} />
-              ) : (
-                <Login onLoginSuccess={() => { }} />
-              )
-            }
-          />
-
-          {/* 404 Page - Catch all unknown routes */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+              {/* Fallback Routes */}
+              <Route path="/select" element={<Navigate to="/login" replace />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </AuthProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

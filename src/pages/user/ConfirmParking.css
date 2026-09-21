@@ -1,0 +1,236 @@
+/* ─── ConfirmParking.css ─────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.cp-page {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #111; /* map will act as background in top half */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: 'Inter', sans-serif;
+}
+
+.cp-shell {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background mini map */
+.cp-map-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60vh;
+  z-index: 1;
+}
+.cp-map {
+  width: 100%;
+  height: 100%;
+}
+.leaflet-container { font-family: 'Inter', sans-serif; }
+.leaflet-control-attribution { display: none !important; }
+
+/* Custom Marker */
+.cp-pin-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.cp-pin-circle {
+  width: 44px;
+  height: 44px;
+  background: #111;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+}
+.cp-pin-tail {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #111;
+  margin-top: -1px;
+}
+
+/* Top Actions */
+.cp-top-actions {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+.cp-back-btn, .cp-compass-btn {
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+}
+
+/* Bottom Sheet */
+.cp-sheet {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #f4f6fa;
+  border-radius: 32px 32px 0 0;
+  padding: 32px 24px 24px;
+  z-index: 10;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Drag Handle */
+.cp-sheet::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 5px;
+  background: #ddd;
+  border-radius: 4px;
+}
+
+/* Title & Meta */
+.cp-header {
+  text-align: left;
+}
+.cp-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #111;
+  margin: 0 0 8px;
+}
+.cp-addr {
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 16px;
+}
+
+/* Details row (Floor & Distance) */
+.cp-details-row {
+  display: flex;
+  gap: 12px;
+}
+.cp-detail-box {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cp-detail-icon {
+  width: 40px;
+  height: 40px;
+  background: #f4f6fa;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cp-detail-text {
+  display: flex;
+  flex-direction: column;
+}
+.cp-detail-lbl { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; }
+.cp-detail-val { font-size: 14px; color: #111; font-weight: 800; }
+
+/* Time selector */
+.cp-time-wrap {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cp-time-box {
+  display: flex;
+  flex-direction: column;
+}
+.cp-time-box.end { text-align: right; }
+
+.cp-time-lbl { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; }
+.cp-time-val { font-size: 15px; color: #111; font-weight: 800; }
+.cp-time-dur {
+  padding: 8px 16px;
+  background: rgba(242,194,48,0.2);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #d69f12;
+}
+
+/* Bottom Action */
+.cp-action-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.cp-price-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.cp-price-lbl { font-size: 12px; color: #888; font-weight: 600; }
+.cp-price-val { font-size: 24px; font-weight: 900; color: #111; }
+
+.cp-book-btn {
+  flex: 1;
+  background: #F2C230;
+  color: #111;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(242,194,48,0.3);
+}
+
+/* Desktop */
+@media (min-width: 640px) {
+  .cp-shell { max-width: 430px; margin: 0 auto; position: relative; }
+  .cp-page { padding: 40px 0; align-items: flex-start; background: #333; }
+  .cp-sheet { border-radius: 32px; bottom: 16px; left: 16px; right: 16px; }
+  .cp-map-bg { border-radius: 44px; height: 100%; }
+}
+@media (min-width: 900px) {
+  .cp-page { align-items: center; padding: 0; }
+  .cp-shell { height: calc(100vh - 60px); border-radius: 44px; overflow: hidden; box-shadow: 0 40px 80px rgba(0,0,0,0.22); }
+  .cp-sheet { bottom: 0; left: 0; right: 0; border-radius: 32px 32px 0 0; }
+}

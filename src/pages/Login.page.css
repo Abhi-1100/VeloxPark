@@ -1,0 +1,576 @@
+/* ═══════════════════════════════════════════════════════════════════
+   VeloxPark — User Login & Signup Page
+   Split-screen layout: gold hero left | form panel right
+   All classes prefixed "vl-" to avoid collisions
+   ═══════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap');
+
+/* ── Root ─────────────────────────────────────────────────────────── */
+.vl-root {
+  display: flex;
+  min-height: 100vh;
+  background: #0A0A0A;
+  font-family: 'Space Grotesk', sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   LEFT HERO PANEL
+   ══════════════════════════════════════════════════════════════════ */
+.vl-hero {
+  position: relative;
+  flex: 1 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0D0D05;
+  /* dot-grid */
+  background-image: radial-gradient(rgba(242, 194, 48, 0.09) 1px, transparent 1px);
+  background-size: 28px 28px;
+  overflow: hidden;
+  padding: 48px 40px;
+}
+
+/* Responsive: hide hero on small screens */
+@media (max-width: 768px) {
+  .vl-hero { display: none; }
+}
+
+/* ── Glow blobs ─────────────────────────────────────────────────── */
+.vl-hero-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.vl-hero-glow-tl {
+  top: -150px;
+  left: -150px;
+  background: radial-gradient(circle, rgba(242, 194, 48, 0.14) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+.vl-hero-glow-br {
+  bottom: -150px;
+  right: -150px;
+  background: radial-gradient(circle, rgba(242, 194, 48, 0.08) 0%, transparent 70%);
+  filter: blur(60px);
+}
+
+/* ── Hero content stack ─────────────────────────────────────────── */
+.vl-hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  width: 100%;
+  max-width: 420px;
+  animation: vl-fade-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* ── Logo mark ──────────────────────────────────────────────────── */
+.vl-logo-mark {
+  width: 64px;
+  height: 64px;
+  background: #F2C230;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 32px rgba(242, 194, 48, 0.4);
+  flex-shrink: 0;
+}
+
+.vl-logo-mark-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(242, 194, 48, 0.3);
+}
+
+/* ── Wordmark ───────────────────────────────────────────────────── */
+.vl-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vl-wordmark-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: rgba(242, 194, 48, 0.6);
+}
+
+.vl-wordmark-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin: 0;
+}
+
+.vl-wordmark-title span {
+  color: #F2C230;
+}
+
+.vl-wordmark-sub {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+}
+
+/* ── SVG illustration ───────────────────────────────────────────── */
+.vl-illustration-wrap {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(242, 194, 48, 0.12);
+  background: rgba(10, 10, 5, 0.6);
+}
+
+.vl-hero-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Animate the gold car */
+@keyframes vl-drive {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-8px); }
+  100% { transform: translateY(0); }
+}
+
+.vl-moving-car {
+  animation: vl-drive 3s ease-in-out infinite;
+  transform-origin: 283px 170px;
+}
+
+/* ── Stats strip ────────────────────────────────────────────────── */
+.vl-stats {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(242, 194, 48, 0.05);
+  border: 1px solid rgba(242, 194, 48, 0.12);
+  border-radius: 10px;
+  padding: 14px 20px;
+  width: 100%;
+}
+
+.vl-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.vl-stat-num {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #F2C230;
+  line-height: 1;
+}
+
+.vl-stat-lbl {
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.35);
+  margin-top: 4px;
+}
+
+.vl-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(242, 194, 48, 0.15);
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RIGHT FORM PANEL
+   ══════════════════════════════════════════════════════════════════ */
+.vl-form-panel {
+  width: 460px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111111;
+  border-left: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 48px 40px;
+  position: relative;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .vl-form-panel {
+    width: 100%;
+    border-left: none;
+    padding: 32px 24px;
+  }
+}
+
+/* ── Form wrapper ───────────────────────────────────────────────── */
+.vl-form-wrap {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: vl-fade-up 0.5s 0.1s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* ── Mobile logo (shown only on mobile) ─────────────────────────── */
+.vl-mobile-logo {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.vl-mobile-brand {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #F2C230;
+  letter-spacing: -0.02em;
+}
+
+@media (max-width: 768px) {
+  .vl-mobile-logo { display: flex; }
+}
+
+/* ── Tabs ───────────────────────────────────────────────────────── */
+.vl-tabs {
+  display: flex;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+
+.vl-tab {
+  flex: 1;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.vl-tab--active {
+  background: #F2C230;
+  color: #0A0A0A;
+  box-shadow: 0 2px 12px rgba(242, 194, 48, 0.3);
+}
+
+/* ── Form header ────────────────────────────────────────────────── */
+.vl-form-header {
+  margin-bottom: 20px;
+}
+
+.vl-form-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 0 0 6px;
+}
+
+.vl-form-desc {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ── Error banner ───────────────────────────────────────────────── */
+.vl-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(240, 90, 103, 0.1);
+  border: 1px solid rgba(240, 90, 103, 0.25);
+  color: #fca5a5;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  animation: vl-shake 0.35s ease;
+}
+
+@keyframes vl-shake {
+  0%, 100% { transform: translateX(0); }
+  25%       { transform: translateX(-6px); }
+  75%       { transform: translateX(6px); }
+}
+
+/* ── Form ───────────────────────────────────────────────────────── */
+.vl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+/* ── Fields ─────────────────────────────────────────────────────── */
+.vl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.vl-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vl-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.vl-forgot {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(242, 194, 48, 0.6);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  transition: color 0.2s;
+}
+
+.vl-forgot:hover { color: #F2C230; }
+
+/* ── Input wrapper ──────────────────────────────────────────────── */
+.vl-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.vl-input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 20px !important;
+  color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  transition: color 0.2s;
+  z-index: 1;
+  user-select: none;
+}
+
+.vl-input-wrap:focus-within .vl-input-icon {
+  color: #F2C230;
+}
+
+.vl-input {
+  width: 100%;
+  padding: 13px 14px 13px 46px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9rem;
+  font-family: 'Space Grotesk', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.vl-input::placeholder { color: rgba(255, 255, 255, 0.22); }
+
+.vl-input:focus {
+  border-color: #F2C230;
+  box-shadow: 0 0 0 3px rgba(242, 194, 48, 0.1);
+}
+
+.vl-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vl-input-pw { padding-right: 48px; }
+
+.vl-eye-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+  z-index: 1;
+}
+
+.vl-eye-btn:hover { color: rgba(255, 255, 255, 0.75); }
+
+/* ── Submit button ──────────────────────────────────────────────── */
+.vl-submit-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #F2C230, #E8AF1A);
+  color: #0A0A0A;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 24px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-family: 'Space Grotesk', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 6px 24px rgba(242, 194, 48, 0.25);
+  margin-top: 4px;
+}
+
+.vl-submit-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 32px rgba(242, 194, 48, 0.38);
+}
+
+.vl-submit-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.vl-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.vl-arrow {
+  font-size: 20px !important;
+  transition: transform 0.2s;
+}
+
+.vl-submit-btn:hover:not(:disabled) .vl-arrow {
+  transform: translateX(4px);
+}
+
+/* Spinner */
+.vl-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(10, 10, 10, 0.3);
+  border-top-color: #0A0A0A;
+  border-radius: 50%;
+  animation: vl-spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes vl-spin { to { transform: rotate(360deg); } }
+
+/* ── Divider ────────────────────────────────────────────────────── */
+.vl-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.vl-divider-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.vl-divider-text {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: lowercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Google button ──────────────────────────────────────────────── */
+.vl-google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 13px 24px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: 'Space Grotesk', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-bottom: 24px;
+}
+
+.vl-google-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.vl-google-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── Footer note ────────────────────────────────────────────────── */
+.vl-foot-note {
+  text-align: center;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+.vl-foot-link {
+  color: #F2C230;
+  font-weight: 700;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: inherit;
+  padding: 0;
+  margin-left: 4px;
+  transition: opacity 0.2s;
+}
+
+.vl-foot-link:hover { opacity: 0.8; text-decoration: underline; }
+
+/* ── Shared animations ──────────────────────────────────────────── */
+@keyframes vl-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

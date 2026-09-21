@@ -1,0 +1,305 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.bs-page {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #a4c8f0; /* Light blue from the image edges */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+.bs-shell {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: #1c1d21; /* Dark background for parking lot */
+  overflow: hidden;
+}
+
+/* Header */
+.bs-header-card {
+  background: #fdfdfd;
+  border-radius: 0 0 36px 36px;
+  padding: 16px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+.bs-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bs-icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bs-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+/* Filters */
+.bs-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bs-filter-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bs-filter-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: #888;
+}
+
+.bs-filter-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.bs-filter-val.blue-text {
+  color: #4a72d4; /* Available text color */
+}
+
+/* Parking Lot Area */
+.bs-lot-area {
+  flex: 1;
+  position: relative;
+  overflow-y: auto;
+  padding: 30px 20px 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.bs-lot-area::-webkit-scrollbar {
+  display: none;
+}
+
+.bs-lot-container {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* The central dashed road line */
+.bs-lot-road {
+  position: absolute;
+  top: 0;
+  bottom: 40px; /* leaves room for entry arrow */
+  left: 50%;
+  width: 2px;
+  background-image: linear-gradient(to bottom, #444 50%, transparent 50%);
+  background-size: 100% 20px;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+/* The Entry Arrow at the bottom */
+.bs-lot-entry {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: #666;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+}
+
+/* The structure curves */
+.bs-curve-tl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100px;
+  height: 60px;
+  border-top: 1px solid #444;
+  border-left: 1px solid #444;
+  border-top-left-radius: 40px;
+}
+.bs-curve-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 60px;
+  border-top: 1px solid #444;
+  border-right: 1px solid #444;
+  border-top-right-radius: 40px;
+}
+.bs-curve-bl {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  width: 100px;
+  height: 60px;
+  border-bottom: 1px solid #444;
+  border-left: 1px solid #444;
+  border-bottom-left-radius: 40px;
+}
+.bs-curve-br {
+  position: absolute;
+  bottom: 60px;
+  right: 0;
+  width: 100px;
+  height: 60px;
+  border-bottom: 1px solid #444;
+  border-right: 1px solid #444;
+  border-bottom-right-radius: 40px;
+}
+
+/* Slots Column */
+.bs-col {
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  position: relative;
+  z-index: 2;
+  margin-top: 60px; /* Below the top curve */
+  margin-bottom: 60px; /* Above the bottom curve */
+}
+
+.bs-slot-wrapper {
+  height: 80px;
+  width: 100%;
+  border-bottom: 1px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.bs-col.left .bs-slot-wrapper {
+  border-left: 1px solid #333;
+}
+.bs-col.right .bs-slot-wrapper {
+  border-right: 1px solid #333;
+}
+.bs-slot-wrapper.first {
+  border-top: 1px solid #333;
+}
+
+/* Slot States */
+.bs-slot-content {
+  width: 100%;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+/* Available */
+.bs-slot-content.available {
+  background: transparent;
+  color: #4a72d4; /* Blue text */
+}
+
+/* Selected */
+.bs-slot-content.selected {
+  background: #F2C230;
+  color: #111;
+}
+
+/* Occupied (Car) */
+.bs-slot-content.occupied {
+  background: transparent;
+  cursor: default;
+}
+.bs-car-svg {
+  width: 80px;
+  height: auto;
+  transform: rotate(0deg);
+}
+.bs-col.right .bs-car-svg {
+  transform: rotate(180deg);
+}
+
+/* Locked */
+.bs-slot-content.locked {
+  background: #2a2d36;
+  color: #888;
+  cursor: not-allowed;
+  width: 90%;
+  height: 52px;
+}
+
+/* Bottom CTA */
+.bs-bottom-action {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 16px 20px 24px;
+  z-index: 20;
+}
+
+.bs-book-btn {
+  width: 100%;
+  background: #F2C230;
+  color: #111;
+  border: none;
+  border-radius: 16px;
+  padding: 18px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(242, 194, 48, 0.2);
+}
+.bs-book-btn:disabled {
+  background: #333;
+  color: #888;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Desktop bounds */
+@media (min-width: 640px) {
+  .bs-shell { max-width: 430px; margin: 0 auto; border-radius: 44px; box-shadow: 0 40px 80px rgba(0,0,0,0.22); }
+  .bs-page { align-items: center; padding: 40px 0; }
+  .bs-bottom-action { border-radius: 0 0 44px 44px; }
+}

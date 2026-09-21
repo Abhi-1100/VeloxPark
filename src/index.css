@@ -3,12 +3,46 @@
 
 /* ─── Tailwind v4 custom theme tokens ─────────────────────────── */
 @theme {
-  --color-primary: #f9d006;
+  --color-ink: #0A0A0A;
+  --color-surface: #141414;
+  --color-surface-raised: #1C1C1C;
+  --color-line: #333333;
+  --color-muted: #8A8A8A;
+  --color-paper: #F5F5F0;
+  --color-gold: #F2C230;
+  --color-gold-soft: #6B5514;
+  --color-available: #35C878;
+  --color-danger: #F05A67;
+  --color-info: #6EA8FE;
+  --color-primary: #F2C230;
+  --font-display: 'Arial Narrow', 'Roboto Condensed', Arial, sans-serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-pill: 9999px;
+  --text-display-xl: 3rem;
+  --text-display-xl--line-height: 1;
+  --text-display-xl--letter-spacing: -0.04em;
+  --text-display-lg: 2.25rem;
+  --text-display-lg--line-height: 1.05;
+  --text-display-lg--letter-spacing: -0.03em;
+  --text-display-md: 1.5rem;
+  --text-display-md--line-height: 1.1;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.12em;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.6;
+  --text-body: 0.9375rem;
+  --text-body--line-height: 1.5;
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.4;
   --color-background-dark: #0a0a0a;
   --color-card-dark: #161616;
   --color-accent-dark: #1f1f1f;
   --color-sidebar-dark: #0f0f0f;
-  --font-display: 'Space Grotesk', sans-serif;
 }
 
 * {
@@ -210,3 +244,218 @@ body {
     font-size: 0.9rem;
   }
 }
+
+/* v2.0 user-side texture utility. Keep it on the page shell, below content. */
+.vp-grid {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--color-gold) 12%, transparent) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* ─── Global Balanced Layout Container ─────────────────────────────────────────
+   Guarantees equal left and right margins across all viewports and widescreen monitors.
+─────────────────────────────────────────────────────────────────────────── */
+.vp-page-container {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .vp-page-container {
+    padding-left: 2.25rem !important;
+    padding-right: 2.25rem !important;
+  }
+}
+
+@media (min-width: 1536px) {
+  .vp-page-container {
+    max-width: 1440px;
+    padding-left: 2.5rem !important;
+    padding-right: 2.5rem !important;
+  }
+}
+
+/* ─── User-side theme tokens ─────────────────────────────────────────────────
+   Aligned with design.md: Dark, high-contrast, operational cockpit aesthetic.
+   Near-black surfaces, golden accents, sharp borders, and legible typography.
+─────────────────────────────────────────────────────────────────────────── */
+:root {
+  /* Page / shell surfaces */
+  --u-page-bg:        #0A0A0A;
+  --u-shell-bg:       #141414;
+  --u-body-bg:        #0E0E0E;
+  --u-card-bg:        #161616;
+  --u-card-bg-2:      #1F1F1F;
+
+  /* Typography */
+  --u-text-primary:   #F5F5F0;
+  --u-text-secondary: #D4D4CE;
+  --u-text-muted:     #8A8A8A;
+  --u-text-faint:     #555555;
+
+  /* Lines / borders */
+  --u-border:         #2E2E2E;
+  --u-border-strong:  #3D3D3D;
+  --u-divider:        #262626;
+
+  /* Input fields */
+  --u-input-bg:       #181818;
+  --u-input-border:   #333333;
+
+  /* Shadows */
+  --u-shadow-card:    0 4px 20px rgba(0,0,0,0.45);
+  --u-shadow-float:   0 8px 32px rgba(0,0,0,0.60);
+  --u-shadow-shell:   0 24px 64px rgba(0,0,0,0.75);
+
+  /* Search / topbar */
+  --u-topbar-bg:      #0E0E0E;
+  --u-search-bg:      #161616;
+
+  /* Map shell bg */
+  --u-map-shell-bg:   #121212;
+}
+
+[data-user-theme="dark"] {
+  --u-page-bg:        #0A0A0A;
+  --u-shell-bg:       #141414;
+  --u-body-bg:        #0E0E0E;
+  --u-card-bg:        #161616;
+  --u-card-bg-2:      #1F1F1F;
+  --u-text-primary:   #F5F5F0;
+  --u-text-secondary: #D4D4CE;
+  --u-text-muted:     #8A8A8A;
+  --u-text-faint:     #555555;
+  --u-border:         #2E2E2E;
+  --u-border-strong:  #3D3D3D;
+  --u-divider:        #262626;
+  --u-input-bg:       #181818;
+  --u-input-border:   #333333;
+  --u-shadow-card:    0 4px 20px rgba(0,0,0,0.45);
+  --u-shadow-float:   0 8px 32px rgba(0,0,0,0.60);
+  --u-shadow-shell:   0 24px 64px rgba(0,0,0,0.75);
+  --u-topbar-bg:      #0E0E0E;
+  --u-search-bg:      #161616;
+  --u-map-shell-bg:   #121212;
+}
+
+[data-user-theme="light"] {
+  --u-page-bg:        #F4F6F9;
+  --u-shell-bg:       #FFFFFF;
+  --u-body-bg:        #F8FAFC;
+  --u-card-bg:        #FFFFFF;
+  --u-card-bg-2:      #F1F5F9;
+  --u-text-primary:   #0F172A;
+  --u-text-secondary: #334155;
+  --u-text-muted:     #64748B;
+  --u-text-faint:     #94A3B8;
+  --u-border:         #E2E8F0;
+  --u-border-strong:  #CBD5E1;
+  --u-divider:        #E2E8F0;
+  --u-input-bg:       #FFFFFF;
+  --u-input-border:   #CBD5E1;
+  --u-shadow-card:    0 4px 20px rgba(0,0,0,0.06);
+  --u-shadow-float:   0 8px 32px rgba(0,0,0,0.08);
+  --u-shadow-shell:   0 24px 64px rgba(0,0,0,0.10);
+  --u-topbar-bg:      #FFFFFF;
+  --u-search-bg:      #F8FAFC;
+  --u-map-shell-bg:   #E2E8F0;
+}
+
+/* ─── Mobile View Design System (Zona Pro & Clean Pill Aesthetic) ─────────────
+   Applied automatically on mobile screen widths (max-width: 768px).
+   Colors: Charcoal #252626, Slate #5d6974, Yellow #f8d73a, Light #f6fbff.
+─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --m-charcoal: #252626;
+  --m-charcoal-card: #252626;
+  --m-slate: #5d6974;
+  --m-yellow: #f8d73a;
+  --m-yellow-hover: #eec929;
+  --m-bg: #f6fbff;
+  --m-card: #ffffff;
+  --m-blue: #2563eb;
+  --m-font-zona: 'Outfit', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --m-radius-card: 24px;
+  --m-radius-sheet: 28px;
+  --m-radius-pill: 9999px;
+  --m-radius-button: 20px;
+  --m-shadow-card: 0 10px 30px rgba(0, 0, 0, 0.05);
+  --m-shadow-float: 0 14px 40px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --color-ink: #f6fbff;
+    --color-surface: #ffffff;
+    --color-surface-raised: #f8fafc;
+    --color-line: #e2e8f0;
+    --color-muted: #5d6974;
+    --color-paper: #252626;
+    --color-gold: #f8d73a;
+    --color-primary: #f8d73a;
+    --font-display: var(--m-font-zona);
+    --font-sans: var(--m-font-zona);
+  }
+
+  body {
+    background-color: var(--m-bg);
+    color: var(--m-charcoal);
+    font-family: var(--m-font-zona);
+  }
+
+  .background-grid {
+    display: none;
+  }
+
+  .vp-grid {
+    background: var(--m-bg) !important;
+    background-image: none !important;
+  }
+
+  .vp-page-container {
+    padding-left: 1.15rem !important;
+    padding-right: 1.15rem !important;
+    padding-top: 0.25rem !important;
+  }
+
+  /* Universal Mobile Card & Surface Styling */
+  .bg-surface,
+  .bg-surface-raised {
+    background-color: #ffffff !important;
+    border: 1.5px solid #edf2f7 !important;
+    border-radius: 24px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04) !important;
+  }
+
+  /* Universal Mobile Input Styling */
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="email"],
+  input[type="password"],
+  select {
+    border-radius: 16px !important;
+    border: 1.5px solid #e2e8f0 !important;
+    background-color: #f8fafc !important;
+    color: #252626 !important;
+    font-family: var(--m-font-zona) !important;
+  }
+
+  /* Universal Mobile Primary Button Styling */
+  .btn-primary {
+    background-color: var(--m-yellow) !important;
+    color: #111111 !important;
+    border-radius: 20px !important;
+    font-weight: 800 !important;
+    box-shadow: 0 8px 24px rgba(248, 215, 58, 0.35) !important;
+    transition: all 0.15s ease !important;
+  }
+}
+
+

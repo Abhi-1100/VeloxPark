@@ -92,7 +92,7 @@ const Home = () => {
             <li><button onClick={() => scrollToSection('features')}>Core</button></li>
             <li><button onClick={() => scrollToSection('stats')}>Scale</button></li>
           </ul>
-          <button className="btn-connect" onClick={() => navigate('/select')}>CONNECT OS</button>
+          <button className="btn-connect" onClick={() => navigate('/login')}>CONNECT OS</button>
         </div>
 
         <div className={`nav-mobile ${mobileMenuOpen ? 'is-open' : ''}`}>
@@ -105,7 +105,7 @@ const Home = () => {
           <button onClick={() => { scrollToSection('stats'); setMobileMenuOpen(false); }}>
             Scale
           </button>
-          <button className="btn-connect nav-mobile-cta" onClick={() => { navigate('/select'); setMobileMenuOpen(false); }}>
+          <button className="btn-connect nav-mobile-cta" onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
             CONNECT OS
           </button>
         </div>
@@ -127,7 +127,7 @@ const Home = () => {
             allocation, and real-time kinetic mapping.
           </p>
           <div className="hero-cta">
-            <button className="btn-get-started" onClick={() => navigate('/select')}>
+            <button className="btn-get-started" onClick={() => navigate('/login')}>
               GET STARTED
             </button>
             <div className="hero-scroll" onClick={() => scrollToSection('features')}>
@@ -241,30 +241,36 @@ const Home = () => {
       {/* ROLES */}
       <section id="roles">
         <div className="roles-header fade-up">
-          <div className="section-badge">SELECT YOUR ROLE</div>
+          <div className="section-badge">ACCESS THE NETWORK</div>
           <h2 className="roles-title">WHO ARE<br />YOU?</h2>
         </div>
         <div className="roles-grid">
           <div className="role-card fade-up">
             <div className="role-num">01 / DRIVER</div>
-            <div className="role-icon">🚗</div>
+            <div className="role-icon">
+              <span className="material-symbols-outlined">admin_panel_settings</span>
+            </div>
             <div className="role-name">Driver</div>
             <p className="role-desc">Find, reserve, and navigate to available parking spots in real-time. Never circle the block again.</p>
-            <button className="role-cta" onClick={() => navigate('/select')}>ACCESS PORTAL</button>
+            <button className="role-cta" onClick={() => navigate('/login')}>ACCESS PORTAL</button>
           </div>
           <div className="role-card fade-up" style={{ transitionDelay: '0.1s' }}>
             <div className="role-num">02 / OPERATOR</div>
-            <div className="role-icon">🏢</div>
+            <div className="role-icon">
+              <span className="material-symbols-outlined">business</span>
+            </div>
             <div className="role-name">Operator</div>
             <p className="role-desc">Manage your parking assets, optimize occupancy rates, and unlock new revenue streams with predictive analytics.</p>
-            <button className="role-cta" onClick={() => navigate('/select')}>ACCESS PORTAL</button>
+            <button className="role-cta" onClick={() => navigate('/login')}>ACCESS PORTAL</button>
           </div>
           <div className="role-card fade-up" style={{ transitionDelay: '0.2s' }}>
             <div className="role-num">03 / CITY</div>
-            <div className="role-icon">🏙️</div>
+            <div className="role-icon">
+              <span className="material-symbols-outlined">local_police</span>
+            </div>
             <div className="role-name">City Planner</div>
             <p className="role-desc">Deploy city-wide smart infrastructure, reduce congestion, and gain macro-level urban mobility intelligence.</p>
-            <button className="role-cta" onClick={() => navigate('/select')}>ACCESS PORTAL</button>
+            <button className="role-cta" onClick={() => navigate('/login')}>ACCESS PORTAL</button>
           </div>
         </div>
       </section>
