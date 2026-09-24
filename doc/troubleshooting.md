@@ -493,3 +493,21 @@ For more help:
 - [Getting Started](./getting-started.md)
 - [API Reference](./api-reference.md)
 - [Database Schema](./database-schema.md)
+
+## Interactive map issues
+
+### Blank map
+
+Confirm access to OpenStreetMap tiles, Leaflet CSS import, and a non-zero map container height.
+
+### Missing location
+
+Allow browser permission, use localhost or HTTPS, and retry Locate Me. The map remains usable without location, but nearest-station distance is unavailable.
+
+### Incorrect nearest station
+
+Check that station coordinates are numeric and that calculateDistance() is used. Demo coordinates are not production locations.
+
+### Missing stations
+
+Confirm getParkingStations() resolves to a non-empty array and that each station matches the documented contract.

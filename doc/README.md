@@ -8,6 +8,9 @@ Welcome to the comprehensive documentation for **VeloxPark** - An intelligent pa
 - **[Getting Started Guide](./getting-started.md)** - Installation and setup instructions
 - **[Development Setup](./development-setup.md)** - Setting up your development environment
 
+### Map & Architecture
+- **[Map Feature Guide](./map-feature.md)** - User map, geolocation, station data, and integration
+
 ### Architecture & Design
 - **[System Architecture](./architecture.md)** - Overview of system design and architecture
 - **[Database Schema](./database-schema.md)** - Complete Firebase database schema documentation
@@ -159,3 +162,38 @@ doc/
 **Last Updated**: March 2026
 **Version**: 4.0
 **Maintained By**: VeloxPark Development Team
+
+## Current feature update (2026-09-24)
+
+The user workflow now includes /dashboard, /search, and /map. The /map route uses React Leaflet/OpenStreetMap, browser geolocation, custom VeloxPark station markers, Haversine nearest-station calculation, and a responsive station card.
+
+See Map Feature Guide. The current station coordinates are temporary local demo data.
+
+Current source areas:
+
+- src/components/map/ - reusable map UI
+- src/data/ - station provider
+- src/hooks/ - shared geolocation logic
+- src/utils/ - distance and parking utilities
+- src/pages/user/ - user routes and screens
+- src/services/ - Firebase service layer
+## Current source tree
+
+    src/
+    ├── components/
+    │   ├── map/
+    │   ├── dashboard/
+    │   ├── analytics/
+    │   ├── ui/
+    │   └── user/
+    ├── config/
+    ├── context/
+    ├── data/
+    ├── hooks/
+    ├── pages/
+    │   └── user/
+    ├── routes/
+    ├── services/
+    └── utils/
+
+Generated directories such as node_modules and dist are intentionally excluded from this documentation tree.

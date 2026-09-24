@@ -117,7 +117,7 @@ function BookingDetails() {
             {/* Facility note */}
             <div className="text-xs text-muted space-y-1.5 border-t border-line pt-4">
               <p><strong className="text-paper">Facility:</strong> {booking.address || 'California Parking (555 Jackson St, SF)'}</p>
-              <p><strong className="text-paper">Billed Duration:</strong> {booking.duration || 0} minutes (${booking.rate || 6}/hr)</p>
+              <p><strong className="text-paper">Billed Duration:</strong> {booking.duration || 0} minutes (₹{booking.rate || 60}/hr)</p>
             </div>
           </Card>
         </div>
@@ -130,7 +130,7 @@ function BookingDetails() {
               <div className="flex justify-between items-baseline mt-1">
                 <span className="text-sm text-muted">Estimated Amount</span>
                 <span className="font-display text-display-lg font-black text-paper">
-                  ${booking.amount || '0.00'}
+                  ₹{booking.amount || '0.00'}
                 </span>
               </div>
             </div>

@@ -1,0 +1,508 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
+import { formatDuration } from '../../utils/parkingUtils';
+
+const UserPaymentPageMobile = ({
+  vehicleData,
+  upiConfig,
+  upiLink,
+  onConfirmPayment,
+}) => {
+  const navigate = useNavigate();
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 375
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isTablet = windowWidth <= 1024;
+  const isMobile = windowWidth <= 768;
+
+  if (!vehicleData) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#231f0f',
+          fontFamily: "'Space Grotesk', sans-serif",
+          color: '#fff',
+        }}
+      >
+        <div style={{ textAlign: 'center', padding: '40px' }}>
+          <span
+            className="material-symbols-outlined"
+            style={{ fontSize: '64px', color: '#f9d006', display: 'block', marginBottom: '16px' }}
+          >
+            error_outline
+          </span>
+          <h2 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '12px' }}>
+            No Payment Data Found
+          </h2>
+          <p style={{ color: '#94a3b8', marginBottom: '24px' }}>
+            Please search for your vehicle first.
+          </p>
+          <button
+            onClick={() => navigate('/user')}
+            style={{
+              background: '#f9d006',
+              color: '#231f0f',
+              border: 'none',
+              borderRadius: '12px',
+              padding: '14px 32px',
+              fontWeight: 700,
+              fontSize: '15px',
+              cursor: 'pointer',
+              fontFamily: "'Space Grotesk', sans-serif",
+            }}
+          >
+            Go Back
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        background: '#231f0f',
+        fontFamily: "'Space Grotesk', sans-serif",
+        color: '#fff',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      {/* Header */}
+      <header
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: isMobile ? '12px 14px' : isTablet ? '14px 20px' : '16px 80px',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(35,31,15,0.6)',
+          backdropFilter: 'blur(12px)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 50,
+          flexWrap: 'wrap',
+          gap: '12px',
+        }}
+      >
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              background: '#f9d006',
+              borderRadius: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#231f0f',
+            }}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>
+              local_parking
+            </span>
+          </div>
+          <h2 style={{ fontSize: '20px', fontWeight: 700, letterSpacing: '-0.3px', margin: 0 }}>
+            VeloxPark
+          </h2>
+        </div>
+
+        {/* Nav + Avatar */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '10px' : '32px' }}>
+          <nav style={{ display: isMobile ? 'none' : 'flex', gap: isTablet ? '16px' : '32px' }}>
+            {['Dashboard', 'My Bookings', 'Settings'].map((item) => (
+              <a
+                key={item}
+                href="#"
+                style={{
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: '#94a3b8',
+                  textDecoration: 'none',
+                  transition: 'color 0.2s',
+                }}
+                onMouseEnter={(e) => (e.target.style.color = '#f9d006')}
+                onMouseLeave={(e) => (e.target.style.color = '#94a3b8')}
+              >
+                {item}
+              </a>
+            ))}
+          </nav>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              border: '2px solid rgba(249,208,6,0.25)',
+              background: '#3a3318',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#f9d006',
+              fontWeight: 700,
+              fontSize: '14px',
+            }}
+          >
+            U
+          </div>
+        </div>
+      </header>
+
+      {/* Main */}
+      <main
+        style={{
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: isMobile ? '24px 12px' : '48px 16px',
+          background: 'linear-gradient(180deg, rgba(249,208,6,0.05) 0%, transparent 40%)',
+        }}
+      >
+        <div style={{ width: '100%', maxWidth: '480px' }}>
+          {/* Amount */}
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <p
+              style={{
+                fontSize: '12px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '3px',
+                color: '#64748b',
+                marginBottom: '8px',
+              }}
+            >
+              Total Amount Due
+            </p>
+            <h1
+              style={{
+                fontSize: isMobile ? '52px' : '72px',
+                fontWeight: 700,
+                color: '#f9d006',
+                letterSpacing: '-3px',
+                lineHeight: 1,
+                margin: 0,
+              }}
+            >
+              ₹{vehicleData.amount || 0}
+            </h1>
+            {vehicleData.amount === 0 && (
+              <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '8px' }}>
+                Your stay was within the free 30-minute window
+              </p>
+            )}
+          </div>
+
+          {/* QR Card */}
+          <div
+            style={{
+              position: 'relative',
+              background: '#2d2816',
+              borderRadius: '24px',
+              padding: isMobile ? '16px' : '32px',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+              border: '1px solid rgba(255,255,255,0.05)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+          >
+            {/* Top glow line */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '1px',
+                background: 'rgba(249,208,6,0.2)',
+                borderRadius: '24px 24px 0 0',
+                filter: 'blur(1px)',
+              }}
+            />
+
+            {/* Sub-label */}
+            <p
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '2px',
+                color: '#94a3b8',
+                marginBottom: '20px',
+                textAlign: 'center',
+              }}
+            >
+              Scan &amp; Pay via any UPI App
+            </p>
+
+            {/* QR Code Container */}
+            <div
+              style={{
+                background: '#ffffff',
+                borderRadius: '18px',
+                padding: isMobile ? '14px' : '20px',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <QRCodeSVG
+                value={
+                  upiLink ||
+                  `upi://pay?pa=${upiConfig?.upiId || 'parking@upi'}&pn=${
+                    upiConfig?.upiName || 'VeloxPark'
+                  }&am=${vehicleData.amount || 0}&cu=INR`
+                }
+                size={isMobile ? 190 : 220}
+                level="H"
+                fgColor="#231f0f"
+                bgColor="#ffffff"
+              />
+            </div>
+
+            {/* UPI ID pill */}
+            <div
+              style={{
+                marginTop: '20px',
+                background: 'rgba(0,0,0,0.3)',
+                border: '1px solid rgba(255,255,255,0.08)',
+                borderRadius: '999px',
+                padding: '6px 18px',
+                fontSize: '12px',
+                color: '#94a3b8',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <span>UPI ID:</span>
+              <strong style={{ color: '#f9d006' }}>{upiConfig?.upiId || 'parking@upi'}</strong>
+            </div>
+
+            {/* Details mini-card */}
+            <div
+              style={{
+                marginTop: '24px',
+                width: '100%',
+                background: 'rgba(0,0,0,0.2)',
+                borderRadius: '16px',
+                padding: isMobile ? '16px' : '24px',
+                border: '1px solid rgba(255,255,255,0.05)',
+              }}
+            >
+              {/* Vehicle Number */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '16px',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '1.5px',
+                    color: '#64748b',
+                  }}
+                >
+                  Vehicle Number
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>
+                  {vehicleData.plate}
+                </span>
+              </div>
+
+              {/* Divider */}
+              <div
+                style={{
+                  height: '1px',
+                  background: 'rgba(255,255,255,0.05)',
+                  marginBottom: '16px',
+                }}
+              />
+
+              {/* Total Duration */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '1.5px',
+                    color: '#64748b',
+                  }}
+                >
+                  Total Duration
+                </span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#ffffff' }}>
+                  {formatDuration(vehicleData.duration) || '—'}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div style={{ marginTop: '32px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <button
+              onClick={onConfirmPayment}
+              style={{
+                width: '100%',
+                height: '64px',
+                background: '#f9d006',
+                color: '#231f0f',
+                border: 'none',
+                borderRadius: '16px',
+                fontSize: '17px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                cursor: 'pointer',
+                boxShadow: '0 8px 30px rgba(249,208,6,0.2)',
+                transition: 'box-shadow 0.2s, transform 0.15s',
+                fontFamily: "'Space Grotesk', sans-serif",
+              }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontVariationSettings: "'FILL' 1", fontSize: '22px' }}
+              >
+                check_circle
+              </span>
+              Confirm Payment
+            </button>
+
+            {/* Secondary row */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '16px',
+                padding: '8px 0',
+                flexWrap: isMobile ? 'wrap' : 'nowrap',
+              }}
+            >
+              <button
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#64748b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: "'Space Grotesk', sans-serif",
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                  help
+                </span>
+                Having trouble?
+              </button>
+
+              {!isMobile && <span style={{ color: '#334155' }}>|</span>}
+
+              <button
+                onClick={() => navigate('/user')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#64748b',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontFamily: "'Space Grotesk', sans-serif",
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                  close
+                </span>
+                Cancel
+              </button>
+            </div>
+          </div>
+
+          {/* Payment icons strip */}
+          <div
+            style={{
+              marginTop: isMobile ? '28px' : '48px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: isMobile ? '18px' : '32px',
+              opacity: 0.4,
+              filter: 'grayscale(1)',
+              cursor: 'default',
+              flexWrap: 'wrap',
+            }}
+          >
+            {['payments', 'credit_card', 'account_balance_wallet'].map((icon) => (
+              <span
+                key={icon}
+                className="material-symbols-outlined"
+                style={{ fontSize: '36px' }}
+              >
+                {icon}
+              </span>
+            ))}
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer
+        style={{
+          padding: '32px 24px',
+          textAlign: 'center',
+          color: '#64748b',
+          fontSize: '12px',
+        }}
+      >
+        <p>© 2024 VeloxPark Management System. All rights reserved.</p>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '16px',
+            marginTop: '8px',
+          }}
+        >
+          {['Terms of Service', 'Privacy Policy', 'Support'].map((item) => (
+            <a key={item} href="#" style={{ color: '#64748b' }}>
+              {item}
+            </a>
+          ))}
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default UserPaymentPageMobile;

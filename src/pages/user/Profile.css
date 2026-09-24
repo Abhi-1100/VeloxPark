@@ -25,7 +25,7 @@
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 20px 96px; /* space for sticky bottom bar */
+  padding: 16px 20px calc(150px + env(safe-area-inset-bottom, 0px)); /* space for sticky bottom bar + dock */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -68,11 +68,33 @@
   transform: translateY(0);
 }
 
+.prof-title-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .prof-top-title {
   font-size: 18px;
   font-weight: 800;
   color: #111827;
   letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.prof-desktop-crumb {
+  display: none;
+}
+
+/* Sequential flow for mobile view */
+.prof-desktop-layout,
+.prof-layout-left,
+.prof-layout-right {
+  display: contents;
+}
+
+.prof-desktop-save-wrap {
+  display: none !important;
 }
 
 /* ─── Hero Section with Banner + Overlapping Avatar ───────────────────────── */
@@ -609,10 +631,10 @@
 /* ─── Bottom Floating Sticky Bar ─────────────────────────────────────────── */
 .prof-bottom-bar {
   position: fixed;
-  bottom: 0;
+  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   left: 0;
   right: 0;
-  padding: 14px 20px 20px;
+  padding: 10px 20px 14px;
   background: linear-gradient(to top, rgba(244, 246, 250, 0.98) 75%, rgba(244, 246, 250, 0) 100%);
   display: flex;
   justify-content: center;
@@ -685,8 +707,8 @@
   transform: translateX(-50%) translateY(0);
 }
 
-/* ─── Responsive Desktop Frame (Like Dash & ConfirmParking Shells) ────────── */
-@media (min-width: 640px) {
+/* ─── Tablet Bounds (640px – 1023px) ──────────────────────────────────────── */
+@media (min-width: 640px) and (max-width: 1023px) {
   .prof-page {
     align-items: flex-start;
     padding: 30px 0;
@@ -703,7 +725,7 @@
 
   .prof-bottom-bar {
     position: absolute;
-    bottom: 0;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     background: linear-gradient(to top, #f4f6fa 80%, rgba(244, 246, 250, 0) 100%);
@@ -711,19 +733,104 @@
   }
 }
 
-@media (min-width: 900px) {
+/* ─── Desktop Size View (min-width: 1024px) ───────────────────────────────── */
+@media (min-width: 1024px) {
   .prof-page {
+    position: relative;
+    inset: auto;
+    min-height: 100vh;
+    background: #f4f6fa;
+    padding: 36px 32px 64px;
     align-items: center;
-    padding: 0;
+    overflow-y: auto;
   }
 
   .prof-shell {
-    max-width: 430px;
-    height: calc(100vh - 50px);
-    max-height: 890px;
-    border-radius: 44px;
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.12),
-      0 40px 80px rgba(0, 0, 0, 0.4);
+    max-width: 1080px;
+    height: auto;
+    max-height: none;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .prof-top-bar {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 20px 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    border: 1px solid #edf2f7;
+    margin-bottom: 28px;
+  }
+
+  .prof-top-title {
+    font-size: 22px;
+    font-weight: 800;
+  }
+
+  .prof-desktop-crumb {
+    display: block;
+    font-size: 13px;
+    color: #6b7280;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .prof-desktop-layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  .prof-layout-left {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 32px;
+  }
+
+  .prof-layout-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .prof-header-hero {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 16px 20px 24px;
+    border: 1px solid #edf2f7;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    margin-bottom: 0;
+  }
+
+  .prof-stats-grid {
+    margin-bottom: 0;
+  }
+
+  .prof-nav-links {
+    margin-top: 0;
+  }
+
+  .prof-row-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 24px 26px;
+    border: 1px solid #edf2f7;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    margin-bottom: 0;
+  }
+
+  .prof-desktop-save-wrap {
+    display: block !important;
+    margin-top: 8px;
+  }
+
+  .prof-bottom-bar {
+    display: none !important;
   }
 }

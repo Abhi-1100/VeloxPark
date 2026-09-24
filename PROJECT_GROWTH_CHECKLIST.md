@@ -123,3 +123,16 @@ Record completed work here so the project history remains easy to understand.
 |------|----------------|-------|
 |      |                |       |
 
+
+## Interactive map readiness checklist
+
+- [x] Integrate React Leaflet and OpenStreetMap.
+- [x] Add custom station and user-location markers.
+- [x] Add browser geolocation states.
+- [x] Add Haversine nearest-station calculation.
+- [x] Add responsive station card and navigation action.
+- [x] Document the station provider contract.
+- [ ] Replace demo coordinates with real station data.
+- [ ] Connect live station availability to Firebase/API.
+- [ ] Add station-data Firebase security rules.
+- [ ] Add automated component/browser tests for map interactions.

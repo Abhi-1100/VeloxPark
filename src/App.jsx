@@ -31,6 +31,10 @@ import UsersPage from './components/UsersPage';
 import NotFound from './components/NotFound';
 import './App.css';
 
+import UserParkingInfo from './components/UserParkingInfo';
+import UserPaymentPage from './components/UserPaymentPage';
+import UserPaymentSuccess from './components/UserPaymentSuccess';
+
 function UserRoute({ children }) {
   return <ProtectedRoute role="user">{children}</ProtectedRoute>;
 }
@@ -47,7 +51,7 @@ function RootRoute() {
   return (
     <UserRoute>
       <UserLayout>
-        <Dashboard />
+        <UserParkingInfo />
       </UserLayout>
     </UserRoute>
   );
@@ -64,9 +68,14 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<RootRoute />} />
 
-              {/* User Mobile View Pages */}
+              {/* User Side Responsive Pages */}
+              <Route path="/user" element={<UserLayout><UserParkingInfo /></UserLayout>} />
+              <Route path="/user/payment" element={<UserPaymentPage />} />
+              <Route path="/user/payment/success" element={<UserPaymentSuccess />} />
+
+              {/* User Pages */}
               <Route element={<UserRoute><UserLayout /></UserRoute>}>
-                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/dashboard" element={<UserParkingInfo />} />
                 <Route path="/search" element={<SearchLocation />} />
                 <Route path="/book" element={<BookSlot />} />
                 <Route path="/map" element={<MapView />} />

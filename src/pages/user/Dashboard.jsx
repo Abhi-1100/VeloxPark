@@ -9,8 +9,8 @@ function VanSVG({ dark }) {
   const wheels = dark ? '#fff' : '#6b7b8c';
   return (
     <svg width="72" height="44" viewBox="0 0 90 56" fill="none">
-      <rect x="8"  y="16" width="66" height="28" rx="6" fill={body} />
-      <rect x="8"  y="22" width="22" height="16" rx="3" fill="#6b7b8c" opacity="0.4" />
+      <rect x="8" y="16" width="66" height="28" rx="6" fill={body} />
+      <rect x="8" y="22" width="22" height="16" rx="3" fill="#6b7b8c" opacity="0.4" />
       <rect x="46" y="16" width="28" height="28" rx="4" fill={body} opacity="0.8" />
       <circle cx="20" cy="46" r="7" fill={wheels} stroke="#222" strokeWidth="3" />
       <circle cx="68" cy="46" r="7" fill={wheels} stroke="#222" strokeWidth="3" />
@@ -50,42 +50,34 @@ function BikeSVG({ dark }) {
 
 const VEHICLES = [
   { id: 'others', label: 'Others', Icon: VanSVG },
-  { id: 'car',    label: 'Car',    Icon: CarSVG },
-  { id: 'bike',   label: 'Bike',   Icon: BikeSVG },
+  { id: 'car', label: 'Car', Icon: CarSVG },
+  { id: 'bike', label: 'Bike', Icon: BikeSVG },
 ];
 
 function Dashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeVehicle, setActiveVehicle] = useState('car');
-  
+
   const name = user?.profile?.name || user?.displayName || 'Test User';
   const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'TU';
 
   return (
     <div className="dash-page">
       <div className="dash-shell">
-        
+
         {/* Header */}
         <div className="dash-header">
-          <button className="dash-menu-btn" onClick={() => navigate('/history')}>
-            <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round">
-              <line x1="1" y1="2" x2="17" y2="2" />
-              <line x1="1" y1="7" x2="13" y2="7" />
-              <line x1="1" y1="12" x2="9" y2="12" />
-            </svg>
-          </button>
-          
           <div className="dash-user-info">
             <h2 className="dash-user-name">{name}</h2>
             <div className="dash-zone">
               <svg width="10" height="12" viewBox="0 0 24 24" fill="#F2C230">
-                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
               </svg>
               VeloxPark Zone
             </div>
           </div>
-          
+
           <button className="dash-profile-btn" onClick={() => navigate('/profile')}>
             {initials}
           </button>
@@ -97,7 +89,7 @@ function Dashboard() {
         </h1>
 
         {/* Dark Map Card Preview */}
-        <div 
+        <div
           className="dash-map-card"
           onClick={() => navigate('/search')}
         >
@@ -126,22 +118,22 @@ function Dashboard() {
           {/* Yellow Lot Badges */}
           <div className="dash-map-pin" style={{ top: '15%', left: '22%' }}>
             <span className="dash-map-pin-num">3</span>
-            <span>$6</span>
+            <span>₹60</span>
           </div>
 
           <div className="dash-map-pin" style={{ top: '12%', right: '15%' }}>
             <span className="dash-map-pin-num">1</span>
-            <span>$5.50</span>
+            <span>₹55</span>
           </div>
 
           <div className="dash-map-pin" style={{ top: '56%', right: '18%' }}>
             <span className="dash-map-pin-num">10</span>
-            <span>$4.50</span>
+            <span>₹45</span>
           </div>
 
           <div className="dash-map-pin" style={{ bottom: '12%', left: '18%' }}>
             <span className="dash-map-pin-num">12</span>
-            <span>$5</span>
+            <span>₹50</span>
           </div>
 
           {/* "You are here" marker with white pill badge */}
@@ -176,8 +168,8 @@ function Dashboard() {
           {VEHICLES.map(({ id, label, Icon }) => {
             const isActive = activeVehicle === id;
             return (
-              <div 
-                key={id} 
+              <div
+                key={id}
                 className={`dash-v-card ${isActive ? 'active' : ''}`}
                 onClick={() => setActiveVehicle(id)}
               >
@@ -185,7 +177,7 @@ function Dashboard() {
                   <Icon dark={isActive} />
                 </div>
                 <div className="dash-v-name">{label}</div>
-                <button 
+                <button
                   className="dash-v-btn"
                   onClick={(e) => { e.stopPropagation(); navigate('/search'); }}
                 >

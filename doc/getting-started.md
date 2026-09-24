@@ -391,3 +391,9 @@ VeloxPark/
 ---
 
 **You're all set to start developing with VeloxPark!** 🚀
+
+## Interactive map setup
+
+The map is available at /map and requires no API key for the current OpenStreetMap setup. Geolocation requires browser permission and localhost or HTTPS.
+
+Before production, replace the demo provider in src/data/parkingStations.js, connect getParkingStations() to Firebase/API, and add appropriate station-data security rules.

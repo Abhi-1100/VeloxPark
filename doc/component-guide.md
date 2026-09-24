@@ -343,3 +343,19 @@ button:focus {
 For more details:
 - [API Reference](./api-reference.md) - Services & hooks
 - [Architecture](./architecture.md) - System design
+
+## VeloxParkMap
+
+Path: src/components/map/VeloxParkMap.jsx
+Route: /map
+
+This reusable component renders OpenStreetMap through React Leaflet, custom station markers, the user-location marker, station selection, nearest-station information, Locate Me, and external navigation.
+
+Supporting files:
+
+- src/components/map/VeloxParkMap.css
+- src/hooks/useUserLocation.js
+- src/utils/distance.js
+- src/data/parkingStations.js
+
+This component is distinct from the admin src/components/dashboard/ZoneMap.jsx, which visualizes parking slots rather than geographic stations.

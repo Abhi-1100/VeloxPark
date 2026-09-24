@@ -216,3 +216,21 @@ const snapshot = await get(zoneQuery);
 - [API Reference](./api-reference.md)
 - [Hardware Integration](./hardware-integration.md)
 - [Troubleshooting](./troubleshooting.md)
+
+## Geographic station data
+
+The current map does not yet read stations from Firebase. It consumes src/data/parkingStations.js, which returns temporary local demo data.
+
+The planned Firebase collection is stations/{stationId} with:
+
+    {
+      name,
+      latitude,
+      longitude,
+      totalSlots,
+      availableSlots,
+      status,
+      updatedAt
+    }
+
+Validate latitude (-90 to 90), longitude (-180 to 180), non-negative total slots, and available slots between zero and total slots. Keep station writes restricted to trusted admin/backend processes.

@@ -447,3 +447,16 @@ For more information:
 - [Troubleshooting Guide](./troubleshooting.md) - Known issues
 - [User Manual](./user-manual.md) - User flows
 - [Admin Manual](./admin-manual.md) - Admin operations
+
+## Interactive map tests
+
+- Open /map and confirm OpenStreetMap tiles and attribution.
+- Confirm custom VeloxPark markers render and station selection updates the card.
+- Grant location permission and confirm the user marker and You are here popup.
+- Deny permission and confirm the guidance message.
+- Confirm the nearest station card and Haversine distance display.
+- Test Locate Me, Navigate, zoom, pan, mobile layout, and keyboard focus.
+- Confirm the no-stations state by temporarily returning an empty provider array.
+- Run npm run lint and npm run build.
+
+See Map Feature Guide for the detailed checklist.

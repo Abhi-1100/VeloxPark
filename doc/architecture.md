@@ -369,3 +369,16 @@ For implementation details:
 - [API Reference](./api-reference.md)
 - [Component Guide](./component-guide.md)
 - [Database Schema](./database-schema.md)
+
+## Interactive Map Architecture
+
+The user map is part of the existing route tree:
+
+    /dashboard -> /search -> /map
+                       |
+                 VeloxParkMap
+                 /    |           location hook  data  Leaflet
+
+VeloxParkMap consumes useUserLocation, getParkingStations, and calculateDistance. The station provider is intentionally separate from Firebase so local demo data can later be replaced by a backend adapter without changing the UI.
+
+The geographic user map is separate from the admin ZoneMap slot-grid visualization. See Map Feature Guide.

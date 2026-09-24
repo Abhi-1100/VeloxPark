@@ -99,103 +99,94 @@ function IconLogOut() {
 
 function IconChevronRight({ color = '#9ca3af' }) {
   return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 18l6-6-6-6" />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
     </svg>
   );
 }
 
 function Profile() {
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const { theme: ctxTheme, setTheme: setCtxTheme } = useTheme();
+  const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
-  const THEME_KEY = 'veloxpark-theme';
-  const [currentTheme, setCurrentTheme] = useState(() => {
-    return document.documentElement.getAttribute('data-user-theme')
-      || localStorage.getItem(THEME_KEY)
-      || ctxTheme
-      || 'dark';
-  });
-
-  const applyTheme = (t) => {
-    document.documentElement.setAttribute('data-user-theme', t);
-    try {
-      localStorage.setItem(THEME_KEY, t);
-    } catch { /* ignore */ }
-    setCurrentTheme(t);
-    if (typeof setCtxTheme === 'function') {
-      setCtxTheme(t);
-    }
-  };
-
-  const [form, setForm]         = useState({ name: '', phone: '' });
-  const [plates, setPlates]     = useState([]);
+  const [form, setForm] = useState({ name: '', phone: '' });
+  const [plates, setPlates] = useState(['7ABC123']);
   const [newPlate, setNewPlate] = useState('');
-  const [saving, setSaving]     = useState(false);
-  const [saved, setSaved]       = useState(false);
-  const [stats, setStats]       = useState({ sessions: 0, hours: 0, pts: 0 });
-  const [toast, setToast]       = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [toast, setToast] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
   const [imgError, setImgError] = useState(false);
+  const [stats, setStats] = useState({ sessions: 0, hours: 0, pts: 0 });
+
   const toastTimer = useRef(null);
 
-  /* Live Firestore profile sync */
-  useEffect(() => {
-    if (!user?.uid) return undefined;
-    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
-      const data = snap.data() || {};
-      setForm({
-        name:  data.name  || user.displayName || '',
-        phone: data.phone || '',
-      });
-      if (Array.isArray(data.vehiclePlates) && data.vehiclePlates.length > 0) {
-        setPlates(data.vehiclePlates);
-      } else {
-        setPlates(['7ABC123']);
-      }
-    });
-    return unsub;
-  }, [user]);
+  const currentTheme = theme || 'light';
 
-  /* Booking stats */
-  useEffect(() => {
-    if (!user?.uid) return;
-    async function loadStats() {
-      try {
-        const q = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-        const snap = await getDocs(q);
-        let totalHours = 0;
-        snap.forEach((d) => {
-          const b = d.data();
-          if (b.duration) totalHours += Number(b.duration) / 60;
-          else if (b.durationHours) totalHours += Number(b.durationHours);
-        });
-        const count = snap.size || 0;
-        setStats({
-          sessions: count,
-          hours:    Math.round(totalHours),
-          pts:      count * 120,
-        });
-      } catch (_) {
-        setStats({ sessions: 0, hours: 0, pts: 0 });
-      }
+  const applyTheme = (nextTheme) => {
+    if (nextTheme !== currentTheme) {
+      toggleTheme();
     }
-    loadStats();
-  }, [user]);
+  };
 
   const showToast = (msg) => {
-    clearTimeout(toastTimer.current);
     setToast(msg);
     setToastVisible(true);
-    toastTimer.current = setTimeout(() => setToastVisible(false), 2600);
+    clearTimeout(toastTimer.current);
+    toastTimer.current = setTimeout(() => {
+      setToastVisible(false);
+    }, 2800);
   };
+
+  useEffect(() => {
+    return () => clearTimeout(toastTimer.current);
+  }, []);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        setForm({
+          name: data.name || user.displayName || '',
+          phone: data.phone || user.phoneNumber || '',
+        });
+        if (Array.isArray(data.vehiclePlates) && data.vehiclePlates.length > 0) {
+          setPlates(data.vehiclePlates);
+        }
+      } else {
+        setForm({
+          name: user.displayName || '',
+          phone: user.phoneNumber || '',
+        });
+      }
+    });
+    return () => unsub();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+    const q = query(collection(db, 'bookings'), where('userId', '==', user.uid));
+    getDocs(q).then((snap) => {
+      let count = 0;
+      let totalMins = 0;
+      snap.forEach((d) => {
+        const b = d.data();
+        count += 1;
+        totalMins += Number(b.duration) || 60;
+      });
+      const hrs = Math.round((totalMins / 60) * 10) / 10;
+      const pts = count * 25 + Math.floor(hrs * 10);
+      setStats({ sessions: count, hours: hrs, pts });
+    }).catch(() => {});
+  }, [user]);
 
   const addPlate = () => {
     const plate = newPlate.trim().toUpperCase();
     if (!plate) return;
     if (plates.includes(plate)) {
-      showToast('Plate already added');
+      showToast('Plate already exists in your garage');
       return;
     }
     setPlates((p) => [...p, plate]);
@@ -216,10 +207,10 @@ function Profile() {
     setSaving(true);
     try {
       await updateDoc(doc(db, 'users', user.uid), {
-        name:          form.name.trim(),
-        phone:         form.phone.trim(),
+        name: form.name.trim(),
+        phone: form.phone.trim(),
         vehiclePlates: plates,
-        updatedAt:     new Date(),
+        updatedAt: new Date(),
       });
       setSaved(true);
       showToast('✓ Changes saved successfully');
@@ -264,7 +255,10 @@ function Profile() {
             <IconArrowLeft />
           </button>
           
-          <h2 className="prof-top-title">Profile</h2>
+          <div className="prof-title-group">
+            <h2 className="prof-top-title">Profile</h2>
+            <span className="prof-desktop-crumb">Driver Account &amp; Vehicle Settings</span>
+          </div>
 
           <button
             type="button"
@@ -277,232 +271,254 @@ function Profile() {
           </button>
         </div>
 
-        {/* Hero Section with Banner + Prominent Centered Avatar */}
-        <div className="prof-header-hero">
-          <div className="prof-banner-strip">
-            <div className="prof-banner-pattern"></div>
-          </div>
-
-          <div className="prof-avatar-cluster">
-            <div className="prof-avatar-ring">
-              {!imgError && userPhoto ? (
-                <img
-                  src={userPhoto}
-                  alt={displayName}
-                  className="prof-avatar-img"
-                  onError={() => setImgError(true)}
-                />
-              ) : (
-                <div className="prof-avatar-fallback">{initials}</div>
-              )}
-              <div className="prof-avatar-badge" title="Verified Account">✓</div>
-            </div>
-
-            <h1 className="prof-user-name">{displayName}</h1>
-            <p className="prof-user-email">{user?.email || 'driver@veloxpark.com'}</p>
-            
-            <div className="prof-member-pill">
-              <span className="prof-star-icon">★</span>
-              <span>VeloxPark Member</span>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Square Stat Quick-Cards (Wireframe 3-Box Row) */}
-        <div className="prof-stats-grid">
-          <div className="prof-stat-box" onClick={() => navigate('/history')} role="button" tabIndex={0}>
-            <div className="prof-stat-icon-wrap sessions">
-              <IconHistory />
-            </div>
-            <div className="prof-stat-val">{stats.sessions}</div>
-            <div className="prof-stat-lbl">Sessions</div>
-          </div>
-
-          <div className="prof-stat-box">
-            <div className="prof-stat-icon-wrap hours">
-              <IconClock />
-            </div>
-            <div className="prof-stat-val">{stats.hours}h</div>
-            <div className="prof-stat-lbl">Duration</div>
-          </div>
-
-          <div className="prof-stat-box">
-            <div className="prof-stat-icon-wrap rewards">
-              <IconSparkles />
-            </div>
-            <div className="prof-stat-val gold">{stats.pts}</div>
-            <div className="prof-stat-lbl">Points</div>
-          </div>
-        </div>
-
-        {/* 3 Wide Stacked Cards (Wireframe 3 Horizontal Rows) */}
-        <div className="prof-rows-stack">
+        {/* Responsive Layout (Sequential on mobile via display:contents, 2-column on desktop) */}
+        <div className="prof-desktop-layout">
           
-          {/* Row Card 1: Personal Details */}
-          <div className="prof-row-card">
-            <div className="prof-row-head">
-              <div className="prof-row-icon"><IconUser /></div>
-              <div className="prof-row-titles">
-                <h3 className="prof-row-title">Personal Details</h3>
-                <p className="prof-row-sub">Manage your driver information</p>
+          {/* Left Column (Hero, Stats, Quick Actions) */}
+          <div className="prof-layout-left">
+            
+            {/* Hero Section with Banner + Prominent Centered Avatar */}
+            <div className="prof-header-hero">
+              <div className="prof-banner-strip">
+                <div className="prof-banner-pattern"></div>
+              </div>
+
+              <div className="prof-avatar-cluster">
+                <div className="prof-avatar-ring">
+                  {!imgError && userPhoto ? (
+                    <img
+                      src={userPhoto}
+                      alt={displayName}
+                      className="prof-avatar-img"
+                      onError={() => setImgError(true)}
+                    />
+                  ) : (
+                    <div className="prof-avatar-fallback">{initials}</div>
+                  )}
+                  <div className="prof-avatar-badge" title="Verified Account">✓</div>
+                </div>
+
+                <h1 className="prof-user-name">{displayName}</h1>
+                <p className="prof-user-email">{user?.email || 'driver@veloxpark.com'}</p>
+                
+                <div className="prof-member-pill">
+                  <span className="prof-star-icon">★</span>
+                  <span>VeloxPark Member</span>
+                </div>
               </div>
             </div>
 
-            <div className="prof-card-fields">
-              <div className="prof-field">
-                <label className="prof-field-label">FULL NAME</label>
+            {/* 3 Square Stat Quick-Cards */}
+            <div className="prof-stats-grid">
+              <div className="prof-stat-box" onClick={() => navigate('/history')} role="button" tabIndex={0}>
+                <div className="prof-stat-icon-wrap sessions">
+                  <IconHistory />
+                </div>
+                <div className="prof-stat-val">{stats.sessions}</div>
+                <div className="prof-stat-lbl">Sessions</div>
+              </div>
+
+              <div className="prof-stat-box">
+                <div className="prof-stat-icon-wrap hours">
+                  <IconClock />
+                </div>
+                <div className="prof-stat-val">{stats.hours}h</div>
+                <div className="prof-stat-lbl">Duration</div>
+              </div>
+
+              <div className="prof-stat-box">
+                <div className="prof-stat-icon-wrap rewards">
+                  <IconSparkles />
+                </div>
+                <div className="prof-stat-val gold">{stats.pts}</div>
+                <div className="prof-stat-lbl">Points</div>
+              </div>
+            </div>
+
+            {/* Quick Action Rows: History & Sign Out */}
+            <div className="prof-nav-links">
+              <div
+                className="prof-link-row"
+                onClick={() => navigate('/history')}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && navigate('/history')}
+              >
+                <div className="prof-link-left">
+                  <div className="prof-link-icon"><IconHistory /></div>
+                  <div>
+                    <span className="prof-link-title">Parking History</span>
+                    <span className="prof-link-subtitle">Telemetry, receipts &amp; barriers</span>
+                  </div>
+                </div>
+                <IconChevronRight />
+              </div>
+
+              <div
+                className="prof-link-row danger"
+                onClick={handleLogout}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === 'Enter' && handleLogout()}
+              >
+                <div className="prof-link-left">
+                  <div className="prof-link-icon danger"><IconLogOut /></div>
+                  <div>
+                    <span className="prof-link-title danger">Sign Out</span>
+                    <span className="prof-link-subtitle">Disconnect active session</span>
+                  </div>
+                </div>
+                <IconChevronRight color="#ef4444" />
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Column (Settings Rows & Desktop Save Action) */}
+          <div className="prof-layout-right">
+            
+            {/* Row Card 1: Personal Details */}
+            <div className="prof-row-card">
+              <div className="prof-row-head">
+                <div className="prof-row-icon"><IconUser /></div>
+                <div className="prof-row-titles">
+                  <h3 className="prof-row-title">Personal Details</h3>
+                  <p className="prof-row-sub">Manage your driver information</p>
+                </div>
+              </div>
+
+              <div className="prof-card-fields">
+                <div className="prof-field">
+                  <label className="prof-field-label">FULL NAME</label>
+                  <input
+                    type="text"
+                    className="prof-input"
+                    placeholder="Enter full name"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  />
+                </div>
+
+                <div className="prof-field">
+                  <label className="prof-field-label">PHONE NUMBER</label>
+                  <input
+                    type="tel"
+                    className="prof-input"
+                    placeholder="+1 (555) 000-0000"
+                    value={form.phone}
+                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Row Card 2: Vehicles & License Plates */}
+            <div className="prof-row-card">
+              <div className="prof-row-head">
+                <div className="prof-row-icon"><IconCar /></div>
+                <div className="prof-row-titles">
+                  <h3 className="prof-row-title">Vehicle Plates</h3>
+                  <p className="prof-row-sub">{plates.length} vehicle(s) saved</p>
+                </div>
+              </div>
+
+              <div className="prof-plates-wrap">
+                {plates.map((plate, index) => (
+                  <div key={plate} className="prof-plate-pill">
+                    <span className="prof-plate-val">{plate}</span>
+                    {index === 0 && <span className="prof-plate-primary">PRIMARY</span>}
+                    <button
+                      type="button"
+                      className="prof-plate-del"
+                      onClick={() => removePlate(plate)}
+                      title="Remove plate"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              <div className="prof-add-plate-row">
                 <input
                   type="text"
-                  className="prof-input"
-                  placeholder="Enter full name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  className="prof-input prof-add-input"
+                  placeholder="ADD PLATE (E.G. 7ABC123)"
+                  value={newPlate}
+                  onChange={(e) => setNewPlate(e.target.value.toUpperCase())}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      addPlate();
+                    }
+                  }}
                 />
-              </div>
-
-              <div className="prof-field">
-                <label className="prof-field-label">PHONE NUMBER</label>
-                <input
-                  type="tel"
-                  className="prof-input"
-                  placeholder="+1 (555) 000-0000"
-                  value={form.phone}
-                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Row Card 2: Vehicles & License Plates */}
-          <div className="prof-row-card">
-            <div className="prof-row-head">
-              <div className="prof-row-icon"><IconCar /></div>
-              <div className="prof-row-titles">
-                <h3 className="prof-row-title">Vehicle Plates</h3>
-                <p className="prof-row-sub">{plates.length} vehicle(s) saved</p>
+                <button
+                  type="button"
+                  className="prof-add-btn"
+                  onClick={addPlate}
+                >
+                  + Add
+                </button>
               </div>
             </div>
 
-            <div className="prof-plates-wrap">
-              {plates.map((plate, index) => (
-                <div key={plate} className="prof-plate-pill">
-                  <span className="prof-plate-val">{plate}</span>
-                  {index === 0 && <span className="prof-plate-primary">PRIMARY</span>}
-                  <button
-                    type="button"
-                    className="prof-plate-del"
-                    onClick={() => removePlate(plate)}
-                    title="Remove plate"
-                  >
-                    ×
-                  </button>
+            {/* Row Card 3: Appearance & Display */}
+            <div className="prof-row-card">
+              <div className="prof-row-head">
+                <div className="prof-row-icon"><IconMoon /></div>
+                <div className="prof-row-titles">
+                  <h3 className="prof-row-title">Appearance</h3>
+                  <p className="prof-row-sub">Cockpit theme selector</p>
                 </div>
-              ))}
+              </div>
+
+              <div className="prof-theme-grid">
+                <button
+                  type="button"
+                  className={`prof-theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
+                  onClick={() => applyTheme('dark')}
+                >
+                  <div className="prof-theme-btn-icon"><IconMoon /></div>
+                  <div className="prof-theme-btn-info">
+                    <span className="prof-theme-btn-title">Dark Cockpit</span>
+                    <span className="prof-theme-btn-desc">Night &amp; HUD view</span>
+                  </div>
+                  {currentTheme === 'dark' && <span className="prof-theme-check">✓</span>}
+                </button>
+
+                <button
+                  type="button"
+                  className={`prof-theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
+                  onClick={() => applyTheme('light')}
+                >
+                  <div className="prof-theme-btn-icon"><IconSun /></div>
+                  <div className="prof-theme-btn-info">
+                    <span className="prof-theme-btn-title">Light Daylight</span>
+                    <span className="prof-theme-btn-desc">High clarity view</span>
+                  </div>
+                  {currentTheme === 'light' && <span className="prof-theme-check">✓</span>}
+                </button>
+              </div>
             </div>
 
-            <div className="prof-add-plate-row">
-              <input
-                type="text"
-                className="prof-input prof-add-input"
-                placeholder="ADD PLATE (E.G. 7ABC123)"
-                value={newPlate}
-                onChange={(e) => setNewPlate(e.target.value.toUpperCase())}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addPlate();
-                  }
-                }}
-              />
+            {/* Desktop Save Action Button */}
+            <div className="prof-desktop-save-wrap">
               <button
                 type="button"
-                className="prof-add-btn"
-                onClick={addPlate}
+                className={`prof-save-btn ${saved ? 'saved' : ''}`}
+                disabled={saving}
+                onClick={handleSave}
               >
-                + Add
+                {saving ? 'Saving Changes…' : saved ? '✓ Profile Saved!' : 'Save Changes'}
               </button>
             </div>
-          </div>
 
-          {/* Row Card 3: Appearance & Display */}
-          <div className="prof-row-card">
-            <div className="prof-row-head">
-              <div className="prof-row-icon"><IconMoon /></div>
-              <div className="prof-row-titles">
-                <h3 className="prof-row-title">Appearance</h3>
-                <p className="prof-row-sub">Cockpit theme selector</p>
-              </div>
-            </div>
-
-            <div className="prof-theme-grid">
-              <button
-                type="button"
-                className={`prof-theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
-                onClick={() => applyTheme('dark')}
-              >
-                <div className="prof-theme-btn-icon"><IconMoon /></div>
-                <div className="prof-theme-btn-info">
-                  <span className="prof-theme-btn-title">Dark Cockpit</span>
-                  <span className="prof-theme-btn-desc">Night &amp; HUD view</span>
-                </div>
-                {currentTheme === 'dark' && <span className="prof-theme-check">✓</span>}
-              </button>
-
-              <button
-                type="button"
-                className={`prof-theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
-                onClick={() => applyTheme('light')}
-              >
-                <div className="prof-theme-btn-icon"><IconSun /></div>
-                <div className="prof-theme-btn-info">
-                  <span className="prof-theme-btn-title">Light Daylight</span>
-                  <span className="prof-theme-btn-desc">High clarity view</span>
-                </div>
-                {currentTheme === 'light' && <span className="prof-theme-check">✓</span>}
-              </button>
-            </div>
-          </div>
-
-          {/* Quick Action Rows: History & Sign Out */}
-          <div className="prof-nav-links">
-            <div
-              className="prof-link-row"
-              onClick={() => navigate('/history')}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && navigate('/history')}
-            >
-              <div className="prof-link-left">
-                <div className="prof-link-icon"><IconHistory /></div>
-                <div>
-                  <span className="prof-link-title">Parking History</span>
-                  <span className="prof-link-subtitle">Telemetry, receipts &amp; barriers</span>
-                </div>
-              </div>
-              <IconChevronRight />
-            </div>
-
-            <div
-              className="prof-link-row danger"
-              onClick={handleLogout}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => e.key === 'Enter' && handleLogout()}
-            >
-              <div className="prof-link-left">
-                <div className="prof-link-icon danger"><IconLogOut /></div>
-                <div>
-                  <span className="prof-link-title danger">Sign Out</span>
-                  <span className="prof-link-subtitle">Disconnect active session</span>
-                </div>
-              </div>
-              <IconChevronRight color="#ef4444" />
-            </div>
           </div>
 
         </div>
 
-        {/* Sticky Save Bar */}
+        {/* Sticky Save Bar (Mobile Only) */}
         <div className="prof-bottom-bar">
           <button
             type="button"

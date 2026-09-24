@@ -931,3 +931,41 @@ For more information:
 - [Database Schema](./database-schema.md) - Schema details
 - [Component Guide](./component-guide.md) - React components
 - [Troubleshooting](./troubleshooting.md) - Common issues
+
+## Map APIs
+
+### getParkingStations()
+
+Location: src/data/parkingStations.js
+
+Returns a promise of station objects:
+
+    {
+      id,
+      name,
+      latitude,
+      longitude,
+      totalSlots,
+      availableSlots,
+      status
+    }
+
+The current implementation returns temporary demo data. Replace this provider with Firebase/API access when real station data is available.
+
+### calculateDistance(lat1, lon1, lat2, lon2)
+
+Location: src/utils/distance.js
+
+Returns great-circle distance in kilometres using the Haversine formula.
+
+### formatDistance(distanceKm)
+
+Formats metres and kilometre distances for the station card.
+
+### useUserLocation()
+
+Location: src/hooks/useUserLocation.js
+
+Returns location coordinates, status, error text, and requestLocation. It performs a one-shot navigator.geolocation.getCurrentPosition() request and does not continuously track the user.
+
+See Map Feature Guide for the complete contract and Firebase adapter example.

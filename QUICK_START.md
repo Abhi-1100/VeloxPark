@@ -296,3 +296,20 @@ For issues or questions:
 ---
 
 **Happy Parking! 🚗💨**
+
+## Interactive map quick check
+
+The current user map is at /map and is reached from the dashboard/search flow. It uses React Leaflet and OpenStreetMap, not the old static map concept.
+
+Test:
+
+1. Open /dashboard.
+2. Open the map preview or Search map view.
+3. Continue to /map.
+4. Allow location access.
+5. Check the user marker, nearest station card, station marker selection, Locate Me, and Navigate.
+6. Repeat once with permission denied.
+
+Demo stations are in src/data/parkingStations.js and must be replaced before production.
+
+See doc/map-feature.md for the complete contract and integration notes.

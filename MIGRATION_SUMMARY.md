@@ -274,3 +274,9 @@ Your Parking System has been successfully migrated to React with all features pr
 **React Project**: `d:\ps\Parking_System\`  
 
 Both projects are intact and functional!
+
+## Interactive map addition
+
+The user experience now includes a real /map route implemented with React Leaflet and OpenStreetMap. The feature adds custom station markers, browser geolocation, Haversine nearest-station calculation, responsive station details, Locate Me, and external Navigate behavior.
+
+The implementation is isolated under src/components/map, src/data, src/hooks, and src/utils, with the existing user route wrapper retained. Current station coordinates are temporary demo data.

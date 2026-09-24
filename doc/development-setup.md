@@ -351,3 +351,9 @@ npm install
 ---
 
 **Development Environment Ready!** 🚀
+
+## Map development notes
+
+Map code is organized under src/components/map, src/data, src/hooks, and src/utils, with the route wrapper in src/pages/user/MapView.jsx.
+
+Run npm run lint and npm run build after map changes. Use Testing Guide for geolocation, station, responsive, and navigation checks.

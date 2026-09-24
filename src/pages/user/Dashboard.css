@@ -21,7 +21,7 @@
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 20px 40px;
+  padding: 16px 20px 84px;
 }
 
 /* Header */
@@ -33,24 +33,15 @@
 }
 
 .dash-menu-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #eee;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  display: none;
 }
 
 .dash-user-info {
-  text-align: center;
+  text-align: left;
 }
 
 .dash-user-name {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 800;
   color: #111;
   margin: 0;
@@ -62,8 +53,9 @@
   color: #888;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 4px;
+  margin-top: 2px;
 }
 
 .dash-profile-btn {

@@ -127,3 +127,11 @@ A: UPI payment confirmation serves as receipt. Save in UPI app.
 ---
 
 **Need Help?** Contact parking staff on-site.
+
+## Nearby stations map
+
+From the dashboard, open Search map view and continue to /map. Allow location access to see your position and the nearest station. The station card shows name, distance, available/total slots, and status.
+
+Click a station marker to select it. Use Locate Me to refocus the map. Use Navigate to open external directions.
+
+If permission is denied, stations remain browsable but distance ordering cannot be calculated. Current station coordinates are temporary demo data.

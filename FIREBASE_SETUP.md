@@ -178,3 +178,11 @@ The app now includes detailed console logging. Open your browser console (F12) t
 ---
 
 **Last Updated**: March 3, 2026
+
+## Station data preparation
+
+The current map uses temporary local station data and does not require a Firebase station collection. When station data is ready, add a stations collection with name, latitude, longitude, totalSlots, availableSlots, status, and updatedAt fields.
+
+Connect it through getParkingStations() in src/data/parkingStations.js using the existing Firebase initialization in src/config/firebase.js. Do not create another Firebase app. Validate coordinates and slot counts and keep station writes restricted to trusted admin/backend processes.
+
+See doc/map-feature.md for the adapter example and security checklist.

@@ -110,3 +110,13 @@ The top bar is a full-width `bg-ink`/`bg-surface` navigation row with a gold wor
 ## 5. Tailwind token source
 
 The canonical JavaScript token map is in `tailwind.config.js`. Because this project uses Tailwind v4, the same values are also exposed through the `@theme` block in `src/index.css` so utility classes work with the current Vite plugin.
+
+## 6. Interactive map visual language
+
+The user map uses the existing VeloxPark black/yellow identity as the UI layer over geographically realistic OpenStreetMap tiles.
+
+- Station markers use yellow for open/available, yellow with a limited state, and red for full/closed.
+- The user location marker uses blue with a white ring for clear map contrast.
+- The station card uses the existing dark surface, gold accent, border radius, and backdrop blur patterns.
+- Map controls remain compact and accessible on mobile.
+- The map itself stays visually realistic; brand styling is limited to markers, overlays, and information cards.

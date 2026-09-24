@@ -1,8 +1,17 @@
 # Smart Parking System - React Application
 
+> Documentation reviewed 2026-09-24. The project now includes a real user map at /map; see doc/map-feature.md.
+
 A modern, feature-rich parking management system built with React, Firebase, and Vite. This application provides both user and admin interfaces for managing parking operations.
 
 ## Features
+
+### Interactive Nearby-Stations Map
+- Real React Leaflet/OpenStreetMap map at /map
+- Custom VeloxPark station and user-location markers
+- Browser geolocation with loading and permission/error states
+- Haversine nearest-station calculation and station information card
+- Locate Me and external Navigate actions
 
 ### User Panel (Public Access)
 - **Vehicle Search**: Search for vehicles by license plate number
@@ -39,6 +48,7 @@ A modern, feature-rich parking management system built with React, Firebase, and
 - **QR Code**: qrcode.react
 - **PDF Generation**: jsPDF with autotable plugin
 - **Styling**: Tailwind CSS 4.1.18 + Custom CSS
+- **Mapping**: React Leaflet 5 + Leaflet 1.9 + OpenStreetMap
 
 ## 📚 Documentation
 
@@ -54,6 +64,7 @@ A modern, feature-rich parking management system built with React, Firebase, and
 - **[Testing Guide](./doc/testing-guide.md)** - Manual testing procedures
 - **[Troubleshooting](./doc/troubleshooting.md)** - Common issues and solutions
 - **[Deployment Guide](./doc/deployment.md)** - Production deployment instructions
+- **[Map Feature Guide](./doc/map-feature.md)** - Map behavior, station data, geolocation, and Firebase replacement
 
 👉 **Start here:** [Documentation Index](./doc/README.md)
 
@@ -143,7 +154,14 @@ To access the admin dashboard, you need to create a user in Firebase Authenticat
 
 If Firebase is unavailable, the application will attempt to load data from `public/numberplate.json` as a fallback.
 
-## Features Breakdown
+## Features
+
+### Interactive Nearby-Stations Map
+- Real React Leaflet/OpenStreetMap map at /map
+- Custom VeloxPark station and user-location markers
+- Browser geolocation with loading and permission/error states
+- Haversine nearest-station calculation and station information card
+- Locate Me and external Navigate actions Breakdown
 
 ### Parking Logic
 - **Entry Detection**: First scan of a plate number
@@ -187,6 +205,8 @@ Fully responsive design optimized for:
 - Secure database rules (configure in Firebase Console)
 
 ## Future Enhancements
+
+- Connect station data and live availability to Firebase/API
 
 - Email notifications
 - SMS alerts

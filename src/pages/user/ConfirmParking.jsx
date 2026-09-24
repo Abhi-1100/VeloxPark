@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import './ConfirmParking.css';
 
-// Fix leafet default icon path issues
+// Fix leaflet default icon path issues
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -33,8 +33,20 @@ function Recenter({ lat, lng }) {
 
 function ConfirmParking() {
   const navigate = useNavigate();
-  const lat = 40.6782;
-  const lng = -73.9442;
+  const location = useLocation();
+  const station = location.state?.station;
+  const entryTime = location.state?.entryTime || '10:00 AM';
+  const exitTime = location.state?.exitTime || '02:00 PM';
+  const durationHours = location.state?.durationHours || 4;
+  const ratePerHour = 60;
+  const totalAmount = location.state?.amount || durationHours * ratePerHour;
+
+  const lat = station?.latitude || 40.6782;
+  const lng = station?.longitude || -73.9442;
+  const name = station?.name || 'California Parking';
+  const address = station?.address || (station ? `${station.city || 'Vadodara'} Station Area` : '1484 Nostrand Ave, Brooklyn, NY 11226');
+  const distance = station?.distance != null ? `${station.distance.toFixed(1)} km` : '12 km';
+  const slots = station?.availableSlots != null ? `${station.availableSlots} slots` : '5 slots';
 
   return (
     <div className="cp-page">
@@ -52,32 +64,42 @@ function ConfirmParking() {
             scrollWheelZoom={false}
             doubleClickZoom={false}
           >
-            <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
             <Recenter lat={lat} lng={lng} />
             <Marker position={[lat, lng]} icon={cpPinIcon} />
           </MapContainer>
         </div>
 
-        {/* Top actions */}
+        {/* Top Navbar Actions (Matches the Old Way: Left Back Arrow, Right Car Pill) */}
         <div className="cp-top-actions">
-          <button className="cp-back-btn" onClick={() => navigate('/map')}>
+          <button className="cp-back-btn" onClick={() => navigate('/map')} aria-label="Go back to map">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
           </button>
           
-          <button className="cp-compass-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+          <div className="cp-car-pill" role="button" tabIndex={0} aria-label="Vehicle type: Car">
+            <svg width="22" height="14" viewBox="0 0 90 56" fill="none">
+              <rect x="12" y="20" width="66" height="22" rx="5" fill="#a2b1c2" />
+              <rect x="18" y="10" width="54" height="20" rx="5" fill="#8c9ead" />
+              <circle cx="22" cy="44" r="8" fill="#fff" stroke="#222" strokeWidth="3" />
+              <circle cx="68" cy="44" r="8" fill="#fff" stroke="#222" strokeWidth="3" />
             </svg>
-          </button>
+            <span>Car</span>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </div>
         </div>
 
         {/* Bottom Sheet Details */}
         <div className="cp-sheet">
           <div className="cp-header">
-            <h2 className="cp-title">California Parking</h2>
-            <p className="cp-addr">1484 Nostrand Ave, Brooklyn, NY 11226</p>
+            <h2 className="cp-title">{name}</h2>
+            <p className="cp-addr">{address}</p>
           </div>
 
           <div className="cp-details-row">
@@ -111,7 +133,7 @@ function ConfirmParking() {
               </div>
               <div className="cp-detail-text">
                 <span className="cp-detail-lbl">Distance</span>
-                <span className="cp-detail-val">12 km</span>
+                <span className="cp-detail-val">{distance}</span>
               </div>
             </div>
           </div>
@@ -119,21 +141,34 @@ function ConfirmParking() {
           <div className="cp-time-wrap">
             <div className="cp-time-box">
               <span className="cp-time-lbl">ENTRY</span>
-              <span className="cp-time-val">Today, 10:00 AM</span>
+              <span className="cp-time-val">Today, {entryTime}</span>
             </div>
-            <div className="cp-time-dur">4h</div>
+            <div className="cp-time-dur">{durationHours}h</div>
             <div className="cp-time-box end">
               <span className="cp-time-lbl">EXIT</span>
-              <span className="cp-time-val">Today, 02:00 PM</span>
+              <span className="cp-time-val">Today, {exitTime}</span>
             </div>
           </div>
 
           <div className="cp-action-row">
             <div className="cp-price-box">
               <span className="cp-price-lbl">Total</span>
-              <span className="cp-price-val">$24.00</span>
+              <span className="cp-price-val">₹{totalAmount.toFixed(2)}</span>
             </div>
-            <button className="cp-book-btn" onClick={() => navigate('/book')}>
+            <button
+              className="cp-book-btn"
+              onClick={() =>
+                navigate('/book', {
+                  state: {
+                    station,
+                    entryTime,
+                    exitTime,
+                    durationHours,
+                    amount: totalAmount,
+                  },
+                })
+              }
+            >
               Pay
             </button>
           </div>

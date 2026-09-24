@@ -1,0 +1,116 @@
+/* ─── Mobile Floating Navigation Dock (White Theme) ───────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.vp-mobile-dock-wrapper {
+  position: fixed;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  left: 0;
+  right: 0;
+  z-index: 1200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  padding: 0 16px;
+  animation: vpDockSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes vpDockSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── White Theme Pill Capsule ────────────────────────────────────────────── */
+.vp-mobile-dock {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 9999px;
+  padding: 6px 8px;
+  gap: 4px;
+  box-shadow:
+    0 16px 36px rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* ─── Dock Button Items ───────────────────────────────────────────────────── */
+.vp-dock-item {
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 9999px;
+  padding: 10px 14px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.vp-dock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.vp-dock-item:active .vp-dock-icon {
+  transform: scale(0.92);
+}
+
+.vp-dock-item:hover:not(.active) {
+  color: #111827;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Active Pill (Matching Image Style in White Theme) ──────────────────── */
+.vp-dock-item.active {
+  background: #1c1d21;
+  color: #ffffff;
+  padding: 9px 18px;
+  box-shadow: 0 4px 16px rgba(28, 29, 33, 0.25);
+  transform: scale(1.02);
+}
+
+.vp-dock-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  animation: vpFadeIn 0.2s ease;
+}
+
+@keyframes vpFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ─── Hide on Desktop View ────────────────────────────────────────────────── */
+@media (min-width: 1024px) {
+  .vp-mobile-dock-wrapper {
+    display: none !important;
+  }
+}

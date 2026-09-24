@@ -279,3 +279,12 @@ Cache-Control: public, max-age=31536000, immutable
 **Deployment Complete!** 🚀
 
 Your VeloxPark is now live!
+
+## Interactive map deployment requirements
+
+- Production geolocation must be served over HTTPS.
+- The deployed origin must be allowed to request browser location.
+- Confirm the deployment can reach OpenStreetMap tile servers.
+- Keep the required OpenStreetMap attribution visible.
+- Replace local demo station data before production release.
+- If stations move to Firebase, publish read rules for the intended audience and restrict writes.

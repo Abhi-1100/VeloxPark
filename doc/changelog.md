@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.1.0] - 2026-09-24
+
+### Added
+
+- Real interactive user map at /map using React Leaflet and OpenStreetMap.
+- Custom VeloxPark station markers and user-location marker.
+- Browser geolocation with loading and failure states.
+- Haversine nearest-station calculation.
+- Station detail card with distance, availability, status, and external navigation.
+- Reusable station-provider abstraction for future Firebase/API data.
+- Map documentation, data contract, setup notes, and manual test cases.
+
+### Notes
+
+- Current station coordinates are temporary local demo data.
+- Firebase station persistence and live availability remain follow-up work.
+
 Version history and release notes for VeloxPark.
 
 ---
