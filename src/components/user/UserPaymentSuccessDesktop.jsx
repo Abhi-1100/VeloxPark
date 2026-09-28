@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserNavbar from './UserNavbar';
 import { formatDateTime, formatDuration } from '../../utils/parkingUtils';
@@ -6,6 +6,7 @@ import { formatDateTime, formatDuration } from '../../utils/parkingUtils';
 const UserPaymentSuccessDesktop = ({
   vehicleData,
   upiConfig,
+  payment,
   receiptId,
   rating,
   setRating,
@@ -271,8 +272,8 @@ const UserPaymentSuccessDesktop = ({
 
                 <div style={{ fontSize: '13px', color: '#94A3B8' }}>
                   {rating === 5
-                    ? '★ Exceptional experience! Thank you for parking with VeloxPark.'
-                    : `★ Thank you for providing ${rating}-star feedback.`}
+                    ? 'â˜… Exceptional experience! Thank you for parking with VeloxPark.'
+                    : `â˜… Thank you for providing ${rating}-star feedback.`}
                 </div>
               </div>
             </div>
@@ -458,7 +459,7 @@ const UserPaymentSuccessDesktop = ({
                 <div>
                   <div style={{ fontWeight: 800, fontSize: '15px' }}>VeloxPark Urban Smart Hub</div>
                   <div style={{ fontSize: '12px', color: '#94A3B8' }}>
-                    Automated Gate Sensor Node #01 • Brooklyn
+                    Automated Gate Sensor Node #01 â€¢ Brooklyn
                   </div>
                 </div>
               </div>
@@ -470,13 +471,15 @@ const UserPaymentSuccessDesktop = ({
                   { label: 'Entry Time', value: formatDateTime(vehicleData.entry) },
                   {
                     label: 'Exit Time',
-                    value: vehicleData.exit ? formatDateTime(vehicleData.exit) : '—',
+                    value: vehicleData.exit ? formatDateTime(vehicleData.exit) : 'â€”',
                   },
                   {
                     label: 'Total Billable Duration',
-                    value: formatDuration(vehicleData.duration) || '—',
+                    value: formatDuration(vehicleData.duration) || 'â€”',
                   },
-                  { label: 'Payment Gateway', value: upiConfig?.upiId || 'parking@upi', mono: true },
+                  { label: 'Payment Status', value: payment?.status || 'paid', mono: true },
+                  { label: 'Razorpay Payment ID', value: payment?.razorpayPaymentId || '—', mono: true },
+                  { label: 'Razorpay Order ID', value: payment?.razorpayOrderId || '—', mono: true },
                   { label: 'Merchant Entity', value: upiConfig?.upiName || 'VeloxPark' },
                 ].map(({ label, value, mono }) => (
                   <div
@@ -527,7 +530,7 @@ const UserPaymentSuccessDesktop = ({
                     fontFamily: "'Barlow Condensed', sans-serif",
                   }}
                 >
-                  ₹{vehicleData.amount || 0}
+                  â‚¹{vehicleData.amount || 0}
                 </div>
               </div>
             </div>
@@ -589,10 +592,13 @@ const UserPaymentSuccessDesktop = ({
           color: '#64748B',
         }}
       >
-        © 2026 VeloxPark Operating Systems Inc. Official Electronic Clearance Receipt.
+        Â© 2026 VeloxPark Operating Systems Inc. Official Electronic Clearance Receipt.
       </footer>
     </div>
   );
 };
 
 export default UserPaymentSuccessDesktop;
+
+
+

@@ -15,6 +15,9 @@
   --color-danger: #F05A67;
   --color-info: #6EA8FE;
   --color-primary: #F2C230;
+  --color-border: #333333;
+  --color-background: #0A0A0A;
+  --color-card: #141414;
   --font-display: 'Arial Narrow', 'Roboto Condensed', Arial, sans-serif;
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --radius-sm: 0.5rem;

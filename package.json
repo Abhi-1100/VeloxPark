@@ -5,17 +5,23 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:server": "node server/index.js",
+    "start:server": "node server/index.js",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "dotenv": "^18.0.3",
+    "express": "^5.2.1",
     "firebase": "^12.9.0",
+    "firebase-admin": "^14.5.0",
     "jspdf": "^4.1.0",
     "jspdf-autotable": "^5.0.7",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.47.0",
     "qrcode.react": "^4.2.0",
+    "razorpay": "^2.9.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-leaflet": "^5.0.0",
@@ -38,3 +44,4 @@
     "vite": "^8.0.0-beta.13"
   }
 }
+

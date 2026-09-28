@@ -31,3 +31,6 @@ dist-ssr
 .env
 .env.local
 .env.production
+
+service-account*.json
+firebase-service-account*.json

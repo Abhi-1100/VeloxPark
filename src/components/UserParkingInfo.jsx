@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { ref, get } from 'firebase/database';
 import { database } from '../config/firebase';
 import { useNavigate } from 'react-router-dom';
@@ -39,14 +39,21 @@ const UserParkingInfo = () => {
   const findVehicleInData = (data, plate) => {
     if (!data) return null;
     const scans = [];
+    let directSession = null;
     Object.keys(data).forEach((key) => {
       const entry = data[key];
       const entryPlate = entry.number_plate || entry.plate || '';
       if (entryPlate === plate && entryPlate !== 'NULL') {
+        if (entry.outTime !== undefined) {
+          const dur = entry.duration != null ? { hours: Math.floor(entry.duration / 60), minutes: entry.duration % 60, totalMinutes: entry.duration } : calculateDuration(entry.inTime, entry.outTime);
+          directSession = { sessionId: key, source: 'parkingLogs', plate, entry: entry.inTime || entry.date_time, exit: entry.outTime, status: entry.outTime ? 'Exited' : 'Parked', duration: dur, amount: entry.amount != null ? entry.amount : calculateAmount(dur, entry.rateAtEntry || 20) };
+          return;
+        }
         const ts = entry.date_time || entry.inTime || entry.timestamp;
         if (ts) scans.push({ id: key, plate: entryPlate, timestamp: ts });
       }
     });
+    if (directSession) return directSession;
     if (scans.length === 0) return null;
 
     // Sort all scans ascending (oldest -> newest)
@@ -57,7 +64,7 @@ const UserParkingInfo = () => {
 
     // If odd number of scans, vehicle is still parked
     if (isOddCount) {
-      return { plate, entry: scans[lastIdx].timestamp, exit: null, status: 'Parked' };
+      return { sessionId: 'legacy_' + scans[lastIdx].id, source: 'numberplate', plate, entry: scans[lastIdx].timestamp, exit: null, status: 'Parked' };
     }
 
     // Even: last two scans form the most recent session
@@ -161,3 +168,9 @@ const UserParkingInfo = () => {
 };
 
 export default UserParkingInfo;
+
+
+
+
+
+

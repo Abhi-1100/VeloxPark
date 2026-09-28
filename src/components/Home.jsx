@@ -310,36 +310,59 @@ const Home = () => {
       </section>
 
       {/* FOOTER */}
-      <footer>
-        <div className="footer-grid">
-          <div>
-            <div className="footer-brand">VELOXPARK.OS</div>
-            <p className="footer-tagline">The operating system for the next billion urban transitions. Built for cities, scaled for humanity.</p>
-          </div>
-          <div>
-            <div className="footer-col-title">System</div>
-            <ul className="footer-links">
-              <li><a href="#">API Docs</a></li>
-              <li><a href="#">Infrastructure</a></li>
-              <li><a href="#">Security</a></li>
-            </ul>
-          </div>
-          <div>
-            <div className="footer-col-title">Legal</div>
-            <ul className="footer-links">
-              <li><a href="#">Privacy Protocol</a></li>
-              <li><a href="#">Terms of Service</a></li>
-              <li><a href="#">GDPR Compliance</a></li>
-            </ul>
+      <footer className="site-footer" id="contact">
+        <div className="footer-feature">
+          <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=1600&q=85" alt="Cars moving through a connected urban parking network" />
+          <div className="footer-feature-overlay"></div>
+          <div className="footer-feature-content fade-up">
+            <div className="section-badge">NETWORK ACCESS</div>
+            <h2>Parking that<br /><span>moves with you.</span></h2>
+            <p>Find your space, connect your site, and keep every journey moving.</p>
+            <button className="footer-cta" onClick={() => navigate('/login')}>CONNECT TO VELOXPARK <span>→</span></button>
           </div>
         </div>
-        <div className="footer-bottom">
-          <div className="footer-copy">© 2026 VELOXPARK URBAN MOBILITY CORP. ALL RIGHTS RESERVED.</div>
-          <div className="footer-system">SYSTEM: ONLINE / CLUSTER: 01</div>
+        <div className="footer-main">
+          <div className="footer-grid">
+            <div className="footer-brand-block fade-up">
+              <div className="footer-brand">VELOX<span>.</span>PARK</div>
+              <p className="footer-tagline">The operating system for smarter urban parking. Built for drivers, operators, and the cities they share.</p>
+              <button className="footer-connect" onClick={() => navigate('/login')}>ACCESS PORTAL <span>↗</span></button>
+            </div>
+            <div className="footer-column fade-up">
+              <div className="footer-col-title">Network</div>
+              <ul className="footer-links">
+                <li><button onClick={() => scrollToSection('node-network')}>Node Network</button></li>
+                <li><button onClick={() => scrollToSection('features')}>Core Systems</button></li>
+                <li><button onClick={() => scrollToSection('stats')}>Network Scale</button></li>
+                <li><button onClick={() => scrollToSection('how-it-works')}>How It Works</button></li>
+              </ul>
+            </div>
+            <div className="footer-column fade-up">
+              <div className="footer-col-title">Access</div>
+              <ul className="footer-links">
+                <li><button onClick={() => navigate('/login')}>Driver Portal</button></li>
+                <li><button onClick={() => navigate('/login')}>Operator Portal</button></li>
+                <li><button onClick={() => navigate('/login')}>City Systems</button></li>
+                <li><a href="mailto:hello@veloxpark.com">Contact Operations</a></li>
+              </ul>
+            </div>
+            <div className="footer-column footer-status fade-up">
+              <div className="footer-col-title">Live Status</div>
+              <p><span className="status-dot"></span> All systems operational</p>
+              <p>Cluster: 01 / India</p>
+              <p>Protocol: VP-4.0</p>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <div className="footer-copy">© 2026 VELOXPARK URBAN MOBILITY CORP. ALL RIGHTS RESERVED.</div>
+            <div className="footer-legal"><a href="#">Privacy Protocol</a><a href="#">Terms of Service</a><a href="#">Security</a></div>
+          </div>
         </div>
+        <div className="footer-wordmark" aria-hidden="true">VELOXPARK<span>.</span></div>
       </footer>
     </>
   );
 };
 
 export default Home;
+

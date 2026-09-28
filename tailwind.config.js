@@ -15,6 +15,10 @@ export default {
         available: '#35C878',
         danger: '#F05A67',
         info: '#6EA8FE',
+        primary: '#F2C230',
+        border: '#333333',
+        background: '#0A0A0A',
+        card: '#141414',
       },
       borderRadius: {
         sm: '0.5rem',

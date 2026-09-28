@@ -255,9 +255,15 @@
 /* ─── Payment Methods Grid ───────────────────────────────────────────────── */
 .pay-methods-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-bottom: 20px;
+}
+
+@media (min-width: 480px) {
+  .pay-methods-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .pay-method-pill {
@@ -289,6 +295,9 @@
 .pay-method-icon {
   color: #111827;
   margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pay-method-name {
@@ -297,12 +306,174 @@
   color: #111827;
 }
 
+.pay-method-badge-fast {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1px solid #bfdbfe;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .pay-method-dot {
   position: absolute;
   top: 8px;
   right: 8px;
   color: #F2C230;
   font-size: 10px;
+}
+
+/* ─── Razorpay Pane ──────────────────────────────────────────────────────── */
+.pay-razorpay-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pay-razorpay-card {
+  background: #ffffff;
+  border: 1.5px solid #edf2f7;
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.pay-razorpay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1.5px dashed #e2e8f0;
+  margin-bottom: 18px;
+}
+
+.pay-razorpay-title-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pay-razorpay-icon-bg {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f0f7ff;
+  border: 1px solid #bfdbfe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.pay-razorpay-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+}
+
+.pay-razorpay-sub {
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.pay-rzp-mode-badge {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 8px;
+  letter-spacing: 0.05em;
+}
+
+.pay-razorpay-methods-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.pay-rzp-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #f8fafc;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #edf2f7;
+}
+
+.pay-rzp-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.pay-rzp-feature-text strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.pay-rzp-feature-text p {
+  font-size: 11px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.pay-rzp-footer-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #166534;
+  margin-bottom: 18px;
+}
+
+.pay-rzp-launch-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #0c2340 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(12, 35, 64, 0.25);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.pay-rzp-launch-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #07162c 0%, #172554 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(12, 35, 64, 0.35);
+}
+
+.pay-rzp-launch-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /* ─── Card Visual & Pane ─────────────────────────────────────────────────── */

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import { formatDateTime, formatDuration } from '../utils/parkingUtils';
@@ -13,9 +13,10 @@ const UserPaymentSuccess = () => {
   const state = location.state;
   const vehicleData = state?.vehicleData;
   const upiConfig = state?.upiConfig;
+  const payment = state?.payment;
 
   // Generate receipt ID
-  const receiptId = `VX-${String(Date.now()).slice(-5)}`;
+  const [receiptId] = useState(() => `VX-${String(Date.now()).slice(-5)}`);
 
   // PDF Receipt Download
   const downloadReceipt = () => {
@@ -67,10 +68,12 @@ const UserPaymentSuccess = () => {
     const rows = [
       ['Vehicle Number', vehicleData.plate],
       ['Entry Time', formatDateTime(vehicleData.entry)],
-      ['Exit Time', vehicleData.exit ? formatDateTime(vehicleData.exit) : '—'],
-      ['Total Duration', formatDuration(vehicleData.duration) || '—'],
+      ['Exit Time', vehicleData.exit ? formatDateTime(vehicleData.exit) : 'â€”'],
+      ['Total Duration', formatDuration(vehicleData.duration) || 'â€”'],
       ['Status', 'PAID'],
-      ['UPI ID', upiConfig?.upiId || 'parking@upi'],
+      ['Payment Status', payment?.status || 'paid'],
+      ['Razorpay Payment ID', payment?.razorpayPaymentId || '—'],
+      ['Razorpay Order ID', payment?.razorpayOrderId || '—'],
       ['Merchant', upiConfig?.upiName || 'VeloxPark'],
     ];
 
@@ -102,13 +105,13 @@ const UserPaymentSuccess = () => {
     doc.setTextColor(10, 10, 10);
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(17);
-    doc.text(`TOTAL PAID: ₹${vehicleData.amount || 0}`, W / 2, y + 46, { align: 'center' });
+    doc.text(`TOTAL PAID: â‚¹${vehicleData.amount || 0}`, W / 2, y + 46, { align: 'center' });
 
     // Rating
     doc.setFontSize(9);
     doc.setTextColor(100, 116, 139);
     doc.setFont('helvetica', 'normal');
-    doc.text(`Rating: ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}`, W / 2, y + 82, {
+    doc.text(`Rating: ${'â˜…'.repeat(rating)}${'â˜†'.repeat(5 - rating)}`, W / 2, y + 82, {
       align: 'center',
     });
 
@@ -153,3 +156,6 @@ const UserPaymentSuccess = () => {
 };
 
 export default UserPaymentSuccess;
+
+
+

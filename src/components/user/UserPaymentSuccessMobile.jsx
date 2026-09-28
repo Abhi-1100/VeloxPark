@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { formatDateTime, formatDuration } from '../../utils/parkingUtils';
 
 const UserPaymentSuccessMobile = ({
   vehicleData,
-  upiConfig,
+  payment,
   receiptId,
   rating,
   setRating,
@@ -368,13 +368,15 @@ const UserPaymentSuccessMobile = ({
                   { label: 'Entry Time', value: formatDateTime(vehicleData.entry) },
                   {
                     label: 'Exit Time',
-                    value: vehicleData.exit ? formatDateTime(vehicleData.exit) : '—',
+                    value: vehicleData.exit ? formatDateTime(vehicleData.exit) : 'â€”',
                   },
                   {
                     label: 'Total Time',
-                    value: formatDuration(vehicleData.duration) || '—',
+                    value: formatDuration(vehicleData.duration) || 'â€”',
                   },
                   { label: 'Vehicle', value: vehicleData.plate },
+                  { label: 'Payment ID', value: payment?.razorpayPaymentId || '—' },
+                  { label: 'Order ID', value: payment?.razorpayOrderId || '—' },
                 ].map(({ label, value }) => (
                   <div key={label}>
                     <p
@@ -426,7 +428,7 @@ const UserPaymentSuccessMobile = ({
                     margin: 0,
                   }}
                 >
-                  ₹{vehicleData.amount || 0}
+                  â‚¹{vehicleData.amount || 0}
                 </p>
               </div>
             </div>
@@ -560,10 +562,17 @@ const UserPaymentSuccessMobile = ({
           fontSize: '12px',
         }}
       >
-        <p>© 2024 VeloxPark Management System. All rights reserved.</p>
+        <p>Â© 2024 VeloxPark Management System. All rights reserved.</p>
       </footer>
     </div>
   );
 };
 
 export default UserPaymentSuccessMobile;
+
+
+
+
+
+
+

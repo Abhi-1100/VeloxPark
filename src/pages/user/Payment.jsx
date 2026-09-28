@@ -55,6 +55,15 @@ function IconWallet() {
   );
 }
 
+function IconRazorpay() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 512 512" fill="none">
+      <path d="M122.5 351.5L254.8 62.4c4.6-10 14.6-16.4 25.6-16.4h113.1c9.3 0 15.6 9.5 12.1 18.2L288.7 348.6c-4.5 10.3-14.7 16.9-25.9 16.9H122.5z" fill="#0C2340"/>
+      <path d="M211.2 466L317.9 232.7c4.6-10 14.6-16.4 25.6-16.4h113.1c9.3 0 15.6 9.5 12.1 18.2L351.8 467.9c-4.5 10.3-14.7 16.9-25.9 16.9H223.3c-9.3 0-15.6-9.5-12.1-18.8z" fill="#3395FF"/>
+    </svg>
+  );
+}
+
 function IconCheck() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -63,13 +72,22 @@ function IconCheck() {
   );
 }
 
+const loadRazorpay = () => new Promise((resolve, reject) => {
+  if (window.Razorpay) return resolve(true);
+  const script = document.createElement('script');
+  script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+  script.onload = () => resolve(true);
+  script.onerror = () => reject(new Error('Razorpay Checkout failed to load'));
+  document.body.appendChild(script);
+});
+
 function Payment() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { booking: liveBooking, loading } = useBooking(id);
 
   const [booking, setBooking] = useState(null);
-  const [selectedMethod, setSelectedMethod] = useState('card');
+  const [selectedMethod, setSelectedMethod] = useState('razorpay');
   const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('888');
@@ -90,17 +108,83 @@ function Payment() {
     slotId: 'H1 237',
     slotLabel: 'Slot H1 237',
     address: 'California Parking',
-    amount: 24.0,
+    amount: 240.0,
     entryTime: '10:00 AM',
     exitTime: '02:00 PM',
     duration: 240,
     status: 'reserved',
   };
 
-  const amountDisplay = Number(activeBooking.amount || 24.0).toFixed(2);
+  const amountDisplay = Number(activeBooking.amount || 240.0).toFixed(2);
   const slotName = activeBooking.slotLabel || (activeBooking.slotId ? `Slot ${activeBooking.slotId}` : 'Slot H1 237');
 
   const handlePay = async () => {
+    if (selectedMethod === 'razorpay') {
+      setProcessing(true);
+      try {
+        await loadRazorpay();
+        const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_Tfp9w39oWHSf98';
+        const totalPaise = Math.round(Number(activeBooking.amount || 240) * 100);
+
+        const options = {
+          key: razorpayKey,
+          amount: totalPaise,
+          currency: 'INR',
+          name: 'VeloxPark',
+          description: `Slot Reservation - ${slotName}`,
+          image: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png',
+          prefill: {
+            name: 'Valued Driver',
+            email: 'driver@veloxpark.com',
+            contact: '9999999999',
+          },
+          notes: {
+            bookingId: activeBooking.id || id || 'booking',
+            slotName: slotName,
+          },
+          theme: {
+            color: '#F2C230',
+          },
+          handler: async (response) => {
+            console.log('Razorpay payment successful:', response);
+            try {
+              if (id && id !== 'demo-booking-1') {
+                await updateDoc(doc(db, 'bookings', id), {
+                  status: 'completed',
+                  paidAt: Timestamp.fromDate(new Date()),
+                  paymentMethod: 'razorpay',
+                  razorpayPaymentId: response.razorpay_payment_id || null,
+                  razorpayOrderId: response.razorpay_order_id || null,
+                });
+              }
+            } catch (err) {
+              console.warn('Booking payment update note:', err);
+            }
+            setProcessing(false);
+            setPaid(true);
+          },
+          modal: {
+            ondismiss: () => {
+              setProcessing(false);
+            },
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.on('payment.failed', (response) => {
+          console.error('Razorpay payment failed:', response.error);
+          alert(`Payment failed: ${response.error?.description || 'Transaction declined'}`);
+          setProcessing(false);
+        });
+        rzp.open();
+      } catch (err) {
+        console.error('Razorpay load error:', err);
+        alert('Could not initialize Razorpay checkout. Please check your network connection.');
+        setProcessing(false);
+      }
+      return;
+    }
+
     setProcessing(true);
 
     try {
@@ -261,6 +345,18 @@ function Payment() {
 
                 <div className="pay-methods-grid">
                   <div
+                    className={`pay-method-pill pay-method-razorpay ${selectedMethod === 'razorpay' ? 'active' : ''}`}
+                    onClick={() => setSelectedMethod('razorpay')}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className="pay-method-icon"><IconRazorpay /></div>
+                    <span className="pay-method-name">Razorpay</span>
+                    <span className="pay-method-badge-fast">Fast</span>
+                    {selectedMethod === 'razorpay' && <span className="pay-method-dot">●</span>}
+                  </div>
+
+                  <div
                     className={`pay-method-pill ${selectedMethod === 'card' ? 'active' : ''}`}
                     onClick={() => setSelectedMethod('card')}
                     role="button"
@@ -295,6 +391,63 @@ function Payment() {
                 </div>
 
                 {/* Method Details Pane */}
+                {selectedMethod === 'razorpay' && (
+                  <div className="pay-razorpay-pane">
+                    <div className="pay-razorpay-card">
+                      <div className="pay-razorpay-header">
+                        <div className="pay-razorpay-title-box">
+                          <div className="pay-razorpay-icon-bg">
+                            <IconRazorpay />
+                          </div>
+                          <div>
+                            <h4 className="pay-razorpay-title">Razorpay Secure Checkout</h4>
+                            <span className="pay-razorpay-sub">India's #1 Payment Gateway</span>
+                          </div>
+                        </div>
+                        <span className="pay-rzp-mode-badge">VERIFIED</span>
+                      </div>
+
+                      <div className="pay-razorpay-methods-list">
+                        <div className="pay-rzp-feature-item">
+                          <span className="pay-rzp-icon">⚡</span>
+                          <div className="pay-rzp-feature-text">
+                            <strong>Instant UPI</strong>
+                            <p>Google Pay, PhonePe, Paytm, BHIM & CRED</p>
+                          </div>
+                        </div>
+                        <div className="pay-rzp-feature-item">
+                          <span className="pay-rzp-icon">💳</span>
+                          <div className="pay-rzp-feature-text">
+                            <strong>Debit & Credit Cards</strong>
+                            <p>Visa, MasterCard, RuPay, Maestro & Corporate</p>
+                          </div>
+                        </div>
+                        <div className="pay-rzp-feature-item">
+                          <span className="pay-rzp-icon">🏦</span>
+                          <div className="pay-rzp-feature-text">
+                            <strong>Net Banking & Wallets</strong>
+                            <p>50+ Banks, Mobikwik, Airtel Money, PayLater</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pay-rzp-footer-info">
+                        <IconShieldLock />
+                        <span>Protected by 256-bit Razorpay SSL encryption</span>
+                      </div>
+
+                      <button
+                        type="button"
+                        className="pay-rzp-launch-btn"
+                        onClick={handlePay}
+                        disabled={processing}
+                      >
+                        {processing ? 'Connecting Razorpay…' : `Open Razorpay Checkout · ₹${amountDisplay}`}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {selectedMethod === 'card' && (
                   <div className="pay-card-pane">
                     {/* Visual Card Preview */}
@@ -449,10 +602,12 @@ function Payment() {
                     {processing ? (
                       <span className="pay-btn-loading">
                         <span className="pay-btn-spinner"></span>
-                        Authorizing…
+                        {selectedMethod === 'razorpay' ? 'Opening Razorpay…' : 'Authorizing…'}
                       </span>
                     ) : (
-                      `Pay ₹${amountDisplay} & Confirm Spot`
+                      selectedMethod === 'razorpay'
+                        ? `Pay ₹${amountDisplay} with Razorpay`
+                        : `Pay ₹${amountDisplay} & Confirm Spot`
                     )}
                   </button>
                 </div>
@@ -472,10 +627,12 @@ function Payment() {
                 {processing ? (
                   <span className="pay-btn-loading">
                     <span className="pay-btn-spinner"></span>
-                    Authorizing…
+                    {selectedMethod === 'razorpay' ? 'Opening Razorpay…' : 'Authorizing…'}
                   </span>
                 ) : (
-                  `Pay ₹${amountDisplay} & Confirm Spot`
+                  selectedMethod === 'razorpay'
+                    ? `Pay ₹${amountDisplay} with Razorpay`
+                    : `Pay ₹${amountDisplay} & Confirm Spot`
                 )}
               </button>
             </div>

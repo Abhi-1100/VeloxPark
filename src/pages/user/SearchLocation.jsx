@@ -1,12 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DatePicker11 from '@/components/base-ui/date-picker-11';
 import './SearchLocation.css';
-
-const TIME_OPTIONS = [
-  '06:00 AM', '07:00 AM', '08:00 AM', '09:00 AM', '10:00 AM', '11:00 AM',
-  '12:00 PM', '01:00 PM', '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM',
-  '06:00 PM', '07:00 PM', '08:00 PM', '09:00 PM', '10:00 PM', '11:00 PM',
-];
 
 const POPULAR_HUBS = [
   { name: 'California Parking', addr: '1484 Nostrand Ave, Brooklyn', dist: '12 km', rate: '₹60/hr', spots: '5 slots' },
@@ -16,11 +11,17 @@ const POPULAR_HUBS = [
 
 function parseTimeToMinutes(t) {
   if (!t) return 0;
-  const [time, period] = t.split(' ');
-  let [h, m] = time.split(':').map(Number);
-  if (period === 'PM' && h !== 12) h += 12;
-  if (period === 'AM' && h === 12) h = 0;
-  return h * 60 + (m || 0);
+  if (typeof t === 'string' && (t.includes('AM') || t.includes('PM'))) {
+    const [time, period] = t.split(' ');
+    let [h, m] = time.split(':').map(Number);
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return h * 60 + (m || 0);
+  }
+  const parts = String(t).split(':').map(Number);
+  const h = parts[0] || 0;
+  const m = parts[1] || 0;
+  return h * 60 + m;
 }
 
 function calculateDurationHours(entry, exit) {
@@ -32,11 +33,25 @@ function calculateDurationHours(entry, exit) {
   return Math.max(1, hrs);
 }
 
+function formatTime12h(t) {
+  if (!t) return '10:00 AM';
+  if (typeof t === 'string' && (t.includes('AM') || t.includes('PM'))) return t;
+  const parts = String(t).split(':');
+  let h = parseInt(parts[0], 10) || 0;
+  const m = parts[1] ? parts[1].padStart(2, '0') : '00';
+  const period = h >= 12 ? 'PM' : 'AM';
+  if (h === 0) h = 12;
+  else if (h > 12) h -= 12;
+  const paddedH = String(h).padStart(2, '0');
+  return `${paddedH}:${m} ${period}`;
+}
+
 function SearchLocation() {
   const navigate = useNavigate();
   const [location, setLocation] = useState('');
-  const [entryTime, setEntryTime] = useState('10:00 AM');
-  const [exitTime, setExitTime] = useState('02:00 PM');
+  const [selectedDate, setSelectedDate] = useState(() => new Date());
+  const [entryTime, setEntryTime] = useState('10:00:00');
+  const [exitTime, setExitTime] = useState('14:00:00');
 
   const durationHours = useMemo(() => {
     return calculateDurationHours(entryTime, exitTime);
@@ -46,9 +61,10 @@ function SearchLocation() {
     navigate('/map', {
       state: {
         destination: location,
-        entryTime,
-        exitTime,
+        entryTime: formatTime12h(entryTime),
+        exitTime: formatTime12h(exitTime),
         durationHours,
+        date: selectedDate ? selectedDate.toISOString().slice(0, 10) : undefined,
       },
     });
   };
@@ -108,53 +124,20 @@ function SearchLocation() {
             {/* Date and Time Pickers (Interactive Selectors) */}
             <div className="sl-group">
               <div className="sl-label-row">
-                <span className="sl-label">TIME</span>
+                <span className="sl-label">DATE & TIME</span>
                 <span className="sl-duration-tag">
                   {durationHours} {durationHours === 1 ? 'Hour' : 'Hours'} Window
                 </span>
               </div>
-              <div className="sl-time-row">
-                <div className="sl-time-box">
-                  <label htmlFor="sl-entry-time" className="sl-time-title">ENTRY</label>
-                  <div className="sl-time-val">
-                    <select
-                      id="sl-entry-time"
-                      className="sl-time-select"
-                      value={entryTime}
-                      onChange={(e) => setEntryTime(e.target.value)}
-                    >
-                      {TIME_OPTIONS.map((time) => (
-                        <option key={`entry-${time}`} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
-                    <svg className="sl-time-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                  </div>
-                </div>
-                <div className="sl-time-box">
-                  <label htmlFor="sl-exit-time" className="sl-time-title">EXIT</label>
-                  <div className="sl-time-val">
-                    <select
-                      id="sl-exit-time"
-                      className="sl-time-select"
-                      value={exitTime}
-                      onChange={(e) => setExitTime(e.target.value)}
-                    >
-                      {TIME_OPTIONS.map((time) => (
-                        <option key={`exit-${time}`} value={time}>
-                          {time}
-                        </option>
-                      ))}
-                    </select>
-                    <svg className="sl-time-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="6 9 12 15 18 9"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
+              <DatePicker11
+                theme="light"
+                date={selectedDate}
+                onDateChange={setSelectedDate}
+                timeFrom={entryTime}
+                onTimeFromChange={setEntryTime}
+                timeTo={exitTime}
+                onTimeToChange={setExitTime}
+              />
             </div>
 
             {/* Suggested Locations */}
