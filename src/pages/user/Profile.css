@@ -1,836 +1,1070 @@
-/* ─── Profile.css (Uniform Mobile Theme) ─────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+/* ─── Stitch Design System: Profile (Profile.css) ─────────────────────────── */
+.stitch-profile-page {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #f7f9fd;
+  color: #191c1f;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
 
-/* Fixed Fullscreen Mobile Page Container */
-.prof-page {
+/* ─── Top App Bar ─────────────────────────────────────────────────────────── */
+.stitch-profile-top-bar {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 50;
-  background: #f4f6fa;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #111;
-  -webkit-tap-highlight-color: transparent;
+  background: rgba(247, 249, 253, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding-top: env(safe-area-inset-top, 0px);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.03);
 }
 
-/* Central Mobile Shell Container */
-.prof-shell {
-  width: 100%;
-  height: 100%;
+.stitch-profile-top-inner {
+  height: 64px;
+  padding: 0 20px;
   display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px 20px calc(150px + env(safe-area-inset-bottom, 0px)); /* space for sticky bottom bar + dock */
-  -webkit-overflow-scrolling: touch;
-}
-
-.prof-shell::-webkit-scrollbar {
-  display: none;
-}
-
-/* ─── Top Bar ────────────────────────────────────────────────────────────── */
-.prof-top-bar {
-  display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-  position: relative;
-  z-index: 10;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.prof-nav-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+.stitch-logo-group {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #111827;
+  gap: 12px;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
+  user-select: none;
 }
 
-.prof-nav-btn:hover {
-  background: #f9fafb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
-}
-
-.prof-nav-btn:active {
-  transform: translateY(0);
-}
-
-.prof-title-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.prof-top-title {
-  font-size: 18px;
+.stitch-logo-p {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #fecb35;
+  color: #010102;
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
   font-weight: 800;
-  color: #111827;
-  letter-spacing: -0.01em;
-  margin: 0;
-}
-
-.prof-desktop-crumb {
-  display: none;
-}
-
-/* Sequential flow for mobile view */
-.prof-desktop-layout,
-.prof-layout-left,
-.prof-layout-right {
-  display: contents;
-}
-
-.prof-desktop-save-wrap {
-  display: none !important;
-}
-
-/* ─── Hero Section with Banner + Overlapping Avatar ───────────────────────── */
-.prof-header-hero {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-  position: relative;
-}
-
-/* Dark Top Banner Strip */
-.prof-banner-strip {
-  width: 100%;
-  height: 84px;
-  background: linear-gradient(135deg, #18191c 0%, #26282e 100%);
-  border-radius: 24px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-}
-
-.prof-banner-pattern {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(rgba(242, 194, 48, 0.18) 1.5px, transparent 1.5px);
-  background-size: 16px 16px;
-  opacity: 0.85;
-}
-
-/* Centered Overlapping Avatar Cluster */
-.prof-avatar-cluster {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: -46px; /* Gracefully pulls avatar up over the banner */
-  position: relative;
-  z-index: 5;
-  text-align: center;
-  width: 100%;
-}
-
-.prof-avatar-ring {
-  width: 92px;
-  height: 92px;
-  border-radius: 50%;
-  background: #1e2025;
-  border: 4px solid #F2C230;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  position: relative;
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 4px 12px rgba(254, 203, 53, 0.35);
+}
+
+.stitch-brand-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-brand-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #191c1f;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.stitch-brand-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #46464a;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.stitch-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stitch-action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: #ffffff;
+  color: #191c1f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.stitch-action-btn:hover {
+  background: #f0f2f5;
+  transform: scale(1.04);
+}
+
+.stitch-avatar-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eceef2;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
 }
 
-.prof-avatar-img {
-  width: 100%;
-  height: 100%;
+.stitch-avatar-img {
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
   object-fit: cover;
   border-radius: 50%;
   display: block;
 }
 
-.prof-avatar-fallback {
+/* ─── Main Content ────────────────────────────────────────────────────────── */
+.stitch-profile-main {
+  flex: 1;
   width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  font-weight: 900;
-  color: #F2C230;
-  background: #25272e;
+  padding-top: 72px;
+  padding-bottom: 110px;
 }
 
-.prof-avatar-badge {
+.stitch-profile-content {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ─── Profile ID Card ─────────────────────────────────────────────────────── */
+.stitch-id-card {
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 24px 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stitch-id-blur-orb {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 26px;
-  height: 26px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
-  background: #35C878;
-  border: 2.5px solid #ffffff;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+.stitch-id-blur-orb.top-right {
+  right: -40px;
+  top: -40px;
+  background: rgba(254, 203, 53, 0.15);
+}
+
+.stitch-id-blur-orb.bottom-left {
+  left: -40px;
+  bottom: -40px;
+  background: rgba(107, 255, 143, 0.2);
+}
+
+.stitch-id-avatar-cluster {
+  position: relative;
+  margin-bottom: 12px;
+  width: 80px;
+  height: 80px;
+}
+
+.stitch-id-avatar-img {
+  width: 80px;
+  height: 80px;
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: 22px;
+  object-fit: cover;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  background: #eceef2;
+  display: block;
+}
+
+.stitch-id-verified-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: #009944;
   color: #ffffff;
-  font-size: 13px;
-  font-weight: 900;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.prof-user-name {
-  font-size: 20px;
-  font-weight: 800;
-  color: #111827;
-  margin: 0 0 3px;
+.stitch-id-verified-badge span {
+  font-size: 15px;
+}
+
+.stitch-id-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #010102;
+  margin: 0;
   letter-spacing: -0.02em;
 }
 
-.prof-user-email {
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0 0 10px;
-  font-weight: 500;
+.stitch-id-contact {
+  font-size: 12px;
+  color: #46464a;
+  margin: 4px 0 0;
 }
 
-.prof-member-pill {
-  display: inline-flex;
+.stitch-id-actions-row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stitch-id-edit-btn {
+  background: #e6e8ec;
+  color: #010102;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: none;
+  display: flex;
   align-items: center;
   gap: 6px;
-  background: #ffffff;
-  border: 1.5px solid #e5e7eb;
-  padding: 5px 14px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #d97706;
-  letter-spacing: 0.01em;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-.prof-star-icon {
+.stitch-id-edit-btn:hover {
+  background: #d8dade;
+}
+
+.stitch-id-edit-btn span {
+  font-size: 15px;
+}
+
+.stitch-id-fastag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(254, 203, 53, 0.25);
+  color: #765b00;
+  font-family: 'Outfit', sans-serif;
   font-size: 13px;
-  color: #f59e0b;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 9999px;
 }
 
-/* ─── 3 Square Stat Quick-Cards (Wireframe 3-Box Row) ──────────────────────── */
-.prof-stats-grid {
+.stitch-id-fastag-pill span {
+  font-size: 15px;
+}
+
+/* ─── Analytics Strip (3-col grid) ────────────────────────────────────────── */
+.stitch-stats-strip {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 22px;
+  gap: 10px;
 }
 
-.prof-stat-box {
+.stitch-stat-tile {
   background: #ffffff;
-  border: 1px solid #edf2f7;
-  border-radius: 22px;
-  padding: 16px 10px;
+  border-radius: 20px;
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.stitch-stat-tile:active {
+  transform: scale(0.96);
+}
+
+.stitch-stat-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #010102;
+  line-height: 1.1;
+}
+
+.stitch-stat-sub {
+  font-size: 11px;
+  color: #46464a;
+  margin-top: 3px;
+  line-height: 1.2;
+}
+
+/* ─── My Vehicles Ribbon ──────────────────────────────────────────────────── */
+.stitch-vehicles-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stitch-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-sec-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stitch-sec-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #010102;
+  margin: 0;
+}
+
+.stitch-veh-count-badge {
+  font-size: 13px;
+  color: #46464a;
+  background: #e6e8ec;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.stitch-sec-action-link {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #765b00;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.stitch-sec-action-link span {
+  font-size: 16px;
+}
+
+.stitch-vehicles-snap-strip {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 0 6px;
+  scrollbar-width: none;
+}
+
+.stitch-vehicles-snap-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.stitch-vehicle-card {
+  min-width: 260px;
+  max-width: 270px;
+  flex-shrink: 0;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stitch-veh-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.stitch-veh-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 14px;
+  background: #f2f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #010102;
+}
+
+.stitch-veh-icon-box span {
+  font-size: 22px;
+}
+
+.stitch-veh-default-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(74, 225, 118, 0.2);
+  color: #005321;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 9999px;
+}
+
+.stitch-veh-set-default-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  color: #46464a;
+  background: #f2f4f8;
+  border: none;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.stitch-veh-set-default-btn:hover {
+  color: #010102;
+  background: #e6e8ec;
+}
+
+/* Realistic Indian HSRP Full License Plate */
+.stitch-hsrp-full-plate {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #d8dade;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: stretch;
+  height: 36px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.stitch-hsrp-ind-strip {
+  width: 28px;
+  background: #003399;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 0;
+  flex-shrink: 0;
+}
+
+.stitch-hsrp-chakra {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid #ffffff;
+  margin-bottom: 2px;
+}
+
+.stitch-hsrp-plate-number {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #010102;
+}
+
+.stitch-veh-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #46464a;
+  font-size: 12px;
+}
+
+.stitch-veh-model-name {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-success {
+  color: #009944;
+}
+
+.text-muted {
+  color: #c7c6ca;
+}
+
+/* Add Vehicle Card */
+.stitch-vehicle-add-card {
+  min-width: 160px;
+  flex-shrink: 0;
+  background: #f2f4f8;
+  border-radius: 24px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   cursor: pointer;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
-.prof-stat-box:hover {
-  transform: translateY(-2px);
-  border-color: #F2C230;
-  box-shadow: 0 8px 24px rgba(242, 194, 48, 0.12);
+.stitch-vehicle-add-card:hover {
+  background: #e6e8ec;
 }
 
-.prof-stat-icon-wrap {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.prof-stat-icon-wrap.sessions {
-  background: #eff6ff;
-  color: #3b82f6;
-}
-
-.prof-stat-icon-wrap.hours {
-  background: #f0fdf4;
-  color: #10b981;
-}
-
-.prof-stat-icon-wrap.rewards {
-  background: #fefce8;
-  color: #ca8a04;
-}
-
-.prof-stat-val {
-  font-size: 18px;
-  font-weight: 900;
-  color: #111827;
-  line-height: 1.1;
-  margin-bottom: 3px;
-}
-
-.prof-stat-val.gold {
-  color: #d97706;
-}
-
-.prof-stat-lbl {
-  font-size: 11px;
-  font-weight: 700;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-/* ─── 3 Wide Stacked Rows / Cards (Wireframe Stack) ────────────────────────── */
-.prof-rows-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.prof-row-card {
-  background: #ffffff;
-  border: 1px solid #edf2f7;
-  border-radius: 24px;
-  padding: 18px 18px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
-}
-
-.prof-row-head {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.prof-row-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #f4f6fa;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #111827;
-  flex-shrink: 0;
-}
-
-.prof-row-titles {
-  display: flex;
-  flex-direction: column;
-}
-
-.prof-row-title {
-  font-size: 15px;
-  font-weight: 800;
-  color: #111827;
-  margin: 0;
-}
-
-.prof-row-sub {
-  font-size: 12px;
-  color: #6b7280;
-  margin: 2px 0 0;
-}
-
-/* Form Fields */
-.prof-card-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.prof-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.prof-field-label {
-  font-size: 10px;
-  font-weight: 800;
-  color: #6b7280;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.prof-input {
-  width: 100%;
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 12px 14px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-  font-family: inherit;
-  outline: none;
-  transition: all 0.2s ease;
-}
-
-.prof-input:focus {
-  background: #ffffff;
-  border-color: #F2C230;
-  box-shadow: 0 0 0 3px rgba(242, 194, 48, 0.18);
-}
-
-.prof-input::placeholder {
-  color: #9ca3af;
-  font-weight: 500;
-}
-
-/* Vehicle Plates Styling */
-.prof-plates-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.prof-plate-pill {
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 8px 12px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.prof-plate-val {
-  font-family: monospace, sans-serif;
-  font-size: 13px;
-  font-weight: 800;
-  color: #111827;
-  letter-spacing: 0.05em;
-}
-
-.prof-plate-primary {
-  background: #F2C230;
-  color: #111827;
-  font-size: 9px;
-  font-weight: 900;
-  padding: 2px 6px;
-  border-radius: 6px;
-  letter-spacing: 0.04em;
-}
-
-.prof-plate-del {
-  background: transparent;
-  border: none;
-  color: #9ca3af;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0 2px;
-  transition: color 0.15s;
-}
-
-.prof-plate-del:hover {
-  color: #ef4444;
-}
-
-.prof-add-plate-row {
-  display: flex;
-  gap: 8px;
-}
-
-.prof-add-input {
-  flex: 1;
-  text-transform: uppercase;
-  font-family: monospace, sans-serif;
-  font-size: 13px;
-}
-
-.prof-add-btn {
-  background: #111827;
-  color: #ffffff;
-  border: none;
-  border-radius: 14px;
-  padding: 0 18px;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.prof-add-btn:hover {
-  background: #1f2937;
-}
-
-/* Appearance Theme Options Grid */
-.prof-theme-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.prof-theme-btn {
-  background: #f8fafc;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 16px;
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
-}
-
-.prof-theme-btn:hover {
-  background: #ffffff;
-  border-color: #cbd5e1;
-}
-
-.prof-theme-btn.active {
-  background: #ffffff;
-  border-color: #111827;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-}
-
-.prof-theme-btn-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #111827;
-  margin-bottom: 8px;
-}
-
-.prof-theme-btn.active .prof-theme-btn-icon {
-  background: #111827;
-  color: #F2C230;
-}
-
-.prof-theme-btn-title {
-  font-size: 13px;
-  font-weight: 800;
-  color: #111827;
-  margin-bottom: 2px;
-}
-
-.prof-theme-btn-desc {
-  font-size: 11px;
-  color: #6b7280;
-}
-
-.prof-theme-check {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 18px;
-  height: 18px;
+.stitch-veh-add-icon-circle {
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #111827;
-  color: #F2C230;
-  font-size: 11px;
-  font-weight: 900;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #010102;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  margin-bottom: 8px;
 }
 
-/* Quick Nav Action Links */
-.prof-nav-links {
+.stitch-veh-add-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #010102;
+}
+
+.stitch-veh-add-sub {
+  font-size: 11px;
+  color: #46464a;
+  margin-top: 2px;
+}
+
+/* ─── Standard VeloxPark Rates Card ───────────────────────────────────────── */
+.stitch-rates-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 4px;
-}
-
-.prof-link-row {
-  background: #ffffff;
-  border: 1px solid #edf2f7;
-  border-radius: 20px;
-  padding: 16px 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.02);
-  transition: all 0.2s ease;
-}
-
-.prof-link-row:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-}
-
-.prof-link-row.danger {
-  border-color: #fee2e2;
-  background: #fffafa;
-}
-
-.prof-link-left {
-  display: flex;
-  align-items: center;
   gap: 14px;
 }
 
-.prof-link-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: #f4f6fa;
+.stitch-rates-icon {
+  font-size: 20px;
+  color: #765b00;
+}
+
+.stitch-live-pricing-tag {
+  font-size: 12px;
+  color: #46464a;
+}
+
+.stitch-rates-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.stitch-rate-box {
+  background: #f2f4f8;
+  border-radius: 16px;
+  padding: 12px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stitch-rate-box span.material-symbols-outlined {
+  font-size: 20px;
+  color: #46464a;
+  margin-bottom: 4px;
+}
+
+.stitch-rate-box span.text-secondary {
+  color: #765b00;
+}
+
+.stitch-rate-type {
+  font-size: 11px;
+  color: #46464a;
+}
+
+.stitch-rate-cost {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #010102;
+  margin-top: 2px;
+}
+
+.stitch-rate-cost small {
+  font-size: 10px;
+  font-weight: normal;
+  color: #46464a;
+}
+
+.stitch-promo-highlight {
+  background: rgba(74, 225, 118, 0.2);
+  border-radius: 14px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stitch-promo-emoji {
+  font-size: 18px;
+}
+
+.stitch-promo-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #005321;
+}
+
+/* ─── iOS Grouped Settings List ───────────────────────────────────────────── */
+.stitch-settings-grouped-list {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.stitch-setting-row:not(.non-clickable):hover {
+  background: rgba(242, 244, 248, 0.7);
+}
+
+.stitch-setting-row.non-clickable {
+  cursor: default;
+}
+
+.stitch-setting-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.stitch-setting-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f2f4f8;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111827;
+  color: #010102;
   flex-shrink: 0;
 }
 
-.prof-link-icon.danger {
-  background: #fef2f2;
-  color: #ef4444;
+.stitch-setting-icon-wrap span {
+  font-size: 20px;
 }
 
-.prof-link-title {
-  display: block;
-  font-size: 14px;
-  font-weight: 800;
-  color: #111827;
-}
-
-.prof-link-title.danger {
-  color: #ef4444;
-}
-
-.prof-link-subtitle {
-  display: block;
-  font-size: 11px;
-  color: #6b7280;
-  margin-top: 1px;
-}
-
-/* ─── Bottom Floating Sticky Bar ─────────────────────────────────────────── */
-.prof-bottom-bar {
-  position: fixed;
-  bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-  left: 0;
-  right: 0;
-  padding: 10px 20px 14px;
-  background: linear-gradient(to top, rgba(244, 246, 250, 0.98) 75%, rgba(244, 246, 250, 0) 100%);
+.stitch-setting-info {
   display: flex;
-  justify-content: center;
-  z-index: 40;
-  pointer-events: none;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.prof-save-btn {
-  pointer-events: auto;
+.stitch-setting-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #010102;
+}
+
+.stitch-setting-desc {
+  font-size: 12px;
+  color: #46464a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.stitch-smart-tag-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stitch-smart-pill {
+  font-size: 9px;
+  text-transform: uppercase;
+  font-weight: 800;
+  background: #fecb35;
+  color: #241a00;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.stitch-chev {
+  font-size: 20px;
+  color: #c7c6ca;
+}
+
+.stitch-setting-divider {
+  height: 1px;
+  background: #e6e8ec;
+  margin: 0 16px;
+}
+
+/* Switch */
+.stitch-switch {
+  width: 48px;
+  height: 28px;
+  border-radius: 9999px;
+  background: #e6e8ec;
+  border: none;
+  padding: 2px;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s ease;
+  flex-shrink: 0;
+}
+
+.stitch-switch.active {
+  background: #009944;
+}
+
+.stitch-switch-knob {
+  display: block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transform: translateX(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stitch-switch.active .stitch-switch-knob {
+  transform: translateX(20px);
+}
+
+/* ─── Logout Section ──────────────────────────────────────────────────────── */
+.stitch-logout-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 6px;
+}
+
+.stitch-logout-btn {
   width: 100%;
-  max-width: 390px;
-  background: #F2C230;
-  color: #111111;
+  background: rgba(255, 218, 214, 0.5);
+  color: #ba1a1a;
   border: none;
   border-radius: 20px;
-  padding: 16px 24px;
+  padding: 14px;
+  font-family: 'Outfit', sans-serif;
   font-size: 15px;
-  font-weight: 800;
-  font-family: inherit;
-  cursor: pointer;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(242, 194, 48, 0.35);
-  transition: all 0.2s ease;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s ease;
 }
 
-.prof-save-btn:hover:not(:disabled) {
-  background: #e5b320;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px rgba(242, 194, 48, 0.45);
+.stitch-logout-btn:hover {
+  background: #ffdad6;
 }
 
-.prof-save-btn:active:not(:disabled) {
-  transform: translateY(0);
+.stitch-logout-btn span {
+  font-size: 18px;
 }
 
-.prof-save-btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
+.stitch-version-tag {
+  font-size: 11px;
+  color: rgba(70, 70, 74, 0.7);
 }
 
-.prof-save-btn.saved {
-  background: #35C878;
-  color: #ffffff;
-  box-shadow: 0 8px 24px rgba(53, 200, 120, 0.35);
-}
-
-/* ─── Toast Notification ─────────────────────────────────────────────────── */
-.prof-toast {
+/* ─── Modals ──────────────────────────────────────────────────────────────── */
+.stitch-modal-overlay {
   position: fixed;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-30px);
-  background: #111827;
-  color: #ffffff;
-  font-size: 13px;
+  inset: 0;
+  z-index: 200;
+  background: rgba(1, 1, 2, 0.5);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.stitch-modal-card {
+  background: #ffffff;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.2);
+  animation: stitchModalIn 0.2s ease;
+}
+
+@keyframes stitchModalIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.stitch-modal-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
   font-weight: 700;
-  padding: 10px 20px;
+  color: #010102;
+  margin: 0;
+}
+
+.stitch-modal-sub {
+  font-size: 12px;
+  color: #46464a;
+  margin: 6px 0 16px;
+}
+
+.stitch-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.stitch-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stitch-form-group label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #46464a;
+  letter-spacing: 0.05em;
+}
+
+.stitch-form-group input {
+  height: 48px;
+  border-radius: 12px;
+  border: 1px solid #d8dade;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  outline: none;
+}
+
+.stitch-form-group input:focus {
+  border-color: #010102;
+}
+
+.stitch-modal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.stitch-btn-cancel {
+  background: #f2f4f8;
+  color: #46464a;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.stitch-btn-submit {
+  background: #fecb35;
+  color: #241a00;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* ─── Toast Popup ─────────────────────────────────────────────────────────── */
+.stitch-profile-toast {
+  position: fixed;
+  bottom: calc(88px + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%) translateY(24px) scale(0.95);
+  z-index: 2000;
+  background: #1c1c1e;
+  color: #ffffff;
+  padding: 12px 22px;
   border-radius: 9999px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.32), 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   opacity: 0;
   pointer-events: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 999;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
 }
 
-.prof-toast.visible {
+.stitch-profile-toast.visible {
+  transform: translateX(-50%) translateY(0) scale(1);
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
 }
 
-/* ─── Tablet Bounds (640px – 1023px) ──────────────────────────────────────── */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .prof-page {
-    align-items: flex-start;
-    padding: 30px 0;
-    background: #25262a;
-  }
-
-  .prof-shell {
-    max-width: 430px;
-    margin: 0 auto;
-    background: #f4f6fa;
-    border-radius: 40px;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-  }
-
-  .prof-bottom-bar {
-    position: absolute;
-    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-    left: 0;
-    right: 0;
-    background: linear-gradient(to top, #f4f6fa 80%, rgba(244, 246, 250, 0) 100%);
-    border-radius: 0 0 40px 40px;
-  }
+/* ─── Profile Desktop Optimization (Preserving Mobile Unaffected) ────────── */
+.stitch-profile-col-left,
+.stitch-profile-col-right {
+  display: contents;
 }
 
-/* ─── Desktop Size View (min-width: 1024px) ───────────────────────────────── */
+.desktop-logout {
+  display: none !important;
+}
+
+.mobile-logout {
+  display: flex !important;
+}
+
 @media (min-width: 1024px) {
-  .prof-page {
-    position: relative;
-    inset: auto;
-    min-height: 100vh;
-    background: #f4f6fa;
-    padding: 36px 32px 64px;
-    align-items: center;
-    overflow-y: auto;
+  .stitch-profile-top-inner {
+    max-width: 1140px;
+    padding: 0 32px;
   }
 
-  .prof-shell {
-    max-width: 1080px;
-    height: auto;
-    max-height: none;
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
-    padding: 0;
-    overflow: visible;
+  .stitch-profile-main {
+    padding-top: 88px;
+    padding-bottom: 60px;
   }
 
-  .prof-top-bar {
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 20px 28px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-    border: 1px solid #edf2f7;
-    margin-bottom: 28px;
-  }
-
-  .prof-top-title {
-    font-size: 22px;
-    font-weight: 800;
-  }
-
-  .prof-desktop-crumb {
-    display: block;
-    font-size: 13px;
-    color: #6b7280;
-    font-weight: 500;
-    margin-top: 2px;
-  }
-
-  .prof-desktop-layout {
+  .stitch-profile-content {
+    max-width: 1140px;
+    padding: 0 32px;
     display: grid;
     grid-template-columns: 380px 1fr;
     gap: 32px;
     align-items: start;
   }
 
-  .prof-layout-left {
+  .stitch-profile-col-left {
     display: flex;
     flex-direction: column;
     gap: 24px;
     position: sticky;
-    top: 32px;
+    top: 88px;
   }
 
-  .prof-layout-right {
+  .stitch-profile-col-right {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
   }
 
-  .prof-header-hero {
-    background: #ffffff;
-    border-radius: 28px;
-    padding: 16px 20px 24px;
-    border: 1px solid #edf2f7;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-    margin-bottom: 0;
+  .desktop-logout {
+    display: flex !important;
+    margin-top: 4px;
   }
 
-  .prof-stats-grid {
-    margin-bottom: 0;
-  }
-
-  .prof-nav-links {
-    margin-top: 0;
-  }
-
-  .prof-row-card {
-    background: #ffffff;
-    border-radius: 24px;
-    padding: 24px 26px;
-    border: 1px solid #edf2f7;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-    margin-bottom: 0;
-  }
-
-  .prof-desktop-save-wrap {
-    display: block !important;
-    margin-top: 8px;
-  }
-
-  .prof-bottom-bar {
+  .mobile-logout {
     display: none !important;
+  }
+
+  /* Expand vehicles on desktop into a clean responsive grid */
+  .stitch-vehicles-snap-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    overflow-x: visible;
+    padding-bottom: 0;
+  }
+
+  .stitch-vehicle-card {
+    min-width: unset;
+    width: 100%;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  }
+
+  .stitch-vehicle-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  }
+
+  .stitch-vehicle-add-card {
+    min-width: unset;
+    width: 100%;
+    min-height: 180px;
+  }
+
+  /* Rates grid on desktop */
+  .stitch-rates-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* Settings group card styling on desktop */
+  .stitch-settings-grouped-list {
+    border-radius: 28px;
+  }
+
+  .stitch-modal-card {
+    max-width: 480px;
+    border-radius: 28px;
+  }
+
+  .stitch-profile-toast {
+    bottom: 32px;
   }
 }

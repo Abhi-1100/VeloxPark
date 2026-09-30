@@ -1,274 +1,967 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
-/* Base layout for mobile-first Dashboard */
-.dash-page {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  background: #f4f6fa;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  font-family: 'Inter', sans-serif;
-}
-
-.dash-shell {
+/* ─── Stitch Home Dashboard (Redesigned) Styles ───────────────────────────── */
+.stitch-dash-root {
+  min-height: 100vh;
   width: 100%;
-  height: 100%;
+  background-color: #f7f9fd;
+  color: #191c1f;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   display: flex;
   flex-direction: column;
-  position: relative;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 16px 20px 84px;
 }
 
-/* Header */
-.dash-header {
+/* ─── Top Header ──────────────────────────────────────────────────────────── */
+.stitch-dash-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: rgba(247, 249, 253, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding-top: env(safe-area-inset-top, 0px);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.03);
+}
+
+.stitch-dash-header-inner {
+  height: 64px;
+  padding: 0 20px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
-.dash-menu-btn {
-  display: none;
-}
-
-.dash-user-info {
-  text-align: left;
-}
-
-.dash-user-name {
-  font-size: 15px;
-  font-weight: 800;
-  color: #111;
-  margin: 0;
-}
-
-.dash-zone {
-  font-size: 11px;
-  font-weight: 500;
-  color: #888;
+.stitch-dash-brand {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 4px;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.stitch-brand-logo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #fecb35;
+  color: #010102;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stitch-brand-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-brand-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #010102;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.gold-text {
+  color: #765b00;
+}
+
+.stitch-brand-tagline {
+  font-size: 11px;
+  font-weight: 700;
+  color: #46464a;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   margin-top: 2px;
 }
 
-.dash-profile-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  background: #1c1d21;
+.stitch-dash-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stitch-bell-btn {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f2f4f8;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #F2C230;
-  font-weight: 800;
-  font-size: 14px;
-  border: none;
-}
-
-/* Hero Title */
-.dash-title {
-  font-size: 32px;
-  font-weight: 900;
-  color: #111;
-  line-height: 1.1;
-  margin: 0 0 24px;
-  letter-spacing: -0.02em;
-}
-
-/* Dark Map Card */
-.dash-map-card {
-  width: 100%;
-  height: 220px;
-  background: #1c1d21;
-  border-radius: 24px;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 20px;
+  color: #191c1f;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(28,29,33,0.15);
+  transition: background 0.15s;
 }
 
-.dash-map-svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.stitch-bell-btn:hover {
+  background: #eceef2;
 }
 
-.dash-map-pin {
+.stitch-bell-btn span {
+  font-size: 20px;
+}
+
+.stitch-bell-dot {
   position: absolute;
-  background: #F2C230;
-  border-radius: 12px;
-  padding: 4px 8px;
+  top: 9px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fecb35;
+  border: 1.5px solid #f7f9fd;
+}
+
+.stitch-dash-avatar-btn {
+  position: relative;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.stitch-dash-avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fecb35;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.stitch-online-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4ae176;
+  border: 1.5px solid #ffffff;
+}
+
+/* ─── Main Content ────────────────────────────────────────────────────────── */
+.stitch-dash-main {
+  flex: 1;
+  width: 100%;
+  padding-top: 72px;
+  padding-bottom: 110px;
+}
+
+.stitch-dash-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ─── Welcome Row ─────────────────────────────────────────────────────────── */
+.stitch-welcome-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.stitch-welcome-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-welcome-greeting {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.stitch-welcome-name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #010102;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.stitch-wave {
+  font-size: 18px;
+}
+
+.stitch-welcome-location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #46464a;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.loc-arrow {
+  font-size: 15px;
+  color: #765b00;
+}
+
+.stitch-fastag-pill {
+  background: #f2f4f8;
+  border: 1px solid rgba(199, 198, 202, 0.4);
+  border-radius: 9999px;
+  padding: 4px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.wallet-icon {
+  font-size: 16px;
+  color: #009944;
+}
+
+.stitch-fastag-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  line-height: 1;
+}
+
+.stitch-fastag-lbl {
+  font-size: 9px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: #46464a;
+  letter-spacing: 0.06em;
+}
+
+.stitch-fastag-amt {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #010102;
+  margin-top: 1px;
+}
+
+/* ─── Active Live Session Card ────────────────────────────────────────────── */
+.stitch-session-card {
+  position: relative;
+  background: linear-gradient(135deg, #1c1c1e 0%, #18181a 50%, #242426 100%);
+  color: #ffffff;
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: 0 12px 32px rgba(28, 28, 30, 0.22);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.stitch-session-glow {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: rgba(254, 203, 53, 0.12);
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.stitch-session-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
+.stitch-session-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stitch-session-live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(74, 225, 118, 0.15);
+  border: 1px solid rgba(74, 225, 118, 0.35);
+  color: #6bff8f;
   font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stitch-ping-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ae176;
+  animation: slPulse 1.8s infinite;
+}
+
+.stitch-session-lot {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+}
+
+.stitch-session-bay {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.stitch-session-middle {
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+.stitch-session-hsrp {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  color: #010102;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 36px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.stitch-session-plate-code {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
   font-weight: 800;
-  color: #111;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  letter-spacing: 0.1em;
+  padding: 0 10px;
 }
 
-.dash-map-pin-num {
-  background: rgba(255,255,255,0.4);
-  padding: 2px 5px;
-  border-radius: 4px;
+.stitch-session-time-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 
-.dash-here-wrap {
+.stitch-session-timer {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fecb35;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.stitch-session-cost {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  margin-top: 3px;
+}
+
+.stitch-session-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 10px;
+  position: relative;
+  z-index: 2;
+}
+
+.stitch-session-anpr {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6bff8f;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.verified-icon {
+  font-size: 16px;
+}
+
+.stitch-session-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stitch-session-extend-btn {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.stitch-session-extend-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.stitch-session-exit-btn {
+  padding: 6px 14px;
+  border-radius: 9999px;
+  background: #fecb35;
+  color: #241a00;
+  border: none;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, brightness 0.15s ease;
+}
+
+.stitch-session-exit-btn:active {
+  transform: scale(0.96);
+}
+
+.stitch-session-exit-btn span {
+  font-size: 16px;
+}
+
+/* ─── Actions Carousel ────────────────────────────────────────────────────── */
+.stitch-actions-carousel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 4px;
+  scrollbar-width: none;
+}
+
+.stitch-actions-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.stitch-action-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: #ffffff;
+  border: 1px solid rgba(199, 198, 202, 0.4);
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  font-size: 12px;
+  font-weight: 600;
+  color: #010102;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  white-space: nowrap;
+}
+
+.stitch-action-chip:hover {
+  border-color: #010102;
+}
+
+.stitch-action-chip span.material-symbols-outlined {
+  font-size: 17px;
+}
+
+/* ─── My Vehicles 3-Column ────────────────────────────────────────────────── */
+.stitch-dash-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stitch-dash-sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-dash-sec-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #010102;
+}
+
+.stitch-add-veh-link {
+  font-size: 12px;
+  font-weight: 700;
+  color: #765b00;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.stitch-vehicles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.stitch-veh-box {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 12px 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(199, 198, 202, 0.4);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 96px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stitch-veh-box:hover {
+  border-color: #77767b;
+}
+
+.stitch-veh-box.active {
+  background: #1c1c1e;
+  color: #ffffff;
+  border-color: #1c1c1e;
+  box-shadow: 0 4px 14px rgba(28, 28, 30, 0.2);
+}
+
+.stitch-veh-box-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-veh-icon-bg {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #f2f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #46464a;
+}
+
+.stitch-veh-box.active .stitch-veh-icon-bg {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fecb35;
+}
+
+.stitch-veh-icon-bg span {
+  font-size: 17px;
+}
+
+.stitch-veh-tag {
+  font-size: 9px;
+  font-weight: 600;
+  color: #46464a;
+}
+
+.stitch-veh-tag.active {
+  background: #fecb35;
+  color: #241a00;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+}
+
+.stitch-veh-box-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-veh-box-type {
+  font-size: 13px;
+  font-weight: 700;
+  color: #010102;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stitch-veh-box.active .stitch-veh-box-type {
+  color: #ffffff;
+}
+
+.stitch-veh-box-plate {
+  font-size: 10px;
+  color: #46464a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.stitch-veh-box.active .stitch-veh-box-plate {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ─── Live Radar Map Teaser Card ─────────────────────────────────────────── */
+.stitch-radar-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(199, 198, 202, 0.4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.stitch-radar-map-area {
+  position: relative;
+  width: 100%;
+  height: 176px;
+  background: #f2f4f8;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.stitch-radar-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.92;
+}
+
+.stitch-radar-explore-pill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 6px 12px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #010102;
+  border: 1px solid rgba(199, 198, 202, 0.3);
+  transition: background 0.15s;
+}
+
+.stitch-radar-explore-pill:hover {
+  background: #ffffff;
+}
+
+.stitch-radar-explore-pill span.material-symbols-outlined {
+  font-size: 15px;
+}
+
+/* Price pins */
+.stitch-radar-price-pin {
+  position: absolute;
+  background: #010102;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.stitch-radar-price-pin.p1 {
+  top: 24px;
+  left: 36px;
+}
+
+.stitch-radar-price-pin.p2 {
+  bottom: 30px;
+  right: 60px;
+}
+
+.stitch-radar-price-pin.p3 {
+  top: 40px;
+  right: 100px;
+}
+
+/* Central Marker */
+.stitch-radar-center-marker {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.stitch-radar-ping-halo {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(254, 203, 53, 0.6);
+  animation: pingHalo 2s infinite;
+}
+
+.stitch-radar-marker-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fecb35;
+  color: #010102;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #010102;
+}
+
+.stitch-radar-marker-circle span {
+  font-size: 18px;
+}
+
+.stitch-radar-footer {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+}
+
+.stitch-radar-slots-left {
+  display: flex;
   align-items: center;
   gap: 8px;
-  pointer-events: none;
 }
 
-.dash-here-marker {
-  width: 32px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
+.stitch-radar-green-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #4ae176;
+  animation: slPulse 1.8s infinite;
 }
 
-.dash-here-pill {
-  background: #fff;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
+.stitch-radar-slot-title {
+  font-size: 13px;
   font-weight: 700;
-  color: #111;
+  color: #010102;
+  display: block;
+  line-height: 1.1;
+}
+
+.stitch-radar-slot-sub {
+  font-size: 11px;
+  color: #46464a;
+  font-weight: 500;
+}
+
+.stitch-radar-live-tag {
+  font-size: 11px;
+  color: #46464a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+}
+
+.stitch-radar-live-tag span {
+  font-size: 14px;
+}
+
+/* ─── Nearby Parking Hubs ─────────────────────────────────────────────────── */
+.stitch-sec-title-left {
   display: flex;
   align-items: center;
   gap: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* Search Bar */
-.dash-search-bar {
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 50px;
-  padding: 14px 20px;
-  width: 100%;
+.stitch-hubs-count-pill {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: #e6e8ec;
+  border-radius: 9999px;
+  font-weight: 700;
+  color: #46464a;
+}
+
+.stitch-view-all-link {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #765b00;
+  background: transparent;
+  border: none;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  color: #888;
-  margin-bottom: 28px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+  gap: 2px;
 }
 
-/* Vehicle Carousel */
-.dash-v-track {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  padding-bottom: 20px;
-  margin: 0 -20px;
-  padding-left: 20px;
-  padding-right: 20px;
-  scroll-snap-type: x mandatory;
+.stitch-view-all-link span {
+  font-size: 15px;
 }
 
-.dash-v-track::-webkit-scrollbar {
-  display: none;
-}
-
-.dash-v-card {
-  flex: 0 0 130px;
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 24px;
-  padding: 20px;
+.stitch-hubs-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  scroll-snap-align: start;
-  transition: all 0.2s;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+  gap: 10px;
 }
 
-.dash-v-card.active {
-  background: #1c1d21;
-  border-color: #1c1d21;
-}
-
-.dash-v-icon {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-}
-
-.dash-v-name {
-  font-size: 16px;
-  font-weight: 800;
-  color: #111;
-  margin-bottom: 16px;
-}
-
-.dash-v-card.active .dash-v-name {
-  color: #fff;
-}
-
-.dash-v-btn {
-  width: 100%;
-  padding: 10px;
+.stitch-hub-card {
+  background: #ffffff;
   border-radius: 16px;
-  background: #f4f6fa;
-  border: none;
-  font-size: 16px;
-  font-weight: 900;
-  color: #888;
-  cursor: pointer;
+  padding: 12px 14px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(199, 198, 202, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: box-shadow 0.15s ease;
+}
+
+.stitch-hub-card:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+}
+
+.stitch-hub-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.stitch-hub-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #1c1c1e;
+  color: #fecb35;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
-.dash-v-card.active .dash-v-btn {
-  background: #F2C230;
-  color: #111;
+.stitch-hub-icon-wrap span {
+  font-size: 22px;
 }
 
-/* Desktop */
-@media (min-width: 640px) {
-  .dash-shell {
-    max-width: 430px;
-  }
-  .dash-page {
-    align-items: flex-start;
-    padding: 40px 0;
-  }
+.stitch-hub-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-@media (min-width: 900px) {
-  .dash-page {
-    align-items: center;
-    padding: 0;
-  }
-  .dash-shell {
-    max-width: 430px;
-    max-height: calc(100vh - 60px);
-    border-radius: 44px;
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.15),
-      0 40px 80px rgba(0,0,0,0.22);
-  }
+.stitch-hub-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #010102;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stitch-hub-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #46464a;
+  margin-top: 2px;
+}
+
+.stitch-hub-slots-highlight {
+  color: #009944;
+  font-weight: 600;
+}
+
+.stitch-hub-tags {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.stitch-hub-tag {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: #f2f4f8;
+  color: #46464a;
+  border-radius: 4px;
+}
+
+.stitch-hub-tag.accent {
+  background: rgba(74, 225, 118, 0.2);
+  color: #009944;
+}
+
+.stitch-hub-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.stitch-hub-rate {
+  font-family: 'Outfit', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #010102;
+}
+
+.stitch-hub-rate small {
+  font-size: 11px;
+  color: #46464a;
+  font-weight: normal;
+}
+
+.stitch-hub-reserve-btn {
+  margin-top: 6px;
+  padding: 5px 14px;
+  background: #010102;
+  color: #ffffff;
+  border-radius: 9999px;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.stitch-hub-reserve-btn:hover {
+  background: #1c1c1e;
 }

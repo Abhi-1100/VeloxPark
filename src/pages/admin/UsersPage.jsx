@@ -4,10 +4,10 @@
  * User Management dashboard for Velox OS.
  */
 import { useState } from 'react';
-import useDashboardData from '../hooks/useDashboardData';
-import Sidebar from './dashboard/Sidebar';
-import Topbar from './dashboard/Topbar';
-import { logoutAdmin } from '../services/firebaseService';
+import useDashboardData from '../../hooks/useDashboardData';
+import Sidebar from '../../components/dashboard/Sidebar';
+import Topbar from '../../components/dashboard/Topbar';
+import { logoutAdmin } from '../../services/firebaseService';
 import './UsersPage.css';
 
 // Mock data for demonstration purposes

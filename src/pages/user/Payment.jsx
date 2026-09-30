@@ -58,8 +58,8 @@ function IconWallet() {
 function IconRazorpay() {
   return (
     <svg width="22" height="22" viewBox="0 0 512 512" fill="none">
-      <path d="M122.5 351.5L254.8 62.4c4.6-10 14.6-16.4 25.6-16.4h113.1c9.3 0 15.6 9.5 12.1 18.2L288.7 348.6c-4.5 10.3-14.7 16.9-25.9 16.9H122.5z" fill="#0C2340"/>
-      <path d="M211.2 466L317.9 232.7c4.6-10 14.6-16.4 25.6-16.4h113.1c9.3 0 15.6 9.5 12.1 18.2L351.8 467.9c-4.5 10.3-14.7 16.9-25.9 16.9H223.3c-9.3 0-15.6-9.5-12.1-18.8z" fill="#3395FF"/>
+      <path d="M122.5 351.5L254.8 62.4c4.6-10 14.6-16.4 25.6-16.4h113.1c9.3 0 15.6 9.5 12.1 18.2L288.7 348.6c-4.5 10.3-14.7 16.9-25.9 16.9H122.5z" fill="#0C2340" />
+      <path d="M211.2 466L317.9 232.7c4.6-10 14.6-16.4 25.6-16.4h113.1c9.3 0 15.6 9.5 12.1 18.2L351.8 467.9c-4.5 10.3-14.7 16.9-25.9 16.9H223.3c-9.3 0-15.6-9.5-12.1-18.8z" fill="#3395FF" />
     </svg>
   );
 }
@@ -219,7 +219,7 @@ function Payment() {
   return (
     <div className="pay-page">
       <div className="pay-shell">
-        
+
         {/* Top Bar */}
         <div className="pay-top-bar">
           <button
@@ -247,7 +247,7 @@ function Payment() {
         {paid ? (
           /* ── Post-Payment Confirmation Pass Screen ── */
           <div className="pay-success-container">
-            
+
             <div className="pay-success-header">
               <div className="pay-success-icon-wrap">
                 <IconCheck />
@@ -331,12 +331,12 @@ function Payment() {
         ) : (
           /* ── Checkout Screen ── */
           <div className="pay-checkout-container">
-            
+
             <div className="pay-desktop-layout">
-              
+
               {/* Left Column (Payment Methods & Card Form) */}
               <div className="pay-left-pane">
-                
+
                 {/* Payment Method Selector */}
                 <div className="pay-section-heading">
                   <h3>Choose Payment Method</h3>
@@ -543,7 +543,7 @@ function Payment() {
 
               {/* Right Column (Summary & Checkout CTA) */}
               <div className="pay-right-pane">
-                
+
                 {/* Summary Banner Card */}
                 <div className="pay-summary-card">
                   <div className="pay-summary-top">

@@ -5,8 +5,7 @@
 export { default as UserLayout } from './UserLayout';
 export { default as Dashboard } from './Dashboard';
 export { default as SearchLocation } from './SearchLocation';
-export { default as MapView } from './MapView';
-export { default as ConfirmParking } from './ConfirmParking';
+export { default as MapView } from '../../components/map/VeloxParkMap';
 export { default as BookSlot } from './BookSlot';
 export { default as BookingDetails } from './BookingDetails';
 export { default as Payment } from './Payment';

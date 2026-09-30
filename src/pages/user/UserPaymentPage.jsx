@@ -1,7 +1,7 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import UserPaymentPageMobile from './user/UserPaymentPageMobile';
-import UserPaymentPageDesktop from './user/UserPaymentPageDesktop';
+import UserPaymentPageMobile from '../../components/user/UserPaymentPageMobile';
+import UserPaymentPageDesktop from '../../components/user/UserPaymentPageDesktop';
 
 const loadRazorpay = () => new Promise((resolve, reject) => {
   if (window.Razorpay) return resolve();

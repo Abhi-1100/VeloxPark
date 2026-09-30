@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The user map at `/map` shows nearby VeloxPark parking stations on a real OpenStreetMap map. It is integrated into the existing dashboard/search flow.
+The user map at `/map` shows nearby VeloxPark parking stations on a MapLibre/OpenStreetMap-compatible map. It is integrated into the existing dashboard/search flow.
 
 ## User flow
 
@@ -15,21 +15,21 @@ The user map at `/map` shows nearby VeloxPark parking stations on a real OpenStr
 | File | Responsibility |
 | --- | --- |
 | `src/pages/user/MapView.jsx` | Existing route integration and dashboard navigation |
-| `src/components/map/VeloxParkMap.jsx` | Leaflet map, markers, selection, card, navigation, and state |
+| `src/components/map/VeloxParkMap.jsx` | MapLibre map, markers, selection, station list, route, and state |
 | `src/components/map/VeloxParkMap.css` | Responsive map overlays and marker styles |
 | `src/hooks/useUserLocation.js` | One-shot browser geolocation and error states |
 | `src/utils/distance.js` | Haversine distance and formatting |
-| `src/data/parkingStations.js` | Station provider and temporary demo data |
+| `src/data/parkingStations.js` | Validated Firebase Realtime Database `stations` provider |
 
 ## Behavior
 
-- React Leaflet renders OpenStreetMap tiles with attribution.
+- MapLibre renders OpenStreetMap raster tiles with attribution. Set `VITE_MAP_STYLE_URL` for another compatible provider and follow its key and attribution requirements.
 - Custom VeloxPark markers show open, limited, full, and closed states.
 - The user marker opens a `You are here` popup.
 - Clicking a station highlights it, focuses the map, and updates the bottom card.
 - The nearest station is calculated when location and stations are available.
 - Locate Me requests location and focuses the map on the detected coordinates.
-- Navigate opens an external Google Maps directions URL.
+- Continue requests a real road route and displays provider distance/ETA; it does not create a booking.
 
 ## Station data contract
 
@@ -45,15 +45,19 @@ The user map at `/map` shows nearby VeloxPark parking stations on a real OpenStr
 }
 ```
 
-The current coordinates are temporary fallback/demo values and are not real VeloxPark locations.
+There are no fallback/demo stations in production code. Invalid-coordinate records are ignored. Add real records under Firebase `stations/{stationId}` with `name`, `latitude`, `longitude`, `address`, `totalSlots`, `availableSlots`, `status`, and optional `pricePerHour`.
 
 ## Nearest-station calculation
 
 `calculateDistance()` uses the Haversine formula with an Earth radius of 6,371 km. Station distances are memoized and sorted to select the nearest station. Latitude/longitude subtraction is not used.
 
+## Routing configuration
+
+`VITE_ROUTING_URL` defaults to the OSRM demo endpoint. OSRM coordinates are sent as `longitude,latitude`; the full GeoJSON route geometry, distance, and duration are used directly. The public demo server has no production SLA or guaranteed limits. For production, point this variable at an appropriately hosted or contracted OSRM-compatible service.
+
 ## Firebase/API replacement
 
-Keep the UI contract unchanged and replace `getParkingStations()` in `src/data/parkingStations.js` with a provider backed by Firebase or an API. Do not initialize Firebase again; use `src/config/firebase.js`.
+The map reads the existing Firebase Realtime Database `stations` node through `getParkingStations()`. Existing `parkingLogs` records are parking sessions, not station records, and are not treated as station locations. Do not initialize Firebase again; use `src/config/firebase.js`.
 
 Example Firestore adapter:
 

@@ -4,131 +4,26 @@ import { doc, onSnapshot, updateDoc, collection, query, where, getDocs } from 'f
 import { signOut } from 'firebase/auth';
 import { db, auth } from '../../config/firebase';
 import { useAuth } from '../../context/useAuth';
-import { useTheme } from '../../context/useTheme';
 import avatarJack from '../../assets/avatar-jack.jpg';
 import './Profile.css';
-
-/* ─── Vector SVG Icons ─────────────────────────────────────────────────────── */
-function IconArrowLeft() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 12H5M12 19l-7-7 7-7" />
-    </svg>
-  );
-}
-
-function IconUser() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
-
-function IconCar() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 10.8 2 11v5c0 .6.4 1 1 1h2" />
-      <circle cx="7" cy="17" r="2" />
-      <path d="M9 17h6" />
-      <circle cx="17" cy="17" r="2" />
-    </svg>
-  );
-}
-
-function IconMoon() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-    </svg>
-  );
-}
-
-function IconSun() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="5" />
-      <line x1="12" y1="1" x2="12" y2="3" />
-      <line x1="12" y1="21" x2="12" y2="23" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="1" y1="12" x2="3" y2="12" />
-      <line x1="21" y1="12" x2="23" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-    </svg>
-  );
-}
-
-function IconHistory() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 16 14" />
-    </svg>
-  );
-}
-
-function IconClock() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <polyline points="12 6 12 12 14 14" />
-    </svg>
-  );
-}
-
-function IconSparkles() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 2l2.4 6.8L21 10.5l-5.6 4.3 1.8 7.2-5.2-4.1-5.2 4.1 1.8-7.2-5.6-4.3 6.6-1.7z" />
-    </svg>
-  );
-}
-
-function IconLogOut() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-      <polyline points="16 17 21 12 16 7" />
-      <line x1="21" y1="12" x2="9" y2="12" />
-    </svg>
-  );
-}
-
-function IconChevronRight({ color = '#9ca3af' }) {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 18 15 12 9 6" />
-    </svg>
-  );
-}
 
 function Profile() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { theme, toggleTheme } = useTheme();
 
   const [form, setForm] = useState({ name: '', phone: '' });
-  const [plates, setPlates] = useState(['7ABC123']);
+  const [plates, setPlates] = useState(['GJ 23 AB 1234', 'GJ 07 CD 5678']);
   const [newPlate, setNewPlate] = useState('');
+  const [showAddPlateModal, setShowAddPlateModal] = useState(false);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [anprActive, setAnprActive] = useState(true);
+  const [notifsActive, setNotifsActive] = useState(true);
+  const [stats, setStats] = useState({ sessions: 42, hours: 98, spent: 2840 });
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [toast, setToast] = useState('');
   const [toastVisible, setToastVisible] = useState(false);
-  const [imgError, setImgError] = useState(false);
-  const [stats, setStats] = useState({ sessions: 0, hours: 0, pts: 0 });
 
   const toastTimer = useRef(null);
-
-  const currentTheme = theme || 'light';
-
-  const applyTheme = (nextTheme) => {
-    if (nextTheme !== currentTheme) {
-      toggleTheme();
-    }
-  };
 
   const showToast = (msg) => {
     setToast(msg);
@@ -143,78 +38,107 @@ function Profile() {
     return () => clearTimeout(toastTimer.current);
   }, []);
 
+  // Fetch User info from Firestore
   useEffect(() => {
     if (!user?.uid) return;
     const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
       if (snap.exists()) {
         const data = snap.data();
         setForm({
-          name: data.name || user.displayName || '',
-          phone: data.phone || user.phoneNumber || '',
+          name: data.name || user.displayName || 'Test User',
+          phone: data.phone || user.phoneNumber || '+91 98765 43210',
         });
         if (Array.isArray(data.vehiclePlates) && data.vehiclePlates.length > 0) {
           setPlates(data.vehiclePlates);
         }
       } else {
         setForm({
-          name: user.displayName || '',
-          phone: user.phoneNumber || '',
+          name: user.displayName || 'Test User',
+          phone: user.phoneNumber || '+91 98765 43210',
         });
       }
     });
     return () => unsub();
   }, [user]);
 
+  // Fetch Bookings for Stats
   useEffect(() => {
     if (!user?.uid) return;
     const q = query(collection(db, 'bookings'), where('userId', '==', user.uid));
-    getDocs(q).then((snap) => {
-      let count = 0;
-      let totalMins = 0;
-      snap.forEach((d) => {
-        const b = d.data();
-        count += 1;
-        totalMins += Number(b.duration) || 60;
-      });
-      const hrs = Math.round((totalMins / 60) * 10) / 10;
-      const pts = count * 25 + Math.floor(hrs * 10);
-      setStats({ sessions: count, hours: hrs, pts });
-    }).catch(() => {});
+    getDocs(q)
+      .then((snap) => {
+        let count = 0;
+        let totalMins = 0;
+        let totalCost = 0;
+        snap.forEach((d) => {
+          const b = d.data();
+          count += 1;
+          totalMins += Number(b.duration) || 60;
+          totalCost += Number(b.amount) || 40;
+        });
+        if (count > 0) {
+          const hrs = Math.round(totalMins / 60);
+          setStats({
+            sessions: count,
+            hours: hrs,
+            spent: totalCost,
+          });
+        }
+      })
+      .catch(() => {});
   }, [user]);
 
-  const addPlate = () => {
-    const plate = newPlate.trim().toUpperCase();
-    if (!plate) return;
-    if (plates.includes(plate)) {
+  const handleAddPlate = () => {
+    const clean = newPlate.trim().toUpperCase();
+    if (!clean) return;
+    if (plates.includes(clean)) {
       showToast('Plate already exists in your garage');
       return;
     }
-    setPlates((p) => [...p, plate]);
+    const updated = [...plates, clean];
+    setPlates(updated);
     setNewPlate('');
+    setShowAddPlateModal(false);
+
+    if (user?.uid) {
+      updateDoc(doc(db, 'users', user.uid), {
+        vehiclePlates: updated,
+      }).catch(() => {});
+    }
+    showToast('✓ Vehicle added successfully');
   };
 
-  const removePlate = (plateToRemove) => {
-    if (plates.length <= 1) {
-      showToast('At least one plate is required');
+  const handleSetDefaultPlate = (idx) => {
+    if (idx === 0) return;
+    const item = plates[idx];
+    const rest = plates.filter((_, i) => i !== idx);
+    const updated = [item, ...rest];
+    setPlates(updated);
+
+    if (user?.uid) {
+      updateDoc(doc(db, 'users', user.uid), {
+        vehiclePlates: updated,
+      }).catch(() => {});
+    }
+    showToast(`✓ Set ${item} as default vehicle`);
+  };
+
+  const handleSaveProfile = async (e) => {
+    e?.preventDefault?.();
+    if (!user?.uid) {
+      setShowEditProfileModal(false);
+      showToast('✓ Profile updated');
       return;
     }
-    setPlates((p) => p.filter((x) => x !== plateToRemove));
-  };
-
-  const handleSave = async (e) => {
-    e?.preventDefault?.();
-    if (!user?.uid) return;
     setSaving(true);
     try {
       await updateDoc(doc(db, 'users', user.uid), {
         name: form.name.trim(),
         phone: form.phone.trim(),
-        vehiclePlates: plates,
         updatedAt: new Date(),
       });
-      setSaved(true);
-      showToast('✓ Changes saved successfully');
-      setTimeout(() => setSaved(false), 2500);
+      setShowEditProfileModal(false);
+      showToast('✓ Profile saved successfully');
     } catch {
       showToast('Failed to save profile changes');
     } finally {
@@ -226,314 +150,488 @@ function Profile() {
     try {
       await signOut(auth);
       navigate('/login');
-    } catch (_) { /* ignore */ }
+    } catch {
+      navigate('/login');
+    }
   };
 
-  const displayName = form.name || user?.displayName || 'Driver User';
-  const initials = displayName
-    .trim()
-    .split(/\s+/)
-    .map((n) => n[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase() || 'DU';
-
-  const userPhoto = user?.photoURL || avatarJack;
+  const displayName = form.name || user?.displayName || 'Test User';
+  const phoneDisplay = form.phone || '+91 98765 43210';
+  const emailDisplay = user?.email || 'test.user@veloxpark.in';
 
   return (
-    <div className="prof-page">
-      <div className="prof-shell">
-        
-        {/* Top Bar with back navigation and theme switcher */}
-        <div className="prof-top-bar">
-          <button
-            type="button"
-            className="prof-nav-btn"
-            onClick={() => navigate(-1)}
-            aria-label="Go back"
-          >
-            <IconArrowLeft />
-          </button>
-          
-          <div className="prof-title-group">
-            <h2 className="prof-top-title">Profile</h2>
-            <span className="prof-desktop-crumb">Driver Account &amp; Vehicle Settings</span>
+    <div className="stitch-profile-page">
+      {/* Top Fixed Header */}
+      <header className="stitch-profile-top-bar">
+        <div className="stitch-profile-top-inner">
+          <div className="stitch-logo-group" onClick={() => navigate('/dashboard')}>
+            <div className="stitch-logo-p">P</div>
+            <div className="stitch-brand-col">
+              <span className="stitch-brand-name">VeloxPark</span>
+              <span className="stitch-brand-sub">Profile</span>
+            </div>
           </div>
-
-          <button
-            type="button"
-            className="prof-nav-btn"
-            onClick={() => applyTheme(currentTheme === 'dark' ? 'light' : 'dark')}
-            aria-label="Toggle theme"
-            title={`Switch to ${currentTheme === 'dark' ? 'Light' : 'Dark'} mode`}
-          >
-            {currentTheme === 'dark' ? <IconSun /> : <IconMoon />}
-          </button>
+          <div className="stitch-top-actions">
+            <button
+              type="button"
+              className="stitch-action-btn"
+              aria-label="Notifications"
+              onClick={() => showToast('FASTag auto-verification synced')}
+            >
+              <span className="material-symbols-outlined">notifications</span>
+            </button>
+            <div className="stitch-avatar-btn">
+              <img src={avatarJack} alt="Profile" className="stitch-avatar-img" />
+            </div>
+          </div>
         </div>
+      </header>
 
-        {/* Responsive Layout (Sequential on mobile via display:contents, 2-column on desktop) */}
-        <div className="prof-desktop-layout">
-          
-          {/* Left Column (Hero, Stats, Quick Actions) */}
-          <div className="prof-layout-left">
-            
-            {/* Hero Section with Banner + Prominent Centered Avatar */}
-            <div className="prof-header-hero">
-              <div className="prof-banner-strip">
-                <div className="prof-banner-pattern"></div>
+      {/* Main Scroll Content */}
+      <main className="stitch-profile-main">
+        <div className="stitch-profile-content">
+          {/* Left Column (Desktop sidebar / mobile direct flow) */}
+          <div className="stitch-profile-col-left">
+            {/* Top Profile Card & Identity */}
+            <section className="stitch-id-card">
+              <div className="stitch-id-blur-orb top-right" />
+              <div className="stitch-id-blur-orb bottom-left" />
+
+              <div className="stitch-id-avatar-cluster">
+                <img src={avatarJack} alt={displayName} className="stitch-id-avatar-img" />
+                <span className="stitch-id-verified-badge" title="Verified Account">
+                  <span className="material-symbols-outlined filled">verified</span>
+                </span>
               </div>
 
-              <div className="prof-avatar-cluster">
-                <div className="prof-avatar-ring">
-                  {!imgError && userPhoto ? (
-                    <img
-                      src={userPhoto}
-                      alt={displayName}
-                      className="prof-avatar-img"
-                      onError={() => setImgError(true)}
-                    />
-                  ) : (
-                    <div className="prof-avatar-fallback">{initials}</div>
-                  )}
-                  <div className="prof-avatar-badge" title="Verified Account">✓</div>
-                </div>
+              <h1 className="stitch-id-name">{displayName}</h1>
+              <p className="stitch-id-contact">
+                {phoneDisplay} • {emailDisplay}
+              </p>
 
-                <h1 className="prof-user-name">{displayName}</h1>
-                <p className="prof-user-email">{user?.email || 'driver@veloxpark.com'}</p>
-                
-                <div className="prof-member-pill">
-                  <span className="prof-star-icon">★</span>
-                  <span>VeloxPark Member</span>
-                </div>
-              </div>
-            </div>
-
-            {/* 3 Square Stat Quick-Cards */}
-            <div className="prof-stats-grid">
-              <div className="prof-stat-box" onClick={() => navigate('/history')} role="button" tabIndex={0}>
-                <div className="prof-stat-icon-wrap sessions">
-                  <IconHistory />
-                </div>
-                <div className="prof-stat-val">{stats.sessions}</div>
-                <div className="prof-stat-lbl">Sessions</div>
-              </div>
-
-              <div className="prof-stat-box">
-                <div className="prof-stat-icon-wrap hours">
-                  <IconClock />
-                </div>
-                <div className="prof-stat-val">{stats.hours}h</div>
-                <div className="prof-stat-lbl">Duration</div>
-              </div>
-
-              <div className="prof-stat-box">
-                <div className="prof-stat-icon-wrap rewards">
-                  <IconSparkles />
-                </div>
-                <div className="prof-stat-val gold">{stats.pts}</div>
-                <div className="prof-stat-lbl">Points</div>
-              </div>
-            </div>
-
-            {/* Quick Action Rows: History & Sign Out */}
-            <div className="prof-nav-links">
-              <div
-                className="prof-link-row"
-                onClick={() => navigate('/history')}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && navigate('/history')}
-              >
-                <div className="prof-link-left">
-                  <div className="prof-link-icon"><IconHistory /></div>
-                  <div>
-                    <span className="prof-link-title">Parking History</span>
-                    <span className="prof-link-subtitle">Telemetry, receipts &amp; barriers</span>
-                  </div>
-                </div>
-                <IconChevronRight />
-              </div>
-
-              <div
-                className="prof-link-row danger"
-                onClick={handleLogout}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => e.key === 'Enter' && handleLogout()}
-              >
-                <div className="prof-link-left">
-                  <div className="prof-link-icon danger"><IconLogOut /></div>
-                  <div>
-                    <span className="prof-link-title danger">Sign Out</span>
-                    <span className="prof-link-subtitle">Disconnect active session</span>
-                  </div>
-                </div>
-                <IconChevronRight color="#ef4444" />
-              </div>
-            </div>
-
-          </div>
-
-          {/* Right Column (Settings Rows & Desktop Save Action) */}
-          <div className="prof-layout-right">
-            
-            {/* Row Card 1: Personal Details */}
-            <div className="prof-row-card">
-              <div className="prof-row-head">
-                <div className="prof-row-icon"><IconUser /></div>
-                <div className="prof-row-titles">
-                  <h3 className="prof-row-title">Personal Details</h3>
-                  <p className="prof-row-sub">Manage your driver information</p>
-                </div>
-              </div>
-
-              <div className="prof-card-fields">
-                <div className="prof-field">
-                  <label className="prof-field-label">FULL NAME</label>
-                  <input
-                    type="text"
-                    className="prof-input"
-                    placeholder="Enter full name"
-                    value={form.name}
-                    onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  />
-                </div>
-
-                <div className="prof-field">
-                  <label className="prof-field-label">PHONE NUMBER</label>
-                  <input
-                    type="tel"
-                    className="prof-input"
-                    placeholder="+1 (555) 000-0000"
-                    value={form.phone}
-                    onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Row Card 2: Vehicles & License Plates */}
-            <div className="prof-row-card">
-              <div className="prof-row-head">
-                <div className="prof-row-icon"><IconCar /></div>
-                <div className="prof-row-titles">
-                  <h3 className="prof-row-title">Vehicle Plates</h3>
-                  <p className="prof-row-sub">{plates.length} vehicle(s) saved</p>
-                </div>
-              </div>
-
-              <div className="prof-plates-wrap">
-                {plates.map((plate, index) => (
-                  <div key={plate} className="prof-plate-pill">
-                    <span className="prof-plate-val">{plate}</span>
-                    {index === 0 && <span className="prof-plate-primary">PRIMARY</span>}
-                    <button
-                      type="button"
-                      className="prof-plate-del"
-                      onClick={() => removePlate(plate)}
-                      title="Remove plate"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <div className="prof-add-plate-row">
-                <input
-                  type="text"
-                  className="prof-input prof-add-input"
-                  placeholder="ADD PLATE (E.G. 7ABC123)"
-                  value={newPlate}
-                  onChange={(e) => setNewPlate(e.target.value.toUpperCase())}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      addPlate();
-                    }
-                  }}
-                />
+              <div className="stitch-id-actions-row">
                 <button
                   type="button"
-                  className="prof-add-btn"
-                  onClick={addPlate}
+                  className="stitch-id-edit-btn"
+                  onClick={() => setShowEditProfileModal(true)}
                 >
-                  + Add
-                </button>
-              </div>
-            </div>
-
-            {/* Row Card 3: Appearance & Display */}
-            <div className="prof-row-card">
-              <div className="prof-row-head">
-                <div className="prof-row-icon"><IconMoon /></div>
-                <div className="prof-row-titles">
-                  <h3 className="prof-row-title">Appearance</h3>
-                  <p className="prof-row-sub">Cockpit theme selector</p>
-                </div>
-              </div>
-
-              <div className="prof-theme-grid">
-                <button
-                  type="button"
-                  className={`prof-theme-btn ${currentTheme === 'dark' ? 'active' : ''}`}
-                  onClick={() => applyTheme('dark')}
-                >
-                  <div className="prof-theme-btn-icon"><IconMoon /></div>
-                  <div className="prof-theme-btn-info">
-                    <span className="prof-theme-btn-title">Dark Cockpit</span>
-                    <span className="prof-theme-btn-desc">Night &amp; HUD view</span>
-                  </div>
-                  {currentTheme === 'dark' && <span className="prof-theme-check">✓</span>}
+                  <span className="material-symbols-outlined">edit</span>
+                  <span>Edit profile</span>
                 </button>
 
-                <button
-                  type="button"
-                  className={`prof-theme-btn ${currentTheme === 'light' ? 'active' : ''}`}
-                  onClick={() => applyTheme('light')}
-                >
-                  <div className="prof-theme-btn-icon"><IconSun /></div>
-                  <div className="prof-theme-btn-info">
-                    <span className="prof-theme-btn-title">Light Daylight</span>
-                    <span className="prof-theme-btn-desc">High clarity view</span>
-                  </div>
-                  {currentTheme === 'light' && <span className="prof-theme-check">✓</span>}
-                </button>
+                <span className="stitch-id-fastag-pill">
+                  <span className="material-symbols-outlined filled">bolt</span>
+                  <span>FASTag Active</span>
+                </span>
               </div>
-            </div>
+            </section>
 
-            {/* Desktop Save Action Button */}
-            <div className="prof-desktop-save-wrap">
+            {/* High-Density Quick Analytics Strip */}
+            <section className="stitch-stats-strip">
+              <div className="stitch-stat-tile" onClick={() => navigate('/history')}>
+                <span className="stitch-stat-number">{stats.sessions}</span>
+                <span className="stitch-stat-sub">Total Parkings</span>
+              </div>
+              <div className="stitch-stat-tile">
+                <span className="stitch-stat-number">{stats.hours} hrs</span>
+                <span className="stitch-stat-sub">Hours Parked</span>
+              </div>
+              <div className="stitch-stat-tile">
+                <span className="stitch-stat-number">₹{stats.spent.toLocaleString()}</span>
+                <span className="stitch-stat-sub">Money Spent</span>
+              </div>
+            </section>
+
+            {/* Logout Section for Left Column on Desktop */}
+            <section className="stitch-logout-section desktop-logout">
               <button
                 type="button"
-                className={`prof-save-btn ${saved ? 'saved' : ''}`}
-                disabled={saving}
-                onClick={handleSave}
+                className="stitch-logout-btn"
+                onClick={handleLogout}
               >
-                {saving ? 'Saving Changes…' : saved ? '✓ Profile Saved!' : 'Save Changes'}
+                <span className="material-symbols-outlined">logout</span>
+                <span>Log out</span>
+              </button>
+
+              <div className="stitch-version-tag">
+                VeloxPark v2.4.1 (Gujarat Smart Mobility Edition)
+              </div>
+            </section>
+          </div>
+
+          {/* Right Column (Vehicles, Rates, Settings) */}
+          <div className="stitch-profile-col-right">
+            {/* My Vehicles Ribbon Section */}
+            <section className="stitch-vehicles-section">
+            <div className="stitch-sec-head">
+              <div className="stitch-sec-title-wrap">
+                <h2 className="stitch-sec-title">My Vehicles</h2>
+                <span className="stitch-veh-count-badge">({plates.length})</span>
+              </div>
+              <button
+                type="button"
+                className="stitch-sec-action-link"
+                onClick={() => setShowAddPlateModal(true)}
+              >
+                <span>Manage</span>
+                <span className="material-symbols-outlined">chevron_right</span>
               </button>
             </div>
 
+            {/* Horizontal Snap Scroll Strip */}
+            <div className="stitch-vehicles-snap-strip">
+              {plates.map((plate, index) => {
+                const isDefault = index === 0;
+                const isBike = index === 1;
+
+                return (
+                  <div key={plate} className="stitch-vehicle-card">
+                    <div className="stitch-veh-card-top">
+                      <div className="stitch-veh-icon-box">
+                        <span className="material-symbols-outlined">
+                          {isBike ? 'two_wheeler' : 'directions_car'}
+                        </span>
+                      </div>
+                      {isDefault ? (
+                        <span className="stitch-veh-default-tag">
+                          <span className="stitch-pulse-micro" />
+                          Default
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          className="stitch-veh-set-default-btn"
+                          onClick={() => handleSetDefaultPlate(index)}
+                        >
+                          Set default
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Realistic Indian HSRP License Plate */}
+                    <div className="stitch-hsrp-full-plate">
+                      <div className="stitch-hsrp-ind-strip">
+                        <div className="stitch-hsrp-chakra" />
+                        <span className="stitch-hsrp-ind-text">IND</span>
+                      </div>
+                      <div className="stitch-hsrp-plate-number">{plate}</div>
+                    </div>
+
+                    <div className="stitch-veh-card-footer">
+                      <span className="stitch-veh-model-name">
+                        {isBike ? 'Royal Enfield Hunter 350' : 'Hyundai Creta • White'}
+                      </span>
+                      <span
+                        className={`material-symbols-outlined ${
+                          isDefault ? 'filled text-success' : 'text-muted'
+                        }`}
+                      >
+                        {isDefault ? 'check_circle' : 'radio_button_unchecked'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Add Vehicle CTA Card */}
+              <div
+                className="stitch-vehicle-add-card"
+                onClick={() => setShowAddPlateModal(true)}
+              >
+                <div className="stitch-veh-add-icon-circle">
+                  <span className="material-symbols-outlined">add</span>
+                </div>
+                <span className="stitch-veh-add-title">+ Add Vehicle</span>
+                <span className="stitch-veh-add-sub">Fast HSRP OCR</span>
+              </div>
+            </div>
+          </section>
+
+          {/* Standard VeloxPark Rates Compact Module */}
+          <section className="stitch-rates-card">
+            <div className="stitch-sec-head">
+              <div className="stitch-sec-title-wrap">
+                <span className="material-symbols-outlined stitch-rates-icon">payments</span>
+                <h3 className="stitch-sec-title">Standard VeloxPark Rates</h3>
+              </div>
+              <span className="stitch-live-pricing-tag">Live Slot Pricing</span>
+            </div>
+
+            {/* 4-item grid */}
+            <div className="stitch-rates-grid">
+              <div className="stitch-rate-box">
+                <span className="material-symbols-outlined">directions_car</span>
+                <span className="stitch-rate-type">Car</span>
+                <span className="stitch-rate-cost">
+                  ₹20<small>/hr</small>
+                </span>
+              </div>
+              <div className="stitch-rate-box">
+                <span className="material-symbols-outlined">two_wheeler</span>
+                <span className="stitch-rate-type">Bike</span>
+                <span className="stitch-rate-cost">
+                  ₹10<small>/hr</small>
+                </span>
+              </div>
+              <div className="stitch-rate-box">
+                <span className="material-symbols-outlined">local_shipping</span>
+                <span className="stitch-rate-type">Truck</span>
+                <span className="stitch-rate-cost">
+                  ₹50<small>/hr</small>
+                </span>
+              </div>
+              <div className="stitch-rate-box">
+                <span className="material-symbols-outlined text-secondary">electric_car</span>
+                <span className="stitch-rate-type">EV</span>
+                <span className="stitch-rate-cost">
+                  ₹20<small>/hr</small>
+                </span>
+              </div>
+            </div>
+
+            {/* Free 30min Promo Highlight Chip */}
+            <div className="stitch-promo-highlight">
+              <span className="stitch-promo-emoji">🎉</span>
+              <span className="stitch-promo-text">
+                First 30 minutes free at all Gujarat partner hubs
+              </span>
+            </div>
+          </section>
+
+          {/* iOS-Style Grouped Settings List */}
+          <section className="stitch-settings-grouped-list">
+            {/* Item 1: Payment Methods */}
+            <div
+              className="stitch-setting-row"
+              onClick={() => showToast('UPI, Fastag & Cards ready')}
+            >
+              <div className="stitch-setting-left">
+                <div className="stitch-setting-icon-wrap">
+                  <span className="material-symbols-outlined">account_balance_wallet</span>
+                </div>
+                <div className="stitch-setting-info">
+                  <span className="stitch-setting-title">Payment Methods</span>
+                  <span className="stitch-setting-desc">
+                    UPI, Google Pay, Fastag Auto-Debit
+                  </span>
+                </div>
+              </div>
+              <span className="material-symbols-outlined stitch-chev">chevron_right</span>
+            </div>
+
+            <div className="stitch-setting-divider" />
+
+            {/* Item 2: Parking History */}
+            <div className="stitch-setting-row" onClick={() => navigate('/history')}>
+              <div className="stitch-setting-left">
+                <div className="stitch-setting-icon-wrap">
+                  <span className="material-symbols-outlined">receipt_long</span>
+                </div>
+                <div className="stitch-setting-info">
+                  <span className="stitch-setting-title">Parking History &amp; Invoices</span>
+                  <span className="stitch-setting-desc">GST receipts &amp; session logs</span>
+                </div>
+              </div>
+              <span className="material-symbols-outlined stitch-chev">chevron_right</span>
+            </div>
+
+            <div className="stitch-setting-divider" />
+
+            {/* Item 3: ANPR Auto-Barrier Access Toggle */}
+            <div className="stitch-setting-row non-clickable">
+              <div className="stitch-setting-left">
+                <div className="stitch-setting-icon-wrap">
+                  <span className="material-symbols-outlined">sensor_occupied</span>
+                </div>
+                <div className="stitch-setting-info">
+                  <div className="stitch-smart-tag-row">
+                    <span className="stitch-setting-title">ANPR Auto-Barrier Access</span>
+                    <span className="stitch-smart-pill">Smart</span>
+                  </div>
+                  <span className="stitch-setting-desc">Touchless boom barrier auto lift</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className={`stitch-switch ${anprActive ? 'active' : ''}`}
+                onClick={() => setAnprActive(!anprActive)}
+                aria-pressed={anprActive}
+                aria-label="Toggle ANPR"
+              >
+                <span className="stitch-switch-knob" />
+              </button>
+            </div>
+
+            <div className="stitch-setting-divider" />
+
+            {/* Item 4: Notifications & Alerts Toggle */}
+            <div className="stitch-setting-row non-clickable">
+              <div className="stitch-setting-left">
+                <div className="stitch-setting-icon-wrap">
+                  <span className="material-symbols-outlined">notifications_active</span>
+                </div>
+                <div className="stitch-setting-info">
+                  <span className="stitch-setting-title">Notifications &amp; Alerts</span>
+                  <span className="stitch-setting-desc">
+                    15-min expiry warnings &amp; receipts
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className={`stitch-switch ${notifsActive ? 'active' : ''}`}
+                onClick={() => setNotifsActive(!notifsActive)}
+                aria-pressed={notifsActive}
+                aria-label="Toggle notifications"
+              >
+                <span className="stitch-switch-knob" />
+              </button>
+            </div>
+
+            <div className="stitch-setting-divider" />
+
+            {/* Item 5: Help & Support */}
+            <div
+              className="stitch-setting-row"
+              onClick={() => showToast('Toll-free 1800-233-VELOX (24x7 Helpdesk)')}
+            >
+              <div className="stitch-setting-left">
+                <div className="stitch-setting-icon-wrap">
+                  <span className="material-symbols-outlined">support_agent</span>
+                </div>
+                <div className="stitch-setting-info">
+                  <span className="stitch-setting-title">Help &amp; Gujarat 24x7 Support</span>
+                  <span className="stitch-setting-desc">Toll-free 1800-233-VELOX</span>
+                </div>
+              </div>
+              <span className="material-symbols-outlined stitch-chev">chevron_right</span>
+            </div>
+
+            <div className="stitch-setting-divider" />
+
+            {/* Item 6: Terms & Privacy */}
+            <div
+              className="stitch-setting-row"
+              onClick={() => showToast('Municipal compliance & RTO approved')}
+            >
+              <div className="stitch-setting-left">
+                <div className="stitch-setting-icon-wrap">
+                  <span className="material-symbols-outlined">policy</span>
+                </div>
+                <div className="stitch-setting-info">
+                  <span className="stitch-setting-title">Terms &amp; Privacy Policy</span>
+                  <span className="stitch-setting-desc">
+                    Municipal compliance, NDMC &amp; RTO
+                  </span>
+                </div>
+              </div>
+              <span className="material-symbols-outlined stitch-chev">chevron_right</span>
+            </div>
+          </section>
+
+            {/* Logout Button & Version Tag (Mobile Bottom Flow) */}
+            <section className="stitch-logout-section mobile-logout">
+              <button
+                type="button"
+                className="stitch-logout-btn"
+                onClick={handleLogout}
+              >
+                <span className="material-symbols-outlined">logout</span>
+                <span>Log out</span>
+              </button>
+              <div className="stitch-version-tag">
+                VeloxPark v2.4.1 (Gujarat Smart Mobility Edition)
+              </div>
+            </section>
           </div>
-
         </div>
+      </main>
 
-        {/* Sticky Save Bar (Mobile Only) */}
-        <div className="prof-bottom-bar">
-          <button
-            type="button"
-            className={`prof-save-btn ${saved ? 'saved' : ''}`}
-            disabled={saving}
-            onClick={handleSave}
-          >
-            {saving ? 'Saving Changes…' : saved ? '✓ Profile Saved!' : 'Save Changes'}
-          </button>
+      {/* Edit Profile Modal */}
+      {showEditProfileModal && (
+        <div className="stitch-modal-overlay" onClick={() => setShowEditProfileModal(false)}>
+          <div className="stitch-modal-card" onClick={(e) => e.stopPropagation()}>
+            <h3 className="stitch-modal-title">Edit Profile</h3>
+            <form onSubmit={handleSaveProfile} className="stitch-modal-form">
+              <div className="stitch-form-group">
+                <label>FULL NAME</label>
+                <input
+                  type="text"
+                  value={form.name}
+                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  placeholder="Enter full name"
+                  required
+                />
+              </div>
+              <div className="stitch-form-group">
+                <label>PHONE NUMBER</label>
+                <input
+                  type="tel"
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                  placeholder="+91 98765 43210"
+                />
+              </div>
+              <div className="stitch-modal-actions">
+                <button
+                  type="button"
+                  className="stitch-btn-cancel"
+                  onClick={() => setShowEditProfileModal(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="stitch-btn-submit" disabled={saving}>
+                  {saving ? 'Saving…' : 'Save Changes'}
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
+      )}
 
-      </div>
+      {/* Add Plate Modal */}
+      {showAddPlateModal && (
+        <div className="stitch-modal-overlay" onClick={() => setShowAddPlateModal(false)}>
+          <div className="stitch-modal-card" onClick={(e) => e.stopPropagation()}>
+            <h3 className="stitch-modal-title">Add Vehicle Plate</h3>
+            <p className="stitch-modal-sub">
+              Enter Indian HSRP registration number for touchless ANPR gate entry.
+            </p>
+            <div className="stitch-modal-form">
+              <div className="stitch-form-group">
+                <label>LICENSE PLATE NUMBER</label>
+                <input
+                  type="text"
+                  value={newPlate}
+                  onChange={(e) => setNewPlate(e.target.value.toUpperCase())}
+                  placeholder="E.G. GJ 23 AB 1234"
+                  autoFocus
+                />
+              </div>
+              <div className="stitch-modal-actions">
+                <button
+                  type="button"
+                  className="stitch-btn-cancel"
+                  onClick={() => setShowAddPlateModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="stitch-btn-submit"
+                  onClick={handleAddPlate}
+                  disabled={!newPlate.trim()}
+                >
+                  Add Vehicle
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* Toast popup */}
-      <div className={`prof-toast ${toastVisible ? 'visible' : ''}`} aria-live="polite">
+      {/* Toast Popup */}
+      <div className={`stitch-profile-toast ${toastVisible ? 'visible' : ''}`}>
         {toast}
       </div>
     </div>

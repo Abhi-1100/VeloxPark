@@ -11,6 +11,11 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  optimizeDeps: {
+    // MapLibre ships a separate worker module that Vite 8's dep optimizer
+    // can incorrectly reference from the generated .vite/deps directory.
+    exclude: ['maplibre-gl'],
+  },
   server: { proxy: { '/api': 'http://localhost:5050' } },
 })
 

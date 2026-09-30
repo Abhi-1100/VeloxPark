@@ -7,9 +7,9 @@
  */
 
 import { useState, useEffect } from 'react';
-import { getCurrentRates, updateRates } from '../services/settingsService';
-import { logoutAdmin } from '../services/firebaseService';
-import Sidebar from './dashboard/Sidebar';
+import { getCurrentRates, updateRates } from '../../services/settingsService';
+import { logoutAdmin } from '../../services/firebaseService';
+import Sidebar from '../../components/dashboard/Sidebar';
 import './Settings.css';
 
 const Settings = ({ user }) => {

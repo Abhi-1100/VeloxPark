@@ -273,9 +273,9 @@ const UserParkingInfoDesktop = ({
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                   onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = item.active
-                      ? '#FFD700'
-                      : 'rgba(255, 255, 255, 0.65)')
+                  (e.currentTarget.style.color = item.active
+                    ? '#FFD700'
+                    : 'rgba(255, 255, 255, 0.65)')
                   }
                 >
                   {item.active && (
@@ -1090,9 +1090,8 @@ const UserParkingInfoDesktop = ({
                       fontWeight: 800,
                       background: isParked ? 'rgba(16, 185, 129, 0.15)' : 'rgba(242, 194, 48, 0.18)',
                       color: isParked ? '#10b981' : '#F2C230',
-                      border: `1px solid ${
-                        isParked ? 'rgba(16, 185, 129, 0.4)' : 'rgba(242, 194, 48, 0.4)'
-                      }`,
+                      border: `1px solid ${isParked ? 'rgba(16, 185, 129, 0.4)' : 'rgba(242, 194, 48, 0.4)'
+                        }`,
                     }}
                   >
                     <span
@@ -1586,3 +1585,4 @@ const UserParkingInfoDesktop = ({
 };
 
 export default UserParkingInfoDesktop;
+

@@ -25,7 +25,8 @@
   position: relative;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 20px 96px; /* space for sticky bottom bar */
+  padding: 16px 20px 96px;
+  /* space for sticky bottom bar */
   -webkit-overflow-scrolling: touch;
 }
 
@@ -57,7 +58,9 @@
 }
 
 @keyframes paySpin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ─── Top Bar ────────────────────────────────────────────────────────────── */

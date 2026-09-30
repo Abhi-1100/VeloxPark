@@ -4,10 +4,10 @@
  * Full-page visualization of Urban OS 'Zone Map' with hover telemetry.
  */
 import { useState } from 'react';
-import useDashboardData from '../hooks/useDashboardData';
-import Sidebar from './dashboard/Sidebar';
-import Topbar from './dashboard/Topbar';
-import { logoutAdmin } from '../services/firebaseService';
+import useDashboardData from '../../hooks/useDashboardData';
+import Sidebar from '../../components/dashboard/Sidebar';
+import Topbar from '../../components/dashboard/Topbar';
+import { logoutAdmin } from '../../services/firebaseService';
 import './ZoneMapPage.css';
 
 const ZoneRow = ({ prefix, count, occupiedSlots, vehiclesInZone, hoveredSlot, setHoveredSlot }) => {

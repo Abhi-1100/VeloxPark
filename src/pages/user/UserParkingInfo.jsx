@@ -1,14 +1,14 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ref, get } from 'firebase/database';
-import { database } from '../config/firebase';
+import { database } from '../../config/firebase';
 import { useNavigate } from 'react-router-dom';
 import {
   calculateDuration,
   calculateAmount,
   generateUPILink,
-} from '../utils/parkingUtils';
-import Dashboard from '../pages/user/Dashboard';
-import UserParkingInfoDesktop from './user/UserParkingInfoDesktop';
+} from '../../utils/parkingUtils';
+import Dashboard from './Dashboard';
+import UserParkingInfoDesktop from '../../components/user/UserParkingInfoDesktop';
 
 const UserParkingInfo = () => {
   const navigate = useNavigate();

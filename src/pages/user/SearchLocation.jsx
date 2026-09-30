@@ -1,223 +1,857 @@
-import { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import DatePicker11 from '@/components/base-ui/date-picker-11';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { GeocoderAutocomplete } from '@geoapify/geocoder-autocomplete';
+import '@geoapify/geocoder-autocomplete/styles/minimal.css';
+import { getParkingStations } from '../../data/parkingStations';
+import { getGeoapifyApiKey } from '../../services/geoapifyService';
+import avatarJack from '../../assets/avatar-jack.jpg';
 import './SearchLocation.css';
 
-const POPULAR_HUBS = [
-  { name: 'California Parking', addr: '1484 Nostrand Ave, Brooklyn', dist: '12 km', rate: '₹60/hr', spots: '5 slots' },
-  { name: 'South Bay Terminal', addr: '320 Atlantic Ave, Brooklyn', dist: '15 km', rate: '₹45/hr', spots: '14 slots' },
-  { name: 'Metro Central Hub', addr: '710 Fulton St, Brooklyn', dist: '5 km', rate: '₹50/hr', spots: '3 slots' },
+const DEFAULT_RECENTS = [
+  { id: '1', title: 'Charusat Campus, Changa', subtitle: 'Highway Rd, Anand • 2.4 km' },
+  { id: '2', title: 'Anand Railway Station Parking', subtitle: 'Station Rd, Anand • 4.1 km' },
+  { id: '3', title: 'Vallabh Vidyanagar Market', subtitle: 'Mota Bazaar, VV Nagar • 1.2 km' },
 ];
 
-function parseTimeToMinutes(t) {
-  if (!t) return 0;
-  if (typeof t === 'string' && (t.includes('AM') || t.includes('PM'))) {
-    const [time, period] = t.split(' ');
-    let [h, m] = time.split(':').map(Number);
-    if (period === 'PM' && h !== 12) h += 12;
-    if (period === 'AM' && h === 12) h = 0;
-    return h * 60 + (m || 0);
+const FILTER_TAGS = [
+  { id: 'near_me', label: 'Near me', icon: 'near_me' },
+  { id: 'cheapest', label: 'Cheapest (₹)' },
+  { id: 'covered', label: 'Covered roof', icon: 'roofing' },
+  { id: 'ev', label: 'EV charging ⚡' },
+  { id: 'open_now', label: 'Open now', dot: true },
+  { id: 'anpr', label: 'ANPR Express', icon: 'bolt' },
+];
+
+const KNOWN_GEO = {
+  anand: { lat: 22.5645, lon: 72.9289, city: 'Anand' },
+  vidyanagar: { lat: 22.5539, lon: 72.9242, city: 'Vallabh Vidyanagar' },
+  vallabh: { lat: 22.5539, lon: 72.9242, city: 'Vallabh Vidyanagar' },
+  changa: { lat: 22.5996, lon: 72.8205, city: 'Changa' },
+  charusat: { lat: 22.5996, lon: 72.8205, city: 'Changa' },
+  ahmedabad: { lat: 23.0225, lon: 72.5714, city: 'Ahmedabad' },
+  vadodara: { lat: 22.3072, lon: 73.1812, city: 'Vadodara' },
+  surat: { lat: 21.1702, lon: 72.8311, city: 'Surat' },
+  rajkot: { lat: 22.3039, lon: 70.8022, city: 'Rajkot' },
+  gandhinagar: { lat: 23.2156, lon: 72.6369, city: 'Gandhinagar' },
+};
+
+function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // km
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+function getNowTimeString() {
+  const now = new Date();
+  const minutes = now.getMinutes();
+  const roundedMin = Math.ceil(minutes / 15) * 15;
+  now.setMinutes(roundedMin, 0, 0);
+
+  const entryH = String(now.getHours()).padStart(2, '0');
+  const entryM = String(now.getMinutes()).padStart(2, '0');
+  return `${entryH}:${entryM}`;
+}
+
+function addHoursToTime(timeStr, hours) {
+  if (!timeStr) return '12:00';
+  const [hStr, mStr] = timeStr.split(':');
+  let h = parseInt(hStr, 10) || 0;
+  let m = parseInt(mStr, 10) || 0;
+  const totalMin = h * 60 + m + Math.round(hours * 60);
+  const newH = Math.floor((totalMin / 60) % 24);
+  const newM = totalMin % 60;
+  return `${String(newH).padStart(2, '0')}:${String(newM).padStart(2, '0')}`;
+}
+
+function formatTime12(timeStr) {
+  if (!timeStr) return '12:00 PM';
+  const [hStr, mStr] = timeStr.split(':');
+  let h = parseInt(hStr, 10);
+  if (isNaN(h)) return timeStr;
+  const m = mStr ? mStr.slice(0, 2) : '00';
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  return `${h}:${m} ${ampm}`;
+}
+
+function calcHoursDifference(entryStr, exitStr) {
+  if (!entryStr || !exitStr) return 2;
+  const [eh, em] = entryStr.split(':').map((v) => parseInt(v, 10) || 0);
+  const [xh, xm] = exitStr.split(':').map((v) => parseInt(v, 10) || 0);
+  let diffMinutes = (xh * 60 + xm) - (eh * 60 + em);
+  if (diffMinutes <= 0) {
+    diffMinutes += 24 * 60; // wraps into next day
   }
-  const parts = String(t).split(':').map(Number);
-  const h = parts[0] || 0;
-  const m = parts[1] || 0;
-  return h * 60 + m;
-}
-
-function calculateDurationHours(entry, exit) {
-  const start = parseTimeToMinutes(entry);
-  let end = parseTimeToMinutes(exit);
-  if (end <= start) end += 24 * 60;
-  const diffMins = end - start;
-  const hrs = Math.round(diffMins / 60);
-  return Math.max(1, hrs);
-}
-
-function formatTime12h(t) {
-  if (!t) return '10:00 AM';
-  if (typeof t === 'string' && (t.includes('AM') || t.includes('PM'))) return t;
-  const parts = String(t).split(':');
-  let h = parseInt(parts[0], 10) || 0;
-  const m = parts[1] ? parts[1].padStart(2, '0') : '00';
-  const period = h >= 12 ? 'PM' : 'AM';
-  if (h === 0) h = 12;
-  else if (h > 12) h -= 12;
-  const paddedH = String(h).padStart(2, '0');
-  return `${paddedH}:${m} ${period}`;
+  const hours = Math.round((diffMinutes / 60) * 10) / 10;
+  return Math.max(1, Math.min(12, Math.round(hours)));
 }
 
 function SearchLocation() {
   const navigate = useNavigate();
-  const [location, setLocation] = useState('');
-  const [selectedDate, setSelectedDate] = useState(() => new Date());
-  const [entryTime, setEntryTime] = useState('10:00:00');
-  const [exitTime, setExitTime] = useState('14:00:00');
+  const routeLocation = useLocation();
+  const searchContainerRef = useRef(null);
+  const [location, setLocation] = useState(routeLocation.state?.prefill || '');
+  const [isLocating, setIsLocating] = useState(false);
+  const [activeFilters, setActiveFilters] = useState(['near_me']);
+  const [scheduleMode, setScheduleMode] = useState('now'); // 'now' | 'later'
+  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
+  const [durationHours, setDurationHours] = useState(2);
+  const [entryTime, setEntryTime] = useState(() => getNowTimeString());
+  const [exitTime, setExitTime] = useState(() => addHoursToTime(getNowTimeString(), 2));
+  const [recentSearches, setRecentSearches] = useState(DEFAULT_RECENTS);
+  const [stations, setStations] = useState([]);
 
-  const durationHours = useMemo(() => {
-    return calculateDurationHours(entryTime, exitTime);
-  }, [entryTime, exitTime]);
+  const autocompleteRef = useRef(null);
+  const durationHoursRef = useRef(durationHours);
+  durationHoursRef.current = durationHours;
+  const entryTimeRef = useRef(entryTime);
+  entryTimeRef.current = entryTime;
+  const exitTimeRef = useRef(exitTime);
+  exitTimeRef.current = exitTime;
+  const scheduleModeRef = useRef(scheduleMode);
+  scheduleModeRef.current = scheduleMode;
+  const selectedDayIndexRef = useRef(selectedDayIndex);
+  selectedDayIndexRef.current = selectedDayIndex;
+  const locationRef = useRef(location);
+  locationRef.current = location;
+  const selectedGeoRef = useRef(null);
+  const handleSearchRef = useRef(null);
 
-  const handleSearch = () => {
+  // Fetch real parking stations
+  useEffect(() => {
+    getParkingStations()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setStations(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    const searchContainer = searchContainerRef.current;
+    if (!searchContainer) return undefined;
+
+    searchContainer.replaceChildren();
+
+    const autocomplete = new GeocoderAutocomplete(searchContainer, getGeoapifyApiKey(), {
+      placeholder: 'Enter location (e.g. Vallabh Vidyanagar, Anand)',
+      skipIcons: true,
+      clearButton: false,
+    });
+    autocompleteRef.current = autocomplete;
+
+    // Set initial value if prefilled
+    if (locationRef.current) {
+      autocomplete.setValue(locationRef.current);
+    }
+
+    // Capture typing in the input in real-time
+    const handleInput = (e) => {
+      if (e.target && e.target.value !== undefined) {
+        setLocation(e.target.value);
+        locationRef.current = e.target.value;
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        const val = e.target?.value || locationRef.current;
+        if (val && handleSearchRef.current) {
+          handleSearchRef.current(val);
+        }
+      }
+    };
+
+    searchContainer.addEventListener('input', handleInput);
+    searchContainer.addEventListener('keydown', handleKeyDown);
+
+    autocomplete.on('select', (feature) => {
+      const properties = feature?.properties;
+      if (!properties) return;
+
+      const formatted = properties.formatted || properties.address_line1 || properties.city || 'Selected location';
+      setLocation(formatted);
+      locationRef.current = formatted;
+      selectedGeoRef.current = {
+        lat: properties.lat,
+        lon: properties.lon,
+        address: formatted,
+        city: properties.city || properties.state || formatted.split(',')[0],
+      };
+
+      // Add to recent searches
+      setRecentSearches((prev) => {
+        if (prev.some((item) => item.title.toLowerCase() === formatted.toLowerCase())) return prev;
+        return [{ id: String(Date.now()), title: formatted, subtitle: `${properties.city || 'Gujarat'} • Nearby` }, ...prev.slice(0, 4)];
+      });
+    });
+
+    return () => {
+      searchContainer.removeEventListener('input', handleInput);
+      searchContainer.removeEventListener('keydown', handleKeyDown);
+      autocomplete.destroy?.();
+      autocompleteRef.current = null;
+      searchContainer.replaceChildren();
+    };
+  }, [navigate]);
+
+  // Day chips dynamically computed for Next 3 days
+  const dayOptions = useMemo(() => {
+    const options = [];
+    const today = new Date();
+    for (let i = 0; i < 3; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + i);
+      const dayName = i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : d.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayMonth = d.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+      options.push(`${dayName}, ${dayMonth}`);
+    }
+    return options;
+  }, []);
+
+  // Compute valid until string based on exitTime
+  const validUntilLabel = useMemo(() => {
+    return `Valid until ${formatTime12(exitTime)}`;
+  }, [exitTime]);
+
+  const toggleFilter = (id) => {
+    setActiveFilters((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
+  };
+
+  const handleStepDuration = (delta) => {
+    setDurationHours((prev) => {
+      const nextDuration = Math.min(12, Math.max(1, prev + delta));
+      setExitTime(addHoursToTime(entryTimeRef.current, nextDuration));
+      return nextDuration;
+    });
+  };
+
+  const handleEntryTimeChange = (newVal) => {
+    if (!newVal) return;
+    setEntryTime(newVal);
+    setExitTime(addHoursToTime(newVal, durationHours));
+  };
+
+  const handleExitTimeChange = (newVal) => {
+    if (!newVal) return;
+    setExitTime(newVal);
+    const calculatedHours = calcHoursDifference(entryTime, newVal);
+    setDurationHours(calculatedHours);
+  };
+
+  const handleToggleScheduleMode = (mode) => {
+    setScheduleMode(mode);
+    if (mode === 'now') {
+      const nowVal = getNowTimeString();
+      setEntryTime(nowVal);
+      setExitTime(addHoursToTime(nowVal, durationHours));
+    }
+  };
+
+  const handleSearch = (customLoc) => {
+    let targetLoc = typeof customLoc === 'string' && customLoc.trim() ? customLoc.trim() : (locationRef.current || location || '').trim();
+    const inputEl = searchContainerRef.current?.querySelector('input');
+    if (inputEl && inputEl.value && !customLoc) {
+      targetLoc = inputEl.value.trim();
+    }
+    if (!targetLoc) {
+      targetLoc = 'Vallabh Vidyanagar, Anand';
+    }
+
+    // Save to recents
+    setRecentSearches((prev) => {
+      if (prev.some((item) => item.title.toLowerCase() === targetLoc.toLowerCase())) return prev;
+      return [{ id: String(Date.now()), title: targetLoc, subtitle: 'Recent search' }, ...prev.slice(0, 4)];
+    });
+
+    let geo = selectedGeoRef.current?.address === targetLoc ? selectedGeoRef.current : null;
+    if (!geo) {
+      const lower = targetLoc.toLowerCase();
+      const matchedKey = Object.keys(KNOWN_GEO).find((key) => lower.includes(key));
+      if (matchedKey) {
+        geo = KNOWN_GEO[matchedKey];
+      } else if (!customLoc && !locationRef.current) {
+        geo = KNOWN_GEO.anand;
+      }
+    }
+
     navigate('/map', {
       state: {
-        destination: location,
-        entryTime: formatTime12h(entryTime),
-        exitTime: formatTime12h(exitTime),
+        destination: targetLoc,
+        address: targetLoc,
+        location: targetLoc,
+        city: geo?.city || targetLoc.split(',')[0].trim(),
+        lat: geo?.lat,
+        lon: geo?.lon,
+        durationHours: durationHoursRef.current,
+        entryTime: formatTime12(entryTimeRef.current),
+        exitTime: formatTime12(exitTimeRef.current),
+        scheduleMode: scheduleModeRef.current,
+        targetDay: dayOptions[selectedDayIndexRef.current],
+        openPopup: false,
+      },
+    });
+  };
+  handleSearchRef.current = handleSearch;
+
+  const handleClear = () => {
+    setLocation('');
+    locationRef.current = '';
+    autocompleteRef.current?.setValue('');
+    const inputEl = searchContainerRef.current?.querySelector('input');
+    if (inputEl) {
+      inputEl.value = '';
+      inputEl.focus();
+    }
+  };
+
+  const handleSetCurrentLocation = () => {
+    setIsLocating(true);
+
+    const onLocationFound = (lat, lon) => {
+      setIsLocating(false);
+
+      const candidates = stations.length > 0 ? stations : [
+        {
+          id: 'station_1',
+          name: 'Central Campus Lot A',
+          address: 'Shastri Maidan Marg, VV Nagar',
+          latitude: 22.5539,
+          longitude: 72.9242,
+          pricePerHour: 40,
+          availableSlots: 24,
+          totalSlots: 50,
+          tag: 'ANPR',
+          feature: 'Fast Gate',
+        },
+        {
+          id: 'station_2',
+          name: 'Station Road Covered',
+          address: 'Near Amul Dairy, Anand',
+          latitude: 22.5645,
+          longitude: 72.9289,
+          pricePerHour: 35,
+          availableSlots: 8,
+          totalSlots: 30,
+          tag: 'CCTV',
+          feature: 'Shaded Roof',
+        },
+        {
+          id: 'station_3',
+          name: 'Anand Smart Parking Hub',
+          address: 'Station Rd, Anand',
+          latitude: 22.5610,
+          longitude: 72.9320,
+          pricePerHour: 30,
+          availableSlots: 40,
+          totalSlots: 60,
+          tag: 'ANPR',
+          feature: 'Live Gate',
+        },
+      ];
+
+      let nearest = null;
+      let minDistance = Infinity;
+
+      candidates.forEach((st) => {
+        const sLat = st.latitude ?? st.lat;
+        const sLng = st.longitude ?? st.lng ?? st.lon;
+        if (Number.isFinite(sLat) && Number.isFinite(sLng)) {
+          const d = getDistanceFromLatLonInKm(lat, lon, sLat, sLng);
+          if (d < minDistance) {
+            minDistance = d;
+            nearest = { ...st, distance: parseFloat(d.toFixed(1)) };
+          }
+        }
+      });
+
+      if (!nearest || minDistance > 60) {
+        nearest = {
+          id: 'nearest_local',
+          name: 'Anand Smart Parking',
+          address: 'Vallabh Vidyanagar, Anand',
+          latitude: lat,
+          longitude: lon,
+          distance: 0.2,
+          pricePerHour: 30,
+          availableSlots: 40,
+          totalSlots: 50,
+          tag: 'ANPR',
+          feature: 'Closest to you',
+        };
+      }
+
+      const locName = `Near ${nearest.name}`;
+      setLocation(locName);
+      locationRef.current = locName;
+      autocompleteRef.current?.setValue(locName);
+      selectedGeoRef.current = { lat, lon, address: locName, city: 'Anand' };
+      const inputEl = searchContainerRef.current?.querySelector('input');
+      if (inputEl) inputEl.value = locName;
+
+      // Automatically navigate to map centered on detected location with the nearest station selected
+      navigate('/map', {
+        state: {
+          destination: nearest.name,
+          address: nearest.address,
+          location: locName,
+          station: nearest,
+          lat,
+          lon,
+          isCurrentLocation: true,
+          durationHours: durationHoursRef.current,
+          entryTime: formatTime12(entryTimeRef.current),
+          exitTime: formatTime12(exitTimeRef.current),
+          openPopup: false,
+        },
+      });
+    };
+
+    if (navigator?.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          onLocationFound(pos.coords.latitude, pos.coords.longitude);
+        },
+        () => {
+          onLocationFound(22.5645, 72.9289);
+        },
+        { timeout: 5000, enableHighAccuracy: true }
+      );
+    } else {
+      onLocationFound(22.5645, 72.9289);
+    }
+  };
+
+  const handleSelectRecent = (itemTitle) => {
+    setLocation(itemTitle);
+    locationRef.current = itemTitle;
+    autocompleteRef.current?.setValue(itemTitle);
+    const inputEl = searchContainerRef.current?.querySelector('input');
+    if (inputEl) {
+      inputEl.value = itemTitle;
+    }
+    handleSearch(itemTitle);
+  };
+
+  const handleSelectStation = (station) => {
+    navigate('/map', {
+      state: {
+        station,
+        address: station.address || station.name,
+        destination: station.name,
         durationHours,
-        date: selectedDate ? selectedDate.toISOString().slice(0, 10) : undefined,
+        amount: (station.pricePerHour || 30) * durationHours,
+        entryTime: formatTime12(entryTime),
+        exitTime: formatTime12(exitTime),
+        scheduleMode,
+        targetDay: scheduleMode === 'later' ? dayOptions[selectedDayIndex] : 'Today',
+        openPopup: true,
       },
     });
   };
 
+  // Filter or fallback station display cards
+  const displayStations = useMemo(() => {
+    if (stations.length > 0) {
+      return stations.slice(0, 4);
+    }
+    return [
+      {
+        id: 'station_1',
+        name: 'Central Campus Lot A',
+        address: 'Shastri Maidan Marg, VV Nagar',
+        distance: 0.6,
+        pricePerHour: 40,
+        availableSlots: 24,
+        totalSlots: 50,
+        tag: 'ANPR',
+        feature: 'Fast Gate',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDiXTEhe1qZRY7qEOIb4SGgVFFocxzL1SNgLwL7WUt2SvmNC3uw0AmEkmnJeBVIrOW7NdiEXITYwsmiLHGi2R3CcWVIXlqCj976VnnSWOoXfUk4VJesiNOkjWoOnOZbD2P4aR0nEPOEcAhAlLb4aC1NSRCeVfeCFrWDz3K9vMsobgmV2We6Ds_WlRVUaD558Y8pACdaudHPs-3hJ4fH-CHSMfKX19Y1SUK4qYryyXo6yHcGNcMbTnNm',
+      },
+      {
+        id: 'station_2',
+        name: 'Station Road Covered',
+        address: 'Near Amul Dairy, Anand',
+        distance: 1.8,
+        pricePerHour: 35,
+        availableSlots: 8,
+        totalSlots: 30,
+        tag: 'CCTV',
+        feature: 'Shaded Roof',
+        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBH-kp_5eO0Z2nDAKbTKhzMnefUDjwQYSlh-KcvQAYB1qfPXYad0NEZmZ7H9HTtWUInU6V_zcv0TTnZOJillm7ot3TNCDG8tcqGukpIL8J7Mq41wizrVG_RoLQmm3GQr2a-mx7fFXgrQDEi9aQ2EavEO2xOXSwpsq8kFlf5e01MrBzax90uXb2x545IQTysGvttaZKSyB-v53Y2VskTjLN9imb4kD9OE9hFd0E1lsGygkKt8OEAVN3i',
+      },
+    ];
+  }, [stations]);
+
   return (
-    <div className="sl-page">
-      <div className="sl-shell">
-        
-        {/* Header */}
-        <div className="sl-header">
-          <div className="sl-header-left">
-            <button className="sl-back-btn" onClick={() => navigate('/dashboard')} aria-label="Go back">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <div className="sl-title-group">
-              <h1 className="sl-title">Find Parking</h1>
-              <span className="sl-desktop-subtitle">Search guaranteed parking bays & live rates</span>
+    <div className="sl-page-root">
+      {/* Top Fixed App Bar */}
+      <header className="sl-top-bar">
+        <div className="sl-top-bar-inner">
+          <div className="sl-logo-group" onClick={() => navigate('/dashboard')}>
+            <div className="sl-brand-circle">P</div>
+            <div className="sl-brand-text">
+              <span className="sl-brand-name">VeloxPark</span>
+              <span className="sl-brand-sub">Find</span>
             </div>
           </div>
-          
-          <button className="sl-filter-btn" aria-label="Filter options">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
-            </svg>
-          </button>
+          <div className="sl-top-actions">
+            <button
+              type="button"
+              className="sl-icon-btn"
+              aria-label="Notifications"
+              onClick={() => alert('All regional smart barriers operational')}
+            >
+              <span className="material-symbols-outlined">notifications</span>
+            </button>
+            <button
+              type="button"
+              className="sl-avatar-link"
+              onClick={() => navigate('/profile')}
+              aria-label="Profile"
+            >
+              <img src={avatarJack} alt="Profile" className="sl-avatar-img" />
+            </button>
+          </div>
         </div>
+      </header>
 
-        {/* Content Container (Column on mobile, 2-column on desktop) */}
-        <div className="sl-content-layout">
-          
-          {/* Main Search Panel */}
-          <div className="sl-search-pane">
-            
-            {/* Location Input */}
-            <div className="sl-group">
-              <span className="sl-label">DESTINATION</span>
-              <div className="sl-input-wrap">
-                <div className="sl-input-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8" />
-                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                  </svg>
-                </div>
-                <input 
-                  type="text" 
-                  className="sl-input" 
-                  placeholder="Where are you going?" 
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  autoFocus
-                />
-              </div>
+      {/* Main Scrollable Content */}
+      <main className="sl-main-scroll">
+        <div className="sl-content-wrapper">
+          {/* Subheader / Page Title */}
+          <div className="sl-page-head">
+            <button
+              type="button"
+              className="sl-round-btn"
+              onClick={() => navigate('/dashboard')}
+              aria-label="Go Back"
+            >
+              <span className="material-symbols-outlined">arrow_back</span>
+            </button>
+            <div className="sl-head-title-col">
+              <h1 className="sl-headline">Find parking</h1>
+              <span className="sl-network-status">
+                <span className="sl-pulse-dot" /> Gujarat Central Network
+              </span>
             </div>
+            <button
+              type="button"
+              className="sl-round-btn filter-trigger"
+              aria-label="Filters"
+            >
+              <span className="material-symbols-outlined">tune</span>
+              <span className="sl-btn-badge" />
+            </button>
+          </div>
 
-            {/* Date and Time Pickers (Interactive Selectors) */}
-            <div className="sl-group">
-              <div className="sl-label-row">
-                <span className="sl-label">DATE & TIME</span>
-                <span className="sl-duration-tag">
-                  {durationHours} {durationHours === 1 ? 'Hour' : 'Hours'} Window
+          {/* Big Rounded Search Input Bar */}
+          <div className="sl-search-wrap">
+            <div className="sl-search-pill">
+              <span className="material-symbols-outlined sl-search-icon">search</span>
+              <div ref={searchContainerRef} className="sl-search-input sl-geo-autocomplete" />
+              {location && (
+                <button
+                  type="button"
+                  className="sl-clear-input-btn"
+                  onClick={handleClear}
+                  aria-label="Clear input"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              )}
+              <button
+                type="button"
+                className={`sl-my-loc-btn ${isLocating ? 'locating' : ''}`}
+                onClick={handleSetCurrentLocation}
+                aria-label="Detect Current Location"
+                title="Detect current location and show nearest parking"
+                disabled={isLocating}
+              >
+                <span className="material-symbols-outlined filled">
+                  {isLocating ? 'progress_activity' : 'my_location'}
                 </span>
-              </div>
-              <DatePicker11
-                theme="light"
-                date={selectedDate}
-                onDateChange={setSelectedDate}
-                timeFrom={entryTime}
-                onTimeFromChange={setEntryTime}
-                timeTo={exitTime}
-                onTimeToChange={setExitTime}
-              />
-            </div>
-
-            {/* Suggested Locations */}
-            <div className="sl-group">
-              <span className="sl-label">RECENT SEARCHES</span>
-              <div className="sl-chips">
-                <div className="sl-chip" onClick={() => setLocation('Brooklyn Museum')}>Brooklyn Museum</div>
-                <div className="sl-chip" onClick={() => setLocation('Barclays Center')}>Barclays Center</div>
-                <div className="sl-chip" onClick={() => setLocation('JFK Airport')}>JFK Airport</div>
-                <div className="sl-chip" onClick={() => setLocation('Central Park')}>Central Park</div>
-              </div>
-            </div>
-
-            {/* Bottom CTA */}
-            <div className="sl-bottom">
-              <button className="sl-btn" onClick={handleSearch}>
-                Show on Map
               </button>
             </div>
-
           </div>
 
-          {/* Desktop Right Side Panel (Visible only on Desktop) */}
-          <div className="sl-desktop-side">
-            
-            {/* Live Map Preview Teaser */}
-            <div className="sl-map-teaser-card" onClick={handleSearch}>
-              <div className="sl-map-teaser-overlay">
-                <div className="sl-map-teaser-badge">Interactive Map</div>
-                <h3 className="sl-map-teaser-title">Explore Brooklyn Parking Hubs</h3>
-                <p className="sl-map-teaser-sub">View live rates, bay availability & 24/7 barrier access</p>
-                <button type="button" className="sl-map-teaser-btn">
-                  Launch Map View →
+          {/* Quick Filter Chips Ribbon */}
+          <div className="sl-filter-ribbon">
+            {FILTER_TAGS.map((chip) => {
+              const active = activeFilters.includes(chip.id);
+              return (
+                <button
+                  key={chip.id}
+                  type="button"
+                  className={`sl-filter-chip ${active ? 'active' : ''}`}
+                  onClick={() => toggleFilter(chip.id)}
+                >
+                  {chip.icon && (
+                    <span className="material-symbols-outlined chip-icon">
+                      {chip.icon}
+                    </span>
+                  )}
+                  {chip.dot && <span className="chip-dot" />}
+                  <span>{chip.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Parking Schedule ("When") Card */}
+          <div className="sl-schedule-card">
+            <div className="sl-card-header">
+              <span className="sl-card-title">
+                <span className="material-symbols-outlined schedule-icon">schedule</span>
+                Parking Schedule
+              </span>
+              <div className="sl-toggle-pill">
+                <button
+                  type="button"
+                  className={`sl-toggle-opt ${scheduleMode === 'now' ? 'active' : ''}`}
+                  onClick={() => handleToggleScheduleMode('now')}
+                >
+                  Now
+                </button>
+                <button
+                  type="button"
+                  className={`sl-toggle-opt ${scheduleMode === 'later' ? 'active' : ''}`}
+                  onClick={() => handleToggleScheduleMode('later')}
+                >
+                  Later
                 </button>
               </div>
             </div>
 
-            {/* Popular Parking Lots */}
-            <div className="sl-popular-sec">
-              <span className="sl-label">FEATURED PARKING HUBS</span>
-              <div className="sl-popular-list">
-                {POPULAR_HUBS.map((hub) => (
+            {/* Target Day Strip if 'later' */}
+            {scheduleMode === 'later' && (
+              <div className="sl-day-selector">
+                <span className="sl-day-label">Select target arrival day</span>
+                <div className="sl-day-chips">
+                  {dayOptions.map((day, idx) => (
+                    <button
+                      key={day}
+                      type="button"
+                      className={`sl-day-chip ${selectedDayIndex === idx ? 'active' : ''}`}
+                      onClick={() => setSelectedDayIndex(idx)}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Time Slot Row (Entry & Exit Times) */}
+            <div className="sl-time-slot-section">
+              <span className="sl-time-slot-heading">Time Window</span>
+              <div className="sl-time-slot-row">
+                {/* Entry Time Tile */}
+                <div className="sl-time-field">
+                  <div className="sl-time-field-header">
+                    <span className="material-symbols-outlined sl-time-field-icon entry">login</span>
+                    <span className="sl-time-field-label">Entry Time</span>
+                  </div>
+                  <div className="sl-time-field-value">
+                    <span className="sl-time-text">{formatTime12(entryTime)}</span>
+                    <span className="material-symbols-outlined sl-time-dropdown-icon">schedule</span>
+                  </div>
+                  <input
+                    type="time"
+                    className="sl-time-hidden-input"
+                    value={entryTime}
+                    onChange={(e) => handleEntryTimeChange(e.target.value)}
+                    aria-label="Select Entry Time"
+                    title="Tap to change entry time"
+                  />
+                </div>
+
+                <div className="sl-time-arrow-circle" aria-hidden="true">
+                  <span className="material-symbols-outlined">east</span>
+                </div>
+
+                {/* Exit Time Tile */}
+                <div className="sl-time-field">
+                  <div className="sl-time-field-header">
+                    <span className="material-symbols-outlined sl-time-field-icon exit">logout</span>
+                    <span className="sl-time-field-label">Exit Time</span>
+                  </div>
+                  <div className="sl-time-field-value">
+                    <span className="sl-time-text">{formatTime12(exitTime)}</span>
+                    <span className="material-symbols-outlined sl-time-dropdown-icon">schedule</span>
+                  </div>
+                  <input
+                    type="time"
+                    className="sl-time-hidden-input"
+                    value={exitTime}
+                    onChange={(e) => handleExitTimeChange(e.target.value)}
+                    aria-label="Select Exit Time"
+                    title="Tap to change exit time"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Duration Stepper Module */}
+            <div className="sl-duration-module">
+              <div className="sl-duration-info">
+                <span className="sl-duration-sub">Total Duration</span>
+                <div className="sl-duration-val-row">
+                  <span className="sl-duration-big">
+                    {durationHours} {durationHours === 1 ? 'hr' : 'hrs'}
+                  </span>
+                  <span className="sl-dot-divider" />
+                  <span className="sl-valid-label">{validUntilLabel}</span>
+                </div>
+              </div>
+
+              <div className="sl-stepper-ctrls">
+                <button
+                  type="button"
+                  className="sl-stepper-btn"
+                  onClick={() => handleStepDuration(-1)}
+                  disabled={durationHours <= 1}
+                  aria-label="Decrease hours"
+                >
+                  <span className="material-symbols-outlined">remove</span>
+                </button>
+                <button
+                  type="button"
+                  className="sl-stepper-btn plus"
+                  onClick={() => handleStepDuration(1)}
+                  disabled={durationHours >= 12}
+                  aria-label="Increase hours"
+                >
+                  <span className="material-symbols-outlined">add</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Searches */}
+          {recentSearches.length > 0 && (
+            <div className="sl-recent-section">
+              <div className="sl-section-head">
+                <h2 className="sl-section-title">Recent Searches</h2>
+                <button
+                  type="button"
+                  className="sl-clear-recent-btn"
+                  onClick={() => setRecentSearches([])}
+                >
+                  Clear all
+                </button>
+              </div>
+              <div className="sl-recent-list">
+                {recentSearches.map((item) => (
                   <div
-                    key={hub.name}
-                    className="sl-popular-item"
-                    onClick={() => {
-                      setLocation(hub.name);
-                      navigate('/map', {
-                        state: {
-                          destination: hub.name,
-                          entryTime,
-                          exitTime,
-                          durationHours,
-                        },
-                      });
-                    }}
+                    key={item.id}
+                    className="sl-recent-item"
+                    onClick={() => handleSelectRecent(item.title)}
                   >
-                    <div className="sl-popular-left">
-                      <div className="sl-popular-name">{hub.name}</div>
-                      <div className="sl-popular-addr">{hub.addr}</div>
-                      <div className="sl-popular-meta">
-                        <span>📍 {hub.dist}</span>
-                        <span>•</span>
-                        <span style={{ color: '#d97706', fontWeight: 700 }}>🚗 {hub.spots}</span>
+                    <div className="sl-recent-left">
+                      <div className="sl-recent-icon-wrap">
+                        <span className="material-symbols-outlined">history</span>
+                      </div>
+                      <div className="sl-recent-text">
+                        <span className="sl-recent-title">{item.title}</span>
+                        <span className="sl-recent-sub">{item.subtitle}</span>
                       </div>
                     </div>
-                    <div className="sl-popular-right">
-                      <span className="sl-popular-price">{hub.rate}</span>
-                      <span className="sl-popular-action">Select</span>
-                    </div>
+                    <span className="material-symbols-outlined sl-recent-arrow">
+                      north_west
+                    </span>
                   </div>
                 ))}
               </div>
             </div>
+          )}
 
+          {/* Popular Nearby Section */}
+          <div className="sl-popular-section">
+            <div className="sl-section-head">
+              <div className="sl-head-with-badge">
+                <h2 className="sl-section-title">Popular Nearby</h2>
+                <span className="sl-live-badge">Live</span>
+              </div>
+              <span className="sl-auto-update">Auto-updating</span>
+            </div>
+
+            <div className="sl-station-grid">
+              {displayStations.map((station) => (
+                <div
+                  key={station.id}
+                  className="sl-station-card"
+                  onClick={() => handleSelectStation(station)}
+                >
+                  <div className="sl-card-body">
+                    <div className="sl-thumb-wrap">
+                      <img
+                        src={station.image || 'https://lh3.googleusercontent.com/aida-public/AB6AXuDiXTEhe1qZRY7qEOIb4SGgVFFocxzL1SNgLwL7WUt2SvmNC3uw0AmEkmnJeBVIrOW7NdiEXITYwsmiLHGi2R3CcWVIXlqCj976VnnSWOoXfUk4VJesiNOkjWoOnOZbD2P4aR0nEPOEcAhAlLb4aC1NSRCeVfeCFrWDz3K9vMsobgmV2We6Ds_WlRVUaD558Y8pACdaudHPs-3hJ4fH-CHSMfKX19Y1SUK4qYryyXo6yHcGNcMbTnNm'}
+                        alt={station.name}
+                        className="sl-station-img"
+                      />
+                      <div className="sl-img-badge">
+                        <span className="material-symbols-outlined badge-icon">
+                          {station.tag === 'CCTV' ? 'shield' : 'bolt'}
+                        </span>
+                        <span>{station.tag || 'ANPR'}</span>
+                      </div>
+                    </div>
+
+                    <div className="sl-card-info">
+                      <div className="sl-name-price-row">
+                        <h3 className="sl-station-name">{station.name}</h3>
+                        <span className="sl-station-rate">
+                          ₹{station.pricePerHour || 30}
+                          <small>/hr</small>
+                        </span>
+                      </div>
+
+                      <p className="sl-station-loc">
+                        <span className="material-symbols-outlined loc-pin">near_me</span>
+                        {station.distance != null ? `${station.distance} km away` : '0.8 km'} • {station.address}
+                      </p>
+
+                      <div className="sl-badges-row">
+                        <span className="sl-avail-tag">
+                          <span className="avail-pulse" />
+                          {station.availableSlots || 15} Available
+                        </span>
+                        {station.feature && (
+                          <span className="sl-feat-tag">{station.feature}</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* Sticky Bottom Interactive Launch Button */}
+          <div className="sl-sticky-bottom-action">
+            <button
+              type="button"
+              className="sl-launch-map-btn"
+              onClick={() => handleSearch()}
+            >
+              <span className="material-symbols-outlined filled">map</span>
+              <span>Show on map ({stations.length > 0 ? stations.length : 14} locations)</span>
+            </button>
+          </div>
         </div>
-
-      </div>
+      </main>
     </div>
   );
 }

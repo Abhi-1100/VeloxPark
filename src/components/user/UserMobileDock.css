@@ -1,6 +1,4 @@
-/* ─── Mobile Floating Navigation Dock (White Theme) ───────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
+/* ─── Stitch Mobile Floating Navigation Dock ──────────────────────────────── */
 .vp-mobile-dock-wrapper {
   position: fixed;
   bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -26,22 +24,22 @@
   }
 }
 
-/* ─── White Theme Pill Capsule ────────────────────────────────────────────── */
+/* ─── Floating White Pill Nav Bar ────────────────────────────────────────── */
 .vp-mobile-dock {
   pointer-events: auto;
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  justify-content: space-between;
+  width: 92%;
+  max-width: 360px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: 9999px;
-  padding: 6px 8px;
+  padding: 4px;
   gap: 4px;
-  box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 /* ─── Dock Button Items ───────────────────────────────────────────────────── */
@@ -51,22 +49,29 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  min-width: 44px;
+  height: 46px;
   border-radius: 9999px;
-  padding: 10px 14px;
+  padding: 0 14px;
   cursor: pointer;
-  color: #6b7280;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #46464a;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   outline: none;
 }
 
 .vp-dock-icon {
-  display: flex;
+  font-size: 22px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, color 0.2s ease;
+  font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+}
+
+.vp-dock-icon.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
 }
 
 .vp-dock-item:active .vp-dock-icon {
@@ -74,25 +79,29 @@
 }
 
 .vp-dock-item:hover:not(.active) {
-  color: #111827;
+  color: #191c1f;
   background: rgba(0, 0, 0, 0.04);
 }
 
-/* ─── Active Pill (Matching Image Style in White Theme) ──────────────────── */
+/* ─── Active Pill (Stitch Primary Dark Pill with Gold Accent) ─────────────── */
 .vp-dock-item.active {
-  background: #1c1d21;
+  background: #1c1c1e;
   color: #ffffff;
-  padding: 9px 18px;
-  box-shadow: 0 4px 16px rgba(28, 29, 33, 0.25);
-  transform: scale(1.02);
+  padding: 0 16px;
+  box-shadow: 0 4px 14px rgba(28, 28, 30, 0.25);
+}
+
+.vp-dock-item.active .vp-dock-icon {
+  color: #fecb35;
 }
 
 .vp-dock-label {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   color: #ffffff;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.02em;
+  margin-left: 6px;
   white-space: nowrap;
   animation: vpFadeIn 0.2s ease;
 }
@@ -100,17 +109,10 @@
 @keyframes vpFadeIn {
   from {
     opacity: 0;
-    transform: translateX(-4px);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* ─── Hide on Desktop View ────────────────────────────────────────────────── */
-@media (min-width: 1024px) {
-  .vp-mobile-dock-wrapper {
-    display: none !important;
+    transform: scale(1);
   }
 }

@@ -6,7 +6,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
 import Login from './pages/Login';
-import Home from './components/Home';
+import Home from './pages/Home';
 
 // Centralized User Mobile Pages
 import {
@@ -15,7 +15,6 @@ import {
   SearchLocation,
   BookSlot,
   MapView,
-  ConfirmParking,
   BookingDetails,
   Payment,
   Profile,
@@ -23,17 +22,17 @@ import {
 } from './pages/user';
 
 // Admin Pages
-import AdminDashboard from './components/AdminDashboard';
-import AnalyticsDashboard from './components/AnalyticsDashboard';
-import Settings from './components/Settings';
-import ZoneMapPage from './components/ZoneMapPage';
-import UsersPage from './components/UsersPage';
-import NotFound from './components/NotFound';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AnalyticsDashboard from './pages/admin/AnalyticsDashboard';
+import Settings from './pages/admin/Settings';
+import ZoneMapPage from './pages/admin/ZoneMapPage';
+import UsersPage from './pages/admin/UsersPage';
+import NotFound from './pages/NotFound';
 import './App.css';
 
-import UserParkingInfo from './components/UserParkingInfo';
-import UserPaymentPage from './components/UserPaymentPage';
-import UserPaymentSuccess from './components/UserPaymentSuccess';
+import UserParkingInfo from './pages/user/UserParkingInfo';
+import UserPaymentPage from './pages/user/UserPaymentPage';
+import UserPaymentSuccess from './pages/user/UserPaymentSuccess';
 
 function UserRoute({ children }) {
   return <ProtectedRoute role="user">{children}</ProtectedRoute>;
@@ -79,7 +78,8 @@ function App() {
                 <Route path="/search" element={<SearchLocation />} />
                 <Route path="/book" element={<BookSlot />} />
                 <Route path="/map" element={<MapView />} />
-                <Route path="/confirm" element={<ConfirmParking />} />
+                {/* Redirect old /confirm page directly to /map with popup open */}
+                <Route path="/confirm" element={<Navigate to="/map" replace state={{ openPopup: true }} />} />
                 <Route path="/booking/:id" element={<BookingDetails />} />
                 <Route path="/booking/:id/pay" element={<Payment />} />
                 <Route path="/profile" element={<Profile />} />

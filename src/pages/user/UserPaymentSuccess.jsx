@@ -1,9 +1,9 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import { formatDateTime, formatDuration } from '../utils/parkingUtils';
-import UserPaymentSuccessMobile from './user/UserPaymentSuccessMobile';
-import UserPaymentSuccessDesktop from './user/UserPaymentSuccessDesktop';
+import { formatDateTime, formatDuration } from '../../utils/parkingUtils';
+import UserPaymentSuccessMobile from '../../components/user/UserPaymentSuccessMobile';
+import UserPaymentSuccessDesktop from '../../components/user/UserPaymentSuccessDesktop';
 
 const UserPaymentSuccess = () => {
   const location = useLocation();

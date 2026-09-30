@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_stack" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100%;margin:0;padding:0;min-height:100%;background-color:#f7f9fd;color:#191c1f;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 500,'GRAD' 0,'opsz' 24;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary": "#010102", "on-primary-fixed-variant": "#474649", "on-surface-variant": "#46464a", "primary-fixed-dim": "#c8c6c8", "on-tertiary-fixed": "#002109", "secondary": "#765b00", "surface-tint": "#5f5e60", "tertiary-container": "#00220a", "primary-container": "#1c1c1e", "on-background": "#191c1f", "outline": "#77767b", "error-container": "#ffdad6", "on-secondary-container": "#705600", "tertiary-fixed-dim": "#4ae176", "inverse-on-surface": "#eff1f5", "surface-container-high": "#e6e8ec", "on-secondary": "#ffffff", "outline-variant": "#c7c6ca", "error": "#ba1a1a", "surface-bright": "#f7f9fd", "inverse-surface": "#2d3134", "on-error": "#ffffff", "background": "#f7f9fd", "on-error-container": "#93000a", "tertiary": "#000200", "surface-container-low": "#f2f4f8", "on-primary": "#ffffff", "secondary-container": "#fecb35", "surface": "#f7f9fd", "secondary-fixed-dim": "#f2c029", "surface-container-highest": "#e0e3e6", "surface-container-lowest": "#ffffff", "surface-container": "#eceef2", "surface-variant": "#e0e3e6", "surface-dim": "#d8dade", "on-tertiary": "#ffffff", "on-secondary-fixed": "#241a00", "secondary-fixed": "#ffdf93", "primary-fixed": "#e4e2e4", "tertiary-fixed": "#6bff8f", "on-surface": "#191c1f", "on-primary-fixed": "#1b1b1d", "on-tertiary-container": "#009944", "on-secondary-fixed-variant": "#594400", "inverse-primary": "#c8c6c8", "on-tertiary-fixed-variant": "#005321", "on-primary-container": "#858486" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-sm": "0.5rem", "space-lg": "1.25rem", "space-xl": "1.75rem", "space-xs": "0.25rem", "space-md": "0.75rem", "gutter": "1rem", "margin": "1.25rem" }, "fontFamily": { "body-lg": ["Plus Jakarta Sans"], "label-timer": ["Outfit"], "label-numeric": ["Outfit"], "body-sm": ["Plus Jakarta Sans"], "title-md": ["Outfit"], "label-plate": ["Outfit"], "headline-sm": ["Plus Jakarta Sans"], "title-lg": ["Outfit"], "headline-lg": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "label-timer": ["28px", { "lineHeight": "32px", "letterSpacing": "0.02em", "fontWeight": "800" }], "label-numeric": ["18px", { "lineHeight": "22px", "letterSpacing": "0.05em", "fontWeight": "700" }], "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "500" }], "title-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.04em", "fontWeight": "600" }], "label-plate": ["15px", { "lineHeight": "18px", "letterSpacing": "0.14em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "title-lg": ["16px", { "lineHeight": "22px", "letterSpacing": "0.02em", "fontWeight": "700" }], "headline-lg": ["24px", { "lineHeight": "30px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-md": ["20px", { "lineHeight": "26px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "500" }], "display-lg": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.03em", "fontWeight": "800" }] } } } };</script><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.03)]"><div class="h-16 px-margin flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><button aria-label="Go back" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface hover:bg-surface-container-high transition-colors" onclick="history.back()"><span class="material-symbols-outlined text-[22px]">arrow_back</span></button><img alt="VeloxPark Logo" class="h-7 w-auto object-contain flex-shrink-0" src="https://lh3.googleusercontent.com/aida/AEtjO1W0a1gtCSJ49BygFtmFfNdCppR1Ea4dfE_R8V5fxDCKGqs80csKUXGoppfmY2WNf00hIEbNDgMFQO_CzL8qYRcUSqrjLxQBw1t5Cu2AGRmbtyZiCViEGPzQ4OVA9rGpe6c5QeSQdL1ZUSFJwMGh68S6zp_yfewxSYRNnyhYkmA2OebHqHYIFKblaTo067ivtNRbsy-vqwVTAkFcTW8iK4cm7KqFcrBlwwW4Hm5CXTFZ-qOrIgVyIZkBDwE"/><h1 class="font-title-lg text-title-lg text-on-surface truncate capitalize">Confirm</h1></div><div class="flex items-center gap-space-sm flex-shrink-0"><button aria-label="Info or help" class="w-11 h-11 flex items-center justify-center rounded-full text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-[20px]">info</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLo0iKDjY2QDg0gqkQvnZpji9MKGZk34IAazeua9zJTypWuJGmxGJiMzSO_MR552v0H4Y2985n2FZ4o5aT_IQhUOtbPIoYsT47DKb8F5fwgyaG6olwaSOeFDM5p_oYjPDosOe0AsPVWd3OroKe-BPYxgZhhTgvGyJMJ6IBQjnfuq5lAoJnquL5GkYjWXWFTHDV8KlJ1HlM3TDpckxPY93p1EMSummtQ0XFwg_oyWnG2udS0VntfuXl"/></div></div></header><main class="flex-1 flex flex-col relative w-full pt-16 pb-safe bg-surface"><div class="flex flex-col w-full relative">
+<!-- Blurred Ambient Map Canvas Backdrop -->
+<div class="relative w-full h-[190px] overflow-hidden -mt-2">
+<div class="w-full h-full bg-cover bg-center brightness-90 saturate-150 contrast-105" data-location="Changa, Anand, Gujarat, India" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD62tE_f71bSMGeRdnb6wEp0XO0aR9gByYUm0u1n26h2QrZoP2NxYqRzMukTJV8u_kqkx8pWqSiMdASyePpj7QgaX-olHrUUe8jUfj8bTfFqUN99tzG1vq1zlx3IUZaCkfrf3iIm5weY70r3-BFOXDMtDOPEym1dgKdUDXdlOsjOdkcR6RPkCO2wLHQpwyvQMM-_CvWrQiKzVM-CsV-S_s4T7SZ-IZX7iwPxjmNXdmUDZNCpdvqcIk5')"></div>
+<div class="absolute inset-0 bg-primary/40 backdrop-blur-[6px] transition-all"></div>
+<!-- Ambient Map Vignette and Street Glyphs -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+<div class="w-20 h-20 rounded-full bg-secondary-container/20 animate-ping"></div>
+<div class="absolute flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary-container text-on-primary shadow-xl">
+<span class="w-2 h-2 rounded-full bg-secondary-container animate-pulse"></span>
+<span class="font-title-md text-title-md tracking-wider">NAVIGATING TO ZONE</span>
+</div>
+</div>
+</div>
+<!-- Bottom Sheet Overlay Container -->
+<div class="relative w-full -mt-7 bg-surface-container-lowest rounded-t-[32px] shadow-[0_-12px_40px_rgba(0,0,0,0.18)] px-5 pt-3 pb-8 flex flex-col justify-between z-10">
+<!-- Sheet Drag Pill -->
+<div class="w-12 h-1.5 rounded-full bg-surface-container-highest mx-auto mb-4 cursor-grab active:cursor-grabbing"></div>
+<!-- Mini-Map Sensor Card -->
+<div class="h-36 w-full rounded-2xl overflow-hidden relative bg-surface-container shadow-sm flex items-center justify-center">
+<div class="absolute inset-0 w-full h-full bg-cover bg-center opacity-85" data-location="Charotar University of Science and Technology, Changa, Gujarat" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA5-_fjHh1d8PBKsGgoonD4qio3h5MGAJHlZfRxfDUTiN9xgGlY7dFVA00pdEJYiok_JZx_Wub2TZtQj3c84HYCkKLK7Xp2pZr16lEQvtOrj0drisKMOv5bhyuKJ6kbDu2qHULXw840ojf1YTd4U2c3motNPFoaMSbxHTVQMlPzg9KP37oAK4gPO2M32S6N9oH5K1ymonPdeMCF3DfWa6sNMd8C-P20MnwIyIqwqDOlCbt19HWYrDtZ')"></div>
+<!-- Gradient Scanner Tint -->
+<div class="absolute inset-0 bg-gradient-to-t from-primary-container/40 via-transparent to-primary-container/10"></div>
+<!-- Radar Pulse Rings -->
+<div class="absolute w-24 h-24 rounded-full bg-secondary-container/25 animate-ping"></div>
+<div class="absolute w-16 h-16 rounded-full bg-secondary-container/40 animate-pulse"></div>
+<!-- Station Master Pin Marker -->
+<div class="relative z-10 flex flex-col items-center">
+<div class="w-11 h-11 rounded-2xl bg-secondary-container text-on-secondary-fixed flex items-center justify-center shadow-lg transform -translate-y-1 hover:scale-105 transition-transform">
+<span class="font-headline-lg text-headline-lg font-extrabold text-primary">P</span>
+</div>
+<div class="w-2.5 h-1.5 bg-primary/40 rounded-full blur-[1.5px] mt-0.5"></div>
+</div>
+<!-- Live GPS Sync Badge -->
+<div class="absolute bottom-2.5 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-lowest/90 backdrop-blur-md shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-ping"></span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">ANPR Gate Live</span>
+</div>
+<!-- Micro Distance Capsule -->
+<div class="absolute bottom-2.5 right-3 px-2 py-0.5 rounded-md bg-primary-container/85 text-on-primary font-label-numeric text-body-sm">
+        350m away
+      </div>
+</div>
+<!-- Destination Identity Header -->
+<div class="text-center mt-3.5 mb-3">
+<h2 class="font-headline-md text-headline-md text-on-surface tracking-tight">Campus Gate Parking</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Changa-Valasan Rd, Anand District, Gujarat</p>
+<!-- Meta Badges Pill Row -->
+<div class="flex items-center justify-center gap-2 mt-2 flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed/30 text-on-tertiary-fixed font-title-md text-title-md">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container animate-pulse"></span>
+          38 Slots Available
+        </span>
+<span class="font-title-md text-title-md text-on-surface-variant">•</span>
+<span class="font-label-numeric text-title-md text-on-surface bg-surface-container-low px-2.5 py-1 rounded-full">₹30/hr</span>
+<span class="font-title-md text-title-md text-on-surface-variant">•</span>
+<span class="font-title-md text-title-md text-on-surface-variant bg-surface-container-low px-2.5 py-1 rounded-full">Zone B</span>
+</div>
+</div>
+<!-- Dual Configuration Tiles (Side-by-Side) -->
+<div class="grid grid-cols-2 gap-3 mb-3.5">
+<!-- Tile 1: Slot Indicator -->
+<div class="bg-surface-container-lowest rounded-2xl p-3.5 shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Parking place</span>
+<div class="w-7 h-7 rounded-xl bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">local_parking</span>
+</div>
+</div>
+<div class="mt-2">
+<span class="font-display-lg text-headline-md text-on-surface tracking-tight">Slot B1</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5 truncate">Ground level • Covered</p>
+</div>
+</div>
+<!-- Tile 2: Duration Selector -->
+<button class="bg-surface-container-lowest rounded-2xl p-3.5 shadow-sm flex flex-col justify-between text-left relative overflow-hidden active:scale-95 transition-transform" id="durationTile" type="button">
+<div class="flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Duration</span>
+<div class="w-7 h-7 rounded-xl bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+</div>
+</div>
+<div class="mt-2">
+<div class="flex items-baseline gap-1">
+<span class="font-label-timer text-headline-md text-on-surface" id="durationVal">2 h 00 m</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary font-semibold mt-0.5 flex items-center gap-1">
+<span>Tap to adjust</span>
+<span class="material-symbols-outlined text-[14px]">edit</span>
+</p>
+</div>
+</button>
+</div>
+<!-- ANPR Smart Barrier Automated Card -->
+<div class="bg-surface-container-low rounded-2xl p-3.5 flex items-center gap-3 mb-3 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+<div class="w-9 h-9 rounded-xl bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">
+<strong class="font-headline-sm text-body-sm text-on-surface">Barrier opens automatically</strong> via number plate recognition (ANPR). Pay before you exit.
+      </p>
+</div>
+<!-- HSRP Plate Verification Pill -->
+<div class="flex items-center justify-between bg-surface-container-highest/60 rounded-2xl px-3.5 py-2 mb-4">
+<div class="flex items-center gap-2 min-w-0">
+<!-- Visual Mini Indian HSRP Badge -->
+<div class="flex items-center h-6 rounded bg-surface-container-lowest shadow-xs overflow-hidden flex-shrink-0">
+<div class="w-3.5 h-full bg-[#003399] flex flex-col items-center justify-center px-0.5">
+<div class="w-1.5 h-1.5 rounded-full bg-surface-container-lowest"></div>
+<span class="text-[6px] font-black text-white leading-none mt-0.5">IND</span>
+</div>
+<span class="font-label-plate text-[11px] px-1.5 text-on-surface tracking-wider">GJ 23 AB 1234</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">Hyundai Creta • White</span>
+</div>
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<!-- Bottom Reserve & Settle Action Row -->
+<div class="flex items-center justify-between gap-3 pt-2">
+<!-- Pricing Summary -->
+<div class="flex flex-col min-w-[105px]">
+<span class="font-body-sm text-[10px] text-on-surface-variant tracking-wider uppercase font-semibold">Estimated Total</span>
+<div class="flex items-baseline gap-0.5">
+<span class="font-title-lg text-headline-sm text-on-surface">₹</span>
+<span class="font-label-timer text-display-lg text-on-surface tracking-tight font-extrabold" id="totalCost">60.00</span>
+</div>
+</div>
+<!-- Primary Action CTA -->
+<button class="flex-1 min-h-[52px] px-6 py-3.5 rounded-2xl bg-secondary-container hover:bg-secondary-fixed-dim text-on-secondary-fixed font-title-lg text-title-lg flex items-center justify-center gap-2 shadow-[0_8px_20px_rgba(254,203,53,0.35)] active:scale-95 transition-all" id="confirmBtn">
+<span>Confirm &amp; Reserve</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+<!-- Booking Confirmation Toast Layer -->
+<div class="fixed inset-x-5 bottom-8 z-50 bg-primary-container text-on-primary p-4 rounded-2xl shadow-2xl flex items-center justify-between transform translate-y-28 opacity-0 pointer-events-none transition-all duration-300 ease-out" id="toastSuccess">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">done</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-body-lg text-on-primary">Slot B1 Locked!</span>
+<span class="font-body-sm text-body-sm text-on-primary-container">Gate barrier configured for GJ 23 AB 1234</span>
+</div>
+</div>
+<span class="font-label-numeric text-title-md text-secondary-container">#V-882</span>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    const durationBtn = document.getElementById('durationTile');
+    const durationVal = document.getElementById('durationVal');
+    const totalCost = document.getElementById('totalCost');
+    const confirmBtn = document.getElementById('confirmBtn');
+    const toastSuccess = document.getElementById('toastSuccess');
+
+    const rates = [
+      { text: "1 h 00 m", cost: "30.00" },
+      { text: "2 h 00 m", cost: "60.00" },
+      { text: "3 h 30 m", cost: "105.00" },
+      { text: "5 h 00 m", cost: "150.00" }
+    ];
+    let currentIndex = 1;
+
+    durationBtn?.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % rates.length;
+      durationVal.textContent = rates[currentIndex].text;
+      totalCost.textContent = rates[currentIndex].cost;
+    });
+
+    confirmBtn?.addEventListener('click', () => {
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = `
+        <span class="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin"></span>
+        <span>Reserving Slot...</span>
+      `;
+
+      setTimeout(() => {
+        toastSuccess.classList.remove('translate-y-28', 'opacity-0', 'pointer-events-none');
+        toastSuccess.classList.add('translate-y-0', 'opacity-100');
+        confirmBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[20px]">check</span>
+          <span>Reserved!</span>
+        `;
+        confirmBtn.classList.remove('bg-secondary-container');
+        confirmBtn.classList.add('bg-tertiary-fixed', 'text-on-tertiary-fixed');
+      }, 700);
+    });
+  })();
+</script></main></body></html>

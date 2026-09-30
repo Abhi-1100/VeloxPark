@@ -290,84 +290,84 @@ body {
 ─────────────────────────────────────────────────────────────────────────── */
 :root {
   /* Page / shell surfaces */
-  --u-page-bg:        #0A0A0A;
-  --u-shell-bg:       #141414;
-  --u-body-bg:        #0E0E0E;
-  --u-card-bg:        #161616;
-  --u-card-bg-2:      #1F1F1F;
+  --u-page-bg: #0A0A0A;
+  --u-shell-bg: #141414;
+  --u-body-bg: #0E0E0E;
+  --u-card-bg: #161616;
+  --u-card-bg-2: #1F1F1F;
 
   /* Typography */
-  --u-text-primary:   #F5F5F0;
+  --u-text-primary: #F5F5F0;
   --u-text-secondary: #D4D4CE;
-  --u-text-muted:     #8A8A8A;
-  --u-text-faint:     #555555;
+  --u-text-muted: #8A8A8A;
+  --u-text-faint: #555555;
 
   /* Lines / borders */
-  --u-border:         #2E2E2E;
-  --u-border-strong:  #3D3D3D;
-  --u-divider:        #262626;
+  --u-border: #2E2E2E;
+  --u-border-strong: #3D3D3D;
+  --u-divider: #262626;
 
   /* Input fields */
-  --u-input-bg:       #181818;
-  --u-input-border:   #333333;
+  --u-input-bg: #181818;
+  --u-input-border: #333333;
 
   /* Shadows */
-  --u-shadow-card:    0 4px 20px rgba(0,0,0,0.45);
-  --u-shadow-float:   0 8px 32px rgba(0,0,0,0.60);
-  --u-shadow-shell:   0 24px 64px rgba(0,0,0,0.75);
+  --u-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --u-shadow-float: 0 8px 32px rgba(0, 0, 0, 0.60);
+  --u-shadow-shell: 0 24px 64px rgba(0, 0, 0, 0.75);
 
   /* Search / topbar */
-  --u-topbar-bg:      #0E0E0E;
-  --u-search-bg:      #161616;
+  --u-topbar-bg: #0E0E0E;
+  --u-search-bg: #161616;
 
   /* Map shell bg */
-  --u-map-shell-bg:   #121212;
+  --u-map-shell-bg: #121212;
 }
 
 [data-user-theme="dark"] {
-  --u-page-bg:        #0A0A0A;
-  --u-shell-bg:       #141414;
-  --u-body-bg:        #0E0E0E;
-  --u-card-bg:        #161616;
-  --u-card-bg-2:      #1F1F1F;
-  --u-text-primary:   #F5F5F0;
+  --u-page-bg: #0A0A0A;
+  --u-shell-bg: #141414;
+  --u-body-bg: #0E0E0E;
+  --u-card-bg: #161616;
+  --u-card-bg-2: #1F1F1F;
+  --u-text-primary: #F5F5F0;
   --u-text-secondary: #D4D4CE;
-  --u-text-muted:     #8A8A8A;
-  --u-text-faint:     #555555;
-  --u-border:         #2E2E2E;
-  --u-border-strong:  #3D3D3D;
-  --u-divider:        #262626;
-  --u-input-bg:       #181818;
-  --u-input-border:   #333333;
-  --u-shadow-card:    0 4px 20px rgba(0,0,0,0.45);
-  --u-shadow-float:   0 8px 32px rgba(0,0,0,0.60);
-  --u-shadow-shell:   0 24px 64px rgba(0,0,0,0.75);
-  --u-topbar-bg:      #0E0E0E;
-  --u-search-bg:      #161616;
-  --u-map-shell-bg:   #121212;
+  --u-text-muted: #8A8A8A;
+  --u-text-faint: #555555;
+  --u-border: #2E2E2E;
+  --u-border-strong: #3D3D3D;
+  --u-divider: #262626;
+  --u-input-bg: #181818;
+  --u-input-border: #333333;
+  --u-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --u-shadow-float: 0 8px 32px rgba(0, 0, 0, 0.60);
+  --u-shadow-shell: 0 24px 64px rgba(0, 0, 0, 0.75);
+  --u-topbar-bg: #0E0E0E;
+  --u-search-bg: #161616;
+  --u-map-shell-bg: #121212;
 }
 
 [data-user-theme="light"] {
-  --u-page-bg:        #F4F6F9;
-  --u-shell-bg:       #FFFFFF;
-  --u-body-bg:        #F8FAFC;
-  --u-card-bg:        #FFFFFF;
-  --u-card-bg-2:      #F1F5F9;
-  --u-text-primary:   #0F172A;
+  --u-page-bg: #F4F6F9;
+  --u-shell-bg: #FFFFFF;
+  --u-body-bg: #F8FAFC;
+  --u-card-bg: #FFFFFF;
+  --u-card-bg-2: #F1F5F9;
+  --u-text-primary: #0F172A;
   --u-text-secondary: #334155;
-  --u-text-muted:     #64748B;
-  --u-text-faint:     #94A3B8;
-  --u-border:         #E2E8F0;
-  --u-border-strong:  #CBD5E1;
-  --u-divider:        #E2E8F0;
-  --u-input-bg:       #FFFFFF;
-  --u-input-border:   #CBD5E1;
-  --u-shadow-card:    0 4px 20px rgba(0,0,0,0.06);
-  --u-shadow-float:   0 8px 32px rgba(0,0,0,0.08);
-  --u-shadow-shell:   0 24px 64px rgba(0,0,0,0.10);
-  --u-topbar-bg:      #FFFFFF;
-  --u-search-bg:      #F8FAFC;
-  --u-map-shell-bg:   #E2E8F0;
+  --u-text-muted: #64748B;
+  --u-text-faint: #94A3B8;
+  --u-border: #E2E8F0;
+  --u-border-strong: #CBD5E1;
+  --u-divider: #E2E8F0;
+  --u-input-bg: #FFFFFF;
+  --u-input-border: #CBD5E1;
+  --u-shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --u-shadow-float: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --u-shadow-shell: 0 24px 64px rgba(0, 0, 0, 0.10);
+  --u-topbar-bg: #FFFFFF;
+  --u-search-bg: #F8FAFC;
+  --u-map-shell-bg: #E2E8F0;
 }
 
 /* ─── Mobile View Design System (Zona Pro & Clean Pill Aesthetic) ─────────────
@@ -460,5 +460,3 @@ body {
     transition: all 0.15s ease !important;
   }
 }
-
-

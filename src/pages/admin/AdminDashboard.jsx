@@ -22,20 +22,20 @@
  *   3. Assembles the page layout from imported components
  */
 
-import useDashboardData from '../hooks/useDashboardData';
-import useExportPDF from '../hooks/useExportPDF';
-import { logoutAdmin } from '../services/firebaseService';
+import useDashboardData from '../../hooks/useDashboardData';
+import useExportPDF from '../../hooks/useExportPDF';
+import { logoutAdmin } from '../../services/firebaseService';
 import { useState } from 'react';
 
-import ManualEntryModal from './dashboard/ManualEntryModal';
+import ManualEntryModal from '../../components/dashboard/ManualEntryModal';
 
-import Sidebar from './dashboard/Sidebar';
-import Topbar from './dashboard/Topbar';
-import StatCards from './dashboard/StatCards';
-import ZoneMap from './dashboard/ZoneMap';
-import TrafficPanel from './dashboard/TrafficPanel';
-import VehicleTable from './dashboard/VehicleTable';
-import DashboardFooter from './dashboard/DashboardFooter';
+import Sidebar from '../../components/dashboard/Sidebar';
+import Topbar from '../../components/dashboard/Topbar';
+import StatCards from '../../components/dashboard/StatCards';
+import ZoneMap from '../../components/dashboard/ZoneMap';
+import TrafficPanel from '../../components/dashboard/TrafficPanel';
+import VehicleTable from '../../components/dashboard/VehicleTable';
+import DashboardFooter from '../../components/dashboard/DashboardFooter';
 
 import './AdminDashboard.css';
 

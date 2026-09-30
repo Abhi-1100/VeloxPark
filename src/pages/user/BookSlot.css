@@ -5,7 +5,8 @@
   position: fixed;
   inset: 0;
   z-index: 50;
-  background: #a4c8f0; /* Light blue from mobile preview */
+  background: #a4c8f0;
+  /* Light blue from mobile preview */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -18,7 +19,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  background: #1c1d21; /* Dark background for parking lot */
+  background: #1c1d21;
+  /* Dark background for parking lot */
   overflow: hidden;
 }
 
@@ -30,7 +32,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   z-index: 10;
   flex-shrink: 0;
 }
@@ -120,7 +122,8 @@
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 16px 20px 100px; /* Space for bottom floating button */
+  padding: 16px 20px calc(160px + env(safe-area-inset-bottom, 0px));
+  /* Space for bottom floating button + dock */
   display: flex;
   justify-content: center;
 }
@@ -167,8 +170,8 @@
   left: 4px;
   width: 60px;
   height: 60px;
-  border-top: 1.5px solid rgba(255,255,255,0.15);
-  border-left: 1.5px solid rgba(255,255,255,0.15);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.15);
   border-top-left-radius: 36px;
 }
 
@@ -178,8 +181,8 @@
   right: 4px;
   width: 60px;
   height: 60px;
-  border-top: 1.5px solid rgba(255,255,255,0.15);
-  border-right: 1.5px solid rgba(255,255,255,0.15);
+  border-top: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.15);
   border-top-right-radius: 36px;
 }
 
@@ -189,8 +192,8 @@
   left: 4px;
   width: 60px;
   height: 60px;
-  border-bottom: 1.5px solid rgba(255,255,255,0.15);
-  border-left: 1.5px solid rgba(255,255,255,0.15);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.15);
   border-bottom-left-radius: 36px;
 }
 
@@ -200,8 +203,8 @@
   right: 4px;
   width: 60px;
   height: 60px;
-  border-bottom: 1.5px solid rgba(255,255,255,0.15);
-  border-right: 1.5px solid rgba(255,255,255,0.15);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.15);
   border-bottom-right-radius: 36px;
 }
 
@@ -216,21 +219,21 @@
 
 .bs-slot-wrapper {
   height: 60px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .bs-col.left .bs-slot-wrapper {
-  border-left: 1px solid rgba(255,255,255,0.08);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
 
 .bs-col.right .bs-slot-wrapper {
-  border-right: 1px solid rgba(255,255,255,0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
 }
@@ -266,11 +269,13 @@
   background: transparent;
   cursor: default;
 }
+
 .bs-car-svg {
   width: 80px;
   height: auto;
   transform: rotate(0deg);
 }
+
 .bs-col.right .bs-car-svg {
   transform: rotate(180deg);
 }
@@ -284,31 +289,36 @@
   height: 52px;
 }
 
-/* Bottom CTA Mobile */
+/* Bottom CTA Mobile (Positioned above floating dock) */
 .bs-bottom-action {
   position: absolute;
-  bottom: 0;
+  bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   left: 0;
   right: 0;
-  padding: 16px 20px 24px;
-  z-index: 20;
+  padding: 0 16px;
+  z-index: 50;
+  pointer-events: auto;
 }
 
 .bs-book-btn {
   width: 100%;
-  background: #F2C230;
+  background: #fecb35;
   color: #111;
   border: none;
-  border-radius: 16px;
-  padding: 18px;
-  font-size: 16px;
+  border-radius: 20px;
+  padding: 16px 20px;
+  font-size: 15px;
   font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8px 24px rgba(242, 194, 48, 0.2);
-  transition: opacity 0.2s ease;
+  box-shadow: 0 10px 24px rgba(254, 203, 53, 0.35);
+  transition: opacity 0.2s ease, transform 0.15s ease;
+}
+
+.bs-book-btn:active {
+  transform: scale(0.98);
 }
 
 .bs-book-btn:disabled {
@@ -325,9 +335,22 @@
 
 /* ─── Tablet Bounds (640px – 1023px) ──────────────────────────────────────── */
 @media (min-width: 640px) and (max-width: 1023px) {
-  .bs-shell { max-width: 430px; margin: 0 auto; border-radius: 44px; box-shadow: 0 40px 80px rgba(0,0,0,0.22); }
-  .bs-page { align-items: center; padding: 40px 0; background: #25262a; }
-  .bs-bottom-action { border-radius: 0 0 44px 44px; }
+  .bs-shell {
+    max-width: 430px;
+    margin: 0 auto;
+    border-radius: 44px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.22);
+  }
+
+  .bs-page {
+    align-items: center;
+    padding: 40px 0;
+    background: #25262a;
+  }
+
+  .bs-bottom-action {
+    border-radius: 0 0 44px 44px;
+  }
 }
 
 /* ─── Desktop Size View (min-width: 1024px) ───────────────────────────────── */
@@ -567,9 +590,17 @@
     border-radius: 4px;
   }
 
-  .bs-legend-dot.yellow { background: #F2C230; }
-  .bs-legend-dot.white { background: #3b82f6; }
-  .bs-legend-dot.car { background: #ef4444; }
+  .bs-legend-dot.yellow {
+    background: #F2C230;
+  }
+
+  .bs-legend-dot.white {
+    background: #3b82f6;
+  }
+
+  .bs-legend-dot.car {
+    background: #ef4444;
+  }
 
   /* Hide mobile bottom action */
   .bs-bottom-action {

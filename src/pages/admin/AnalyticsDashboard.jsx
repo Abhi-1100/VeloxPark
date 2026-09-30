@@ -10,17 +10,17 @@
  * ROUTE: /admin/analytics  (protected, same auth guard as /admin)
  */
 
-import useAnalyticsData from '../hooks/useAnalyticsData';
-import useMonthlyReport from '../hooks/useMonthlyReport';
-import { logoutAdmin } from '../services/firebaseService';
+import useAnalyticsData from '../../hooks/useAnalyticsData';
+import useMonthlyReport from '../../hooks/useMonthlyReport';
+import { logoutAdmin } from '../../services/firebaseService';
 
-import Sidebar from './dashboard/Sidebar';
-import AnalyticsHeader from './analytics/AnalyticsHeader';
-import AnalyticsKPICards from './analytics/AnalyticsKPICards';
-import RevenueChart from './analytics/RevenueChart';
-import DurationChart from './analytics/DurationChart';
-import ZoneHeatmap from './analytics/ZoneHeatmap';
-import TopZonesTable from './analytics/TopZonesTable';
+import Sidebar from '../../components/dashboard/Sidebar';
+import AnalyticsHeader from '../../components/analytics/AnalyticsHeader';
+import AnalyticsKPICards from '../../components/analytics/AnalyticsKPICards';
+import RevenueChart from '../../components/analytics/RevenueChart';
+import DurationChart from '../../components/analytics/DurationChart';
+import ZoneHeatmap from '../../components/analytics/ZoneHeatmap';
+import TopZonesTable from '../../components/analytics/TopZonesTable';
 
 import './AnalyticsDashboard.css';
 import { useState } from 'react';
