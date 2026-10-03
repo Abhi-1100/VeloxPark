@@ -1,3 +1,5 @@
+import { isValidPlate } from './validation.js';
+
 // Calculate duration between entry and exit
 export const calculateDuration = (entry, exit) => {
   if (!exit) return null;
@@ -139,9 +141,12 @@ export const getTodayDateStr = () => {
 //     These come from the `numberplate` Firebase node.
 //
 export const processParkingData = (data) => {
+  // ── 0. Enforce standard number plate format (exclude missing/malformed plates) ────
+  const validData = (data || []).filter(e => e && e.plate && isValidPlate(e.plate));
+
   // ── 1. Separate PRD records (already have outTime) from legacy records ────
-  const directRecords = data.filter(e => e._outTime !== undefined);
-  const legacyRecords = data.filter(e => e._outTime === undefined);
+  const directRecords = validData.filter(e => e._outTime !== undefined);
+  const legacyRecords = validData.filter(e => e._outTime === undefined);
 
   // ── 2. Robustly sort legacy records by parsed timestamp (asc) ─────────────
   legacyRecords.sort((a, b) => {

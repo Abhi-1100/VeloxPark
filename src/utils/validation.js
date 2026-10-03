@@ -4,77 +4,199 @@
  */
 
 /**
- * Validates Indian license plate format
+ * Valid Indian State and Union Territory 2-letter RTO codes
+ */
+export const INDIAN_STATE_CODES = new Set([
+  'AN', // Andaman and Nicobar Islands
+  'AP', // Andhra Pradesh
+  'AR', // Arunachal Pradesh
+  'AS', // Assam
+  'BR', // Bihar
+  'CG', // Chhattisgarh
+  'CH', // Chandigarh
+  'DD', // Daman and Diu
+  'DL', // Delhi
+  'DN', // Dadra and Nagar Haveli
+  'GA', // Goa
+  'GJ', // Gujarat
+  'HR', // Haryana
+  'HP', // Himachal Pradesh
+  'JH', // Jharkhand
+  'JK', // Jammu and Kashmir
+  'KA', // Karnataka
+  'KL', // Kerala
+  'LA', // Ladakh
+  'LD', // Lakshadweep
+  'MP', // Madhya Pradesh
+  'MH', // Maharashtra
+  'MN', // Manipur
+  'ML', // Meghalaya
+  'MZ', // Mizoram
+  'NL', // Nagaland
+  'OD', // Odisha
+  'OR', // Odisha (legacy code)
+  'PB', // Punjab
+  'PY', // Puducherry
+  'RJ', // Rajasthan
+  'SK', // Sikkim
+  'TN', // Tamil Nadu
+  'TR', // Tripura
+  'TS', // Telangana
+  'UK', // Uttarakhand
+  'UA', // Uttarakhand (legacy code)
+  'UP', // Uttar Pradesh
+  'WB', // West Bengal
+]);
+
+/**
+ * Cleans a license plate string by stripping spaces, dashes, dots, and converting to uppercase.
  *
- * Indian license plate format:
- * - 2 letters (State code, e.g., TS, MH, DL)
- * - 1-2 digits (RTO code)
- * - 1-3 letters (Series)
- * - 1-4 digits (Registration number)
+ * @param {string} plate - Raw license plate string
+ * @returns {string} Cleaned alphanumeric uppercase string
+ */
+export const cleanPlate = (plate) => {
+  if (!plate) return '';
+  return String(plate).replace(/[^A-Za-z0-9]/g, '').toUpperCase().trim();
+};
+
+/**
+ * Validates Indian license plate format according to MoRTH standards:
  *
- * Examples: TS15EL5671, MH12AB1234, DL1CAB4321
+ * 1. Standard State/UT Series:
+ *    - 2 letters: Valid Indian State or UT code (e.g. RJ, GJ, TS, MH, DL)
+ *    - 1-2 digits: RTO district code (e.g. 05, 14, 01)
+ *    - 0-3 letters: Series code (e.g. CV, MZ, MP, SD, AJ, AK, A, CAA)
+ *    - Exactly 4 digits: Vehicle registration number (0001 - 9999).
+ *      Note: Under MoRTH & HSRP rules, numbers below 1000 MUST be zero-padded (e.g. 0002, 0193).
+ *      Plates missing digits (e.g. RJ14CV0 or GJ05SD193) are invalid.
+ *
+ * 2. Bharat Series (BH):
+ *    - 2 digits: Year of registration (e.g. 21, 22, 23, 24, 25, 26)
+ *    - "BH": Bharat series identifier
+ *    - Exactly 4 digits: Registration number (0001 - 9999)
+ *    - 1-2 letters: Series letters (e.g. AA, AB, Z)
+ *    Example: 22BH1234AA
  *
  * @param {string} plate - License plate to validate
- * @returns {Object} { valid: boolean, message?: string, cleaned?: string }
- *
- * @example
- * validateLicensePlate('TS15EL5671')
- * // Returns: { valid: true, cleaned: 'TS15EL5671' }
- *
- * @example
- * validateLicensePlate('abc123')
- * // Returns: { valid: false, message: 'Invalid format...' }
- *
- * @example
- * validateLicensePlate('  ts15el5671  ')
- * // Returns: { valid: true, cleaned: 'TS15EL5671' }
+ * @returns {Object} { valid: boolean, message?: string, cleaned: string, type?: string, state?: string }
  */
 export const validateLicensePlate = (plate) => {
-  // Check if plate is provided
   if (!plate) {
     return {
       valid: false,
-      message: 'License plate is required'
+      message: 'License plate is required',
+      cleaned: '',
     };
   }
 
-  // Clean the input (trim and uppercase)
-  const cleaned = plate.toString().toUpperCase().trim();
+  const cleaned = cleanPlate(plate);
 
-  // Check length constraints
-  if (cleaned.length < 4) {
+  if (!cleaned) {
     return {
       valid: false,
-      message: 'License plate must be at least 4 characters'
+      message: 'License plate cannot be empty',
+      cleaned: '',
     };
   }
 
-  if (cleaned.length > 12) {
+  // ── 1. Check Bharat Series (BH) ──────────────────────────────────────────
+  // Format: YY BH 1234 AA (e.g., 22BH1234AA)
+  const bhMatch = cleaned.match(/^([0-9]{2})BH([0-9]{4})([A-Z]{1,2})$/);
+  if (bhMatch) {
+    return {
+      valid: true,
+      cleaned,
+      type: 'BH',
+    };
+  }
+
+  // If starts with 2 digits but is not BH format
+  if (/^[0-9]{2}/.test(cleaned)) {
     return {
       valid: false,
-      message: 'License plate must not exceed 12 characters'
+      message: 'Invalid format. Plate starting with numbers must follow BH series (e.g., 22BH1234AA)',
+      cleaned,
     };
   }
 
-  // Indian license plate pattern
-  // Format: XX00XX0000
-  // - 2 letters (state code)
-  // - 1-2 digits (RTO code)
-  // - 1-3 letters (series)
-  // - 1-4 digits (registration number)
-  const indianPlateRegex = /^[A-Z]{2}[0-9]{1,2}[A-Z]{1,3}[0-9]{1,4}$/;
+  // ── 2. Check Standard State/UT Format ────────────────────────────────────
+  // Standard format: State(2) + RTO(1-2) + Series(0-3) + Number(exactly 4 digits)
+  const standardMatch = cleaned.match(/^([A-Z]{2})([0-9]{1,2})([A-Z]{0,3})([0-9]{4})$/);
+  if (standardMatch) {
+    const stateCode = standardMatch[1];
+    if (!INDIAN_STATE_CODES.has(stateCode)) {
+      return {
+        valid: false,
+        message: `Invalid state code "${stateCode}". Must start with a valid Indian state/UT code (e.g., RJ, GJ, TS, MH, DL)`,
+        cleaned,
+      };
+    }
+    return {
+      valid: true,
+      cleaned,
+      type: 'Standard',
+      state: stateCode,
+    };
+  }
 
-  if (!indianPlateRegex.test(cleaned)) {
+  // ── 3. Diagnostic checks for informative error messages ───────────────────
+  // A: Missing digits at the end (e.g. RJ14CV0 or GJ05SD193)
+  const partialDigitsMatch = cleaned.match(/^([A-Z]{2})([0-9]{1,2})([A-Z]{0,3})([0-9]{1,3})$/);
+  if (partialDigitsMatch) {
+    const stateCode = partialDigitsMatch[1];
+    const rto = partialDigitsMatch[2];
+    const series = partialDigitsMatch[3] || '';
+    const digits = partialDigitsMatch[4];
+    const example = `${stateCode}${rto}${series}${digits.padStart(4, '0')}`;
     return {
       valid: false,
-      message: 'Invalid format. Use XX00XX0000 (e.g., TS15EL5671, MH12AB1234)'
+      message: `Incomplete number plate: standard vehicle registration must end with exactly 4 digits (e.g., ${example})`,
+      cleaned,
     };
   }
 
+  // B: Missing number entirely (e.g. RJ14CV)
+  if (/^[A-Z]{2}[0-9]{1,2}[A-Z]{0,3}$/.test(cleaned)) {
+    return {
+      valid: false,
+      message: `Missing number in plate: license plate must end with a 4-digit number (e.g., ${cleaned}1234)`,
+      cleaned,
+    };
+  }
+
+  // C: Too short or too long
+  if (cleaned.length < 8) {
+    return {
+      valid: false,
+      message: 'License plate is too short. Standard format requires at least 8 characters (e.g., DL01A1234, RJ14CV0002)',
+      cleaned,
+    };
+  }
+
+  if (cleaned.length > 11) {
+    return {
+      valid: false,
+      message: 'License plate is too long. Standard format does not exceed 10-11 characters',
+      cleaned,
+    };
+  }
+
+  // Default invalid format error
   return {
-    valid: true,
-    cleaned: cleaned
+    valid: false,
+    message: 'Invalid license plate format. Must follow standard format (e.g., RJ14CV0002, TS15EL5671, 22BH1234AA)',
+    cleaned,
   };
+};
+
+/**
+ * Returns true if the license plate follows the standard Indian format.
+ *
+ * @param {string} plate - License plate string
+ * @returns {boolean}
+ */
+export const isValidPlate = (plate) => {
+  return validateLicensePlate(plate).valid;
 };
 
 /**

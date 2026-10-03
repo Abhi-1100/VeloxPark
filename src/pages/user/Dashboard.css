@@ -150,6 +150,64 @@
   border: 1.5px solid #ffffff;
 }
 
+/* ─── Desktop Header Navigation ──────────────────────────────────────────── */
+.stitch-desktop-nav {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .stitch-dash-header-inner {
+    max-width: 1240px;
+    padding: 0 32px;
+  }
+
+  .stitch-desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(240, 243, 248, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 9999px;
+    padding: 4px 6px;
+  }
+
+  .stitch-desk-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    border: none;
+    background: transparent;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #46464a;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .stitch-desk-nav-link .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  .stitch-desk-nav-link:hover {
+    color: #010102;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .stitch-desk-nav-link.active {
+    background: #010102;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .stitch-desk-nav-link.active .material-symbols-outlined {
+    color: #fecb35;
+  }
+}
+
 /* ─── Main Content ────────────────────────────────────────────────────────── */
 .stitch-dash-main {
   flex: 1;
@@ -165,7 +223,32 @@
   padding: 0 20px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .stitch-dash-container {
+    max-width: 1240px;
+    padding: 0 32px;
+    gap: 24px;
+  }
+}
+
+/* ─── Smooth Transition on Dashboard ──────────────────────────────────────── */
+.stitch-dash-container > *:not(.sl-search-wrap) {
+  animation: dashContentFadeSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes dashContentFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ─── Welcome Row ─────────────────────────────────────────────────────────── */
@@ -173,7 +256,68 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 4px;
+  height: 52px;
+  min-height: 52px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.stitch-welcome-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stitch-network-pill {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .stitch-network-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(74, 225, 118, 0.12);
+    border: 1px solid rgba(74, 225, 118, 0.35);
+    color: #086e2e;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 6px 14px;
+    border-radius: 9999px;
+  }
+
+  .stitch-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    display: inline-block;
+    animation: stitchPulseDot 1.8s infinite;
+  }
+}
+
+@keyframes stitchPulseDot {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* ─── Dashboard Search Bar Precision Styles ───────────────────────────────── */
+.vp-dash-search-wrap {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.vp-dash-search-pill {
+  cursor: text;
+}
+
+.vp-dash-search-input {
+  width: 100%;
+  cursor: text;
 }
 
 .stitch-welcome-left {
@@ -964,4 +1108,410 @@
 
 .stitch-hub-reserve-btn:hover {
   background: #1c1c1e;
+}
+
+/* ─── Responsive Desktop & Mobile Grid Layout ────────────────────────────── */
+.stitch-dash-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.stitch-grid-main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.stitch-grid-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+/* On Mobile screens (< 1024px): Maintain exact natural mobile order */
+@media (max-width: 1023px) {
+  .stitch-grid-main,
+  .stitch-grid-sidebar {
+    display: contents;
+  }
+
+  .stitch-actions-carousel {
+    order: 1;
+  }
+
+  .stitch-vehicles-section {
+    order: 2;
+  }
+
+  .stitch-radar-card {
+    order: 3;
+  }
+
+  .stitch-dash-section:not(.stitch-vehicles-section) {
+    order: 4;
+  }
+
+  /* Keep mobile dashboard clean - hide secondary desktop telemetry tools */
+  .stitch-telemetry-card,
+  .stitch-network-card {
+    display: none !important;
+  }
+}
+
+/* On Desktop screens (>= 1024px): 2-Column Responsive Dashboard */
+@media (min-width: 1024px) {
+  .stitch-dash-grid {
+    display: grid;
+    grid-template-columns: 1fr 410px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .stitch-grid-main {
+    gap: 24px;
+  }
+
+  .stitch-grid-sidebar {
+    gap: 24px;
+    position: sticky;
+    top: 84px;
+  }
+
+  .stitch-radar-svg {
+    height: 220px;
+  }
+}
+
+/* ─── ANPR Vehicle Telemetry Card (Desktop) ───────────────────────────────── */
+.stitch-telemetry-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stitch-telemetry-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stitch-telemetry-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #010102;
+  color: #fecb35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stitch-telemetry-head-text {
+  flex: 1;
+}
+
+.stitch-telemetry-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #010102;
+  margin: 0;
+}
+
+.stitch-telemetry-sub {
+  font-size: 11px;
+  color: #77767b;
+  margin: 2px 0 0;
+}
+
+.stitch-telemetry-pill {
+  font-size: 10px;
+  font-weight: 800;
+  color: #765b00;
+  background: #fff4d2;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.06em;
+}
+
+.stitch-telemetry-form {
+  width: 100%;
+}
+
+.stitch-telemetry-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #f7f9fd;
+  border: 1.5px solid #e2e6ee;
+  border-radius: 14px;
+  padding: 6px 6px 6px 14px;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.stitch-telemetry-input-wrap:focus-within {
+  border-color: #010102;
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.stitch-telemetry-input-wrap .car-icon {
+  font-size: 20px;
+  color: #77767b;
+}
+
+.stitch-telemetry-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #010102;
+  text-transform: uppercase;
+}
+
+.stitch-telemetry-input::placeholder {
+  font-size: 11px;
+  font-weight: 500;
+  color: #9aa0a6;
+  text-transform: none;
+}
+
+.stitch-telemetry-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fecb35;
+  color: #010102;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.stitch-telemetry-submit-btn:hover {
+  background: #e5b626;
+  transform: translateY(-1px);
+}
+
+.stitch-telemetry-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.stitch-telemetry-error {
+  color: #dc2626;
+  font-size: 12px;
+  margin: 0;
+  padding: 6px 12px;
+  background: #fef2f2;
+  border-radius: 8px;
+}
+
+.stitch-telemetry-result {
+  background: #f7f9fd;
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid #e6eaf0;
+}
+
+.stitch-result-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-result-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #77767b;
+  letter-spacing: 0.05em;
+}
+
+.stitch-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.stitch-status-badge.parked {
+  background: rgba(74, 225, 118, 0.15);
+  color: #086e2e;
+}
+
+.stitch-status-badge.exited {
+  background: #fff4d2;
+  color: #765b00;
+}
+
+.stitch-status-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.stitch-hsrp-display {
+  display: inline-flex;
+  align-self: center;
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #010102;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stitch-hsrp-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 18px;
+  font-weight: 800;
+  padding: 6px 14px;
+  color: #010102;
+  letter-spacing: 0.1em;
+}
+
+.stitch-result-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.metric-box {
+  background: #ffffff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #eef1f6;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-lbl {
+  font-size: 11px;
+  color: #77767b;
+  font-weight: 600;
+}
+
+.metric-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: #010102;
+  margin-top: 2px;
+}
+
+.metric-val.highlight {
+  color: #765b00;
+  font-size: 17px;
+}
+
+.stitch-pay-now-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: #010102;
+  color: #fecb35;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stitch-pay-now-btn:hover {
+  background: #1c1c1e;
+  transform: translateY(-1px);
+}
+
+.stitch-telemetry-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #f0f2f7;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #46464a;
+  font-weight: 500;
+}
+
+.badge-item .check-icon {
+  font-size: 15px;
+  color: #10b981;
+}
+
+/* ─── Smart Grid Perks Card ───────────────────────────────────────────────── */
+.stitch-network-card {
+  background: linear-gradient(135deg, #010102 0%, #1c1c1e 100%);
+  border-radius: 20px;
+  padding: 20px;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.stitch-network-card-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.stitch-net-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(254, 203, 53, 0.15);
+  color: #fecb35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stitch-net-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.stitch-net-sub {
+  font-size: 12px;
+  color: #9aa0a6;
+  margin: 4px 0 0;
+  line-height: 1.4;
 }

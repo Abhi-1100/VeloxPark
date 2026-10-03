@@ -113,7 +113,6 @@ const UserParkingInfoDesktop = ({
   error,
   vehicleData,
   onSubmit,
-  onPayNow,
 }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -1194,34 +1193,26 @@ const UserParkingInfoDesktop = ({
                       ₹{vehicleData.amount || 0}
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={onPayNow}
+                    <div
                       style={{
-                        width: '100%',
-                        background: '#F2C230',
-                        color: '#111827',
-                        border: 'none',
-                        borderRadius: '14px',
-                        padding: '14px',
-                        fontSize: '15px',
-                        fontWeight: 900,
-                        cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '8px',
-                        boxShadow: '0 8px 20px rgba(242, 194, 48, 0.4)',
-                        transition: 'all 0.15s ease',
+                        padding: '12px',
+                        borderRadius: '12px',
+                        background: 'rgba(16, 185, 129, 0.1)',
+                        border: '1px solid rgba(16, 185, 129, 0.25)',
+                        color: '#10b981',
+                        fontSize: '13px',
+                        fontWeight: 700,
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = '#e5b626')}
-                      onMouseLeave={(e) => (e.currentTarget.style.background = '#F2C230')}
                     >
-                      <span>PROCEED TO PAYMENT</span>
                       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
-                        arrow_forward
+                        verified
                       </span>
-                    </button>
+                      <span>Exit Recorded · Session Finalized</span>
+                    </div>
                   </div>
                 ) : (
                   <div

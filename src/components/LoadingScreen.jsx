@@ -1,34 +1,21 @@
 import './LoadingScreen.css';
+import ParkingSlotCarAnimation from './ParkingSlotCarAnimation';
 
-const LoadingScreen = () => (
+const LoadingScreen = ({ statusText = "SYSTEM: INITIALIZING..." }) => (
     <div className="ls-root">
-        {/* Ambient Grid Overlay from Stitch */}
+        {/* Ambient Grid Overlay */}
         <div className="ls-grid-stitch" />
         
         {/* Visual Texture Layers */}
         <div className="ls-texture-overlay">
             <div className="ls-tonal-shift" />
-            <div className="ls-grain" />
+            <div className="ls-scanlines" />
         </div>
 
         <main className="ls-main-container">
-            {/* Kinetic Grid Centerpiece */}
-            <div className="ls-kinetic-centerpiece">
-                {/* Road Container */}
-                <div className="ls-road-container">
-                    <div className="ls-animate-road" />
-                </div>
-                
-                {/* Car Icon Animation */}
-                <div className="ls-animate-drive">
-                    <img 
-                      alt="Autonomous Car" 
-                      className="ls-car-img" 
-                      src="https://lh3.googleusercontent.com/aida/ADBb0ugmljvOgfG2ayO1_DjHxDOoPpiDJgPTdnls0zrqIZHak-AwheqKj9xkwDIVu6txzQiaYIQO9B5W2DmpF16SgWKo5WLfPACi5OC7F9Ss30GuMptuY3CDnYUNoG4GQXS4BAJM7rU54JswpJHonlbkFILtENdhGy65_avsufEVcz0O63xUGG53ih9eWTy8J29iIKAMg_Jao-mDHtjAS1Y0tCeBnTApqrnfCILztS_RTXG2NNoXegDyhnb_-dMN28MR8vwMX_SvBhB4Zzw" 
-                    />
-                    {/* Headlight Glow Effect */}
-                    <div className="ls-headlight-glow" />
-                </div>
+            {/* Autonomous Parking Centerpiece */}
+            <div className="ls-parking-stage">
+                <ParkingSlotCarAnimation slotName="BAY A-01" />
             </div>
 
             {/* Branding */}
@@ -37,13 +24,14 @@ const LoadingScreen = () => (
                     <span className="ls-velox">VELOX</span>
                     <span className="ls-park">PARK</span>
                 </h1>
+                <div className="ls-brand-sub">AUTONOMOUS URBAN MOBILITY OS</div>
             </div>
 
             {/* Technical Metadata / Status */}
             <div className="ls-meta-wrap">
                 <div className="ls-status-line">
                     <div className="ls-status-pulse" />
-                    <p className="ls-status-text">SYSTEM: INITIALIZING...</p>
+                    <p className="ls-status-text">{statusText}</p>
                 </div>
                 <div className="ls-node-status">
                     <span>

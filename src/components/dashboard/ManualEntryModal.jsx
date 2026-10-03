@@ -10,8 +10,9 @@
  *   onClose   {function}  Called when the user dismisses the modal
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { pushManualEntry } from '../../services/firebaseService';
+import { validateLicensePlate } from '../../utils/validation';
 
 const ManualEntryModal = ({ isOpen, onClose }) => {
     const [plate, setPlate] = useState('');
@@ -19,6 +20,11 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
     const [zone, setZone] = useState('');
     const [status, setStatus] = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
     const [errMsg, setErrMsg] = useState('');
+
+    const plateValidation = useMemo(() => {
+        if (!plate.trim()) return null;
+        return validateLicensePlate(plate);
+    }, [plate]);
 
     const reset = () => {
         setPlate('');
@@ -48,8 +54,13 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const cleanPlate = plate.trim().toUpperCase();
-        if (!cleanPlate) { setErrMsg('Please enter a licence plate.'); return; }
+        const validation = validateLicensePlate(plate);
+        if (!validation.valid) {
+            setErrMsg(validation.message);
+            return;
+        }
+
+        const cleanPlate = validation.cleaned;
         if (!type) { setErrMsg('Please select a vehicle type.'); return; }
         if (!zone) { setErrMsg('Please select a parking zone.'); return; }
 
@@ -236,19 +247,36 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
 
                         {/* Plate number */}
                         <div>
-                            <label style={{
-                                display: 'block',
-                                fontSize: '10px', fontWeight: 800,
-                                textTransform: 'uppercase', letterSpacing: '2px',
-                                color: '#475569', marginBottom: '8px', marginLeft: '4px',
-                            }}>
-                                License Plate Number
-                            </label>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', marginLeft: '4px' }}>
+                                <label style={{
+                                    fontSize: '10px', fontWeight: 800,
+                                    textTransform: 'uppercase', letterSpacing: '2px',
+                                    color: '#475569',
+                                }}>
+                                    License Plate Number
+                                </label>
+                                {plateValidation && (
+                                    <span style={{
+                                        fontSize: '11px',
+                                        fontWeight: 600,
+                                        color: plateValidation.valid ? '#10b981' : '#f59e0b',
+                                        display: 'flex', alignItems: 'center', gap: '4px'
+                                    }}>
+                                        <span className="material-symbols-outlined" style={{ fontSize: '13px' }}>
+                                            {plateValidation.valid ? 'check_circle' : 'info'}
+                                        </span>
+                                        {plateValidation.valid ? 'Standard Format Verified' : 'Incomplete / Invalid'}
+                                    </span>
+                                )}
+                            </div>
                             <input
                                 type="text"
-                                placeholder="e.g. TS15EL5671"
+                                placeholder="e.g. RJ14CV0002"
                                 value={plate}
-                                onChange={e => setPlate(e.target.value.toUpperCase())}
+                                onChange={e => {
+                                    setPlate(e.target.value.toUpperCase());
+                                    if (errMsg) setErrMsg('');
+                                }}
                                 maxLength={12}
                                 required
                                 disabled={status === 'loading'}
@@ -260,10 +288,18 @@ const ManualEntryModal = ({ isOpen, onClose }) => {
                                     fontFamily: "'Space Grotesk', monospace",
                                     color: '#f9d006',
                                     letterSpacing: '0.1em',
+                                    borderColor: plateValidation && !plateValidation.valid && plate.trim().length >= 4
+                                        ? 'rgba(239, 68, 68, 0.6)'
+                                        : plateValidation && plateValidation.valid
+                                        ? 'rgba(16, 185, 129, 0.6)'
+                                        : 'rgba(249,208,6,0.2)',
                                 }}
                                 onFocus={e => (e.target.style.borderColor = '#f9d006')}
-                                onBlur={e => (e.target.style.borderColor = 'rgba(249,208,6,0.2)')}
+                                onBlur={e => (e.target.style.borderColor = plateValidation && plateValidation.valid ? 'rgba(16, 185, 129, 0.4)' : 'rgba(249,208,6,0.2)')}
                             />
+                            <p style={{ fontSize: '11px', color: '#64748b', marginTop: '6px', marginLeft: '4px', lineHeight: 1.4 }}>
+                                Standard format: 2-letter State (RJ, GJ, TS...) + RTO (01-99) + Series + exactly 4 digits (e.g. RJ14CV0002, TS15EL5671, 22BH1234AA)
+                            </p>
                         </div>
 
                         {/* Type + Zone row */}

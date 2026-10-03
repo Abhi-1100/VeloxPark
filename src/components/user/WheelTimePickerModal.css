@@ -1,0 +1,378 @@
+/* ─── WheelTimePickerModal.css (Exact match to reference image) ──────────── */
+
+.wheel-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: wheelFadeIn 0.2s ease-out;
+  touch-action: none;
+  overscroll-behavior: contain;
+}
+
+@keyframes wheelFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.wheel-picker-sheet {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border-radius: 28px 28px 0 0;
+  padding: 14px 22px 28px;
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.16);
+  animation: wheelSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+
+@keyframes wheelSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Desktop float modal styling */
+@media (min-width: 640px) {
+  .wheel-picker-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .wheel-picker-sheet {
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    padding: 16px 26px 28px;
+  }
+}
+
+/* Top iOS pill drag handle */
+.wheel-picker-handle {
+  width: 44px;
+  height: 5px;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  margin: 0 auto 14px;
+}
+
+/* Header */
+.wheel-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.wheel-picker-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.wheel-picker-tag {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 5px;
+  width: fit-content;
+}
+
+.wheel-picker-tag.entry {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.wheel-picker-tag.exit {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.wheel-picker-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+/* AM / PM Segmented Control */
+.wheel-ampm-toggle {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.wheel-ampm-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 9px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  user-select: none;
+}
+
+.wheel-ampm-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Quick Presets Ribbon (Reference Image) */
+.wheel-presets-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 16px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.wheel-presets-row::-webkit-scrollbar {
+  display: none;
+}
+
+.wheel-preset-chip {
+  flex-shrink: 0;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 7px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  user-select: none;
+}
+
+.wheel-preset-chip:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.wheel-preset-chip.active {
+  background: #ffffff;
+  border-color: #fecb35;
+  color: #765b00;
+  box-shadow: 0 2px 8px rgba(254, 203, 53, 0.28);
+  font-weight: 700;
+}
+
+/* ─── Drum Roller Time Picker Container (Reference Image) ───────────────── */
+.wheel-drum-container {
+  position: relative;
+  background: #f3f4f6;
+  border-radius: 20px;
+  padding: 26px 16px;
+  margin-bottom: 22px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Left & Right Ruler Graduation Ticks */
+.wheel-ruler {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 110px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.wheel-ruler.left {
+  left: 14px;
+  align-items: flex-start;
+}
+
+.wheel-ruler.right {
+  right: 14px;
+  align-items: flex-end;
+}
+
+.wheel-ruler-tick {
+  border-radius: 1px;
+}
+
+.wheel-ruler-tick.small {
+  width: 7px;
+  height: 1.5px;
+  background: #cbd5e1;
+}
+
+.wheel-ruler-tick.medium {
+  width: 13px;
+  height: 1.5px;
+  background: #94a3b8;
+}
+
+.wheel-ruler-tick.major {
+  width: 22px;
+  height: 2px;
+  background: #64748b;
+}
+
+/* Active Center Horizontal Guidelines */
+.wheel-center-guide {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+}
+
+.wheel-center-guide.top {
+  top: calc(50% - 27px);
+}
+
+.wheel-center-guide.bottom {
+  bottom: calc(50% - 27px);
+}
+
+/* Wheel Columns */
+.wheel-drum-columns {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 240px;
+  z-index: 2;
+}
+
+.wheel-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 76px;
+  user-select: none;
+  cursor: ns-resize;
+}
+
+.wheel-cell {
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  transition: all 0.15s ease;
+}
+
+.wheel-cell.faded {
+  font-size: 26px;
+  font-weight: 500;
+  color: #94a3b8;
+  opacity: 0.45;
+  cursor: pointer;
+}
+
+.wheel-cell.faded:hover {
+  opacity: 0.8;
+  transform: scale(1.06);
+}
+
+.wheel-cell.active {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.wheel-colon {
+  font-family: 'Outfit', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  color: #94a3b8;
+  opacity: 0.5;
+  user-select: none;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+/* ─── Bottom Action Buttons (Cancel & Done) ─────────────────────────────── */
+.wheel-picker-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 12px;
+}
+
+.wheel-btn-cancel {
+  height: 50px;
+  border-radius: 14px;
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.wheel-btn-cancel:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #0f172a;
+}
+
+.wheel-btn-done {
+  height: 50px;
+  border-radius: 14px;
+  background: #fecb35;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15.5px;
+  font-weight: 800;
+  color: #010102;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(254, 203, 53, 0.4);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.wheel-btn-done:hover {
+  background: #f5be1c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(254, 203, 53, 0.5);
+}
+
+.wheel-btn-done:active {
+  transform: translateY(0);
+}

@@ -564,89 +564,291 @@
   margin-top: 2px;
 }
 
-/* ─── Standard VeloxPark Rates Card ───────────────────────────────────────── */
-.stitch-rates-card {
+/* ─── Add Vehicle Box Section (In place of Standard Rates) ───────────────── */
+.stitch-add-vehicle-card {
   background: #ffffff;
   border-radius: 24px;
-  padding: 20px;
+  padding: 22px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
-.stitch-rates-icon {
-  font-size: 20px;
-  color: #765b00;
+.stitch-add-vehicle-card:focus-within {
+  border-color: rgba(254, 203, 53, 0.6);
+  box-shadow: 0 10px 30px rgba(254, 203, 53, 0.12), 0 8px 24px rgba(0, 0, 0, 0.04);
 }
 
-.stitch-live-pricing-tag {
-  font-size: 12px;
-  color: #46464a;
+.stitch-add-veh-header-icon {
+  font-size: 22px;
+  color: #010102;
 }
 
-.stitch-rates-grid {
+.stitch-anpr-ready-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(74, 225, 118, 0.18);
+  color: #005321;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.02em;
+}
+
+/* Vehicle Type Selector Pills */
+.stitch-veh-type-pills {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;
 }
 
-.stitch-rate-box {
-  background: #f2f4f8;
-  border-radius: 16px;
-  padding: 12px 6px;
+.stitch-veh-type-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
-}
-
-.stitch-rate-box span.material-symbols-outlined {
-  font-size: 20px;
+  justify-content: center;
+  gap: 4px;
+  background: #f2f4f8;
   color: #46464a;
-  margin-bottom: 4px;
-}
-
-.stitch-rate-box span.text-secondary {
-  color: #765b00;
-}
-
-.stitch-rate-type {
-  font-size: 11px;
-  color: #46464a;
-}
-
-.stitch-rate-cost {
-  font-family: 'Outfit', sans-serif;
-  font-size: 15px;
-  font-weight: 700;
-  color: #010102;
-  margin-top: 2px;
-}
-
-.stitch-rate-cost small {
-  font-size: 10px;
-  font-weight: normal;
-  color: #46464a;
-}
-
-.stitch-promo-highlight {
-  background: rgba(74, 225, 118, 0.2);
+  border: 1.5px solid transparent;
   border-radius: 14px;
-  padding: 10px 14px;
+  padding: 10px 4px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.stitch-veh-type-btn span.material-symbols-outlined {
+  font-size: 20px;
+  transition: transform 0.18s ease;
+}
+
+.stitch-veh-type-btn:hover:not(.active) {
+  background: #e6e8ec;
+  color: #010102;
+  transform: translateY(-1px);
+}
+
+.stitch-veh-type-btn.active {
+  background: #010102;
+  color: #ffffff;
+  border-color: #010102;
+  box-shadow: 0 4px 12px rgba(1, 1, 2, 0.2);
+}
+
+.stitch-veh-type-btn.active span.material-symbols-outlined {
+  color: #fecb35;
+  transform: scale(1.08);
+}
+
+/* Inline Add Form */
+.stitch-inline-add-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.stitch-form-field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stitch-field-label {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #5c5f65;
+  text-transform: uppercase;
+}
+
+/* Realistic Indian HSRP Plate Input Group */
+.stitch-inline-hsrp-input-group {
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
+  border: 2px solid #d8dade;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 48px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stitch-inline-hsrp-input-group:focus-within {
+  border-color: #010102;
+  box-shadow: 0 0 0 3px rgba(254, 203, 53, 0.35);
+}
+
+.stitch-inline-hsrp-badge {
+  width: 36px;
+  background: #003399;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 0;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.stitch-inline-hsrp-badge span {
+  font-family: 'Outfit', sans-serif;
+  font-size: 8.5px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.stitch-inline-hsrp-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 0 12px;
+  font-family: 'Outfit', monospace;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #010102;
+  text-transform: uppercase;
+}
+
+.stitch-inline-hsrp-input::placeholder {
+  color: #a4a7ae;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.stitch-inline-clear-btn {
+  border: none;
+  background: transparent;
+  padding: 0 10px;
+  color: #76767a;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  transition: color 0.15s;
 }
 
-.stitch-promo-emoji {
+.stitch-inline-clear-btn:hover {
+  color: #010102;
+}
+
+.stitch-inline-clear-btn span {
   font-size: 18px;
 }
 
-.stitch-promo-text {
+/* Optional Model / Nickname Input */
+.stitch-inline-model-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f2f4f8;
+  border-radius: 12px;
+  padding: 0 14px;
+  height: 44px;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.stitch-inline-model-input-group:focus-within {
+  background: #ffffff;
+  border-color: #d8dade;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.stitch-model-input-icon {
+  font-size: 20px;
+  color: #5c5f65;
+  flex-shrink: 0;
+}
+
+.stitch-inline-model-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13.5px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #010102;
+}
+
+.stitch-inline-model-input::placeholder {
+  color: #76767a;
+}
+
+/* Submit CTA Button */
+.stitch-inline-submit-btn {
+  height: 46px;
+  border-radius: 12px;
+  background: #fecb35;
+  color: #010102;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(254, 203, 53, 0.35);
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  user-select: none;
+}
+
+.stitch-inline-submit-btn:hover:not(:disabled) {
+  background: #f5be1c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(254, 203, 53, 0.45);
+}
+
+.stitch-inline-submit-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.stitch-inline-submit-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.stitch-inline-submit-btn span.material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* Info Banner */
+.stitch-add-veh-info-banner {
+  background: #f2f4f8;
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stitch-info-icon {
+  font-size: 20px;
+  color: #009944;
+  flex-shrink: 0;
+}
+
+.stitch-info-text {
   font-size: 12px;
-  font-weight: 600;
-  color: #005321;
+  line-height: 1.4;
+  color: #46464a;
 }
 
 /* ─── iOS Grouped Settings List ───────────────────────────────────────────── */
@@ -1049,9 +1251,10 @@
     min-height: 180px;
   }
 
-  /* Rates grid on desktop */
-  .stitch-rates-grid {
-    grid-template-columns: repeat(4, 1fr);
+  /* Add vehicle card on desktop */
+  .stitch-add-vehicle-card {
+    border-radius: 28px;
+    padding: 24px;
   }
 
   /* Settings group card styling on desktop */

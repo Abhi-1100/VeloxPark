@@ -294,6 +294,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  user-select: none;
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cal-pin-anchor.active-p-pin {
+  z-index: 60 !important;
+}
+
+.cal-pin-anchor.dark-price-pin {
+  z-index: 10 !important;
 }
 
 /* Inactive Dark Price Pin */

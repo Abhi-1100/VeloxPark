@@ -1,0 +1,784 @@
+/* ─── ParkingPassReceipt.css (Modern Ticket & Pass Voucher) ──────────────── */
+
+.pay-success-container {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 0 28px;
+}
+
+/* ─── Rosette Success Icon (Reference Image 2) ───────────────────────────── */
+.pay-rosette-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.pay-rosette-outer {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.22);
+  animation: payRosettePop 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pay-rosette-inner {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+@keyframes payRosettePop {
+  0% {
+    transform: scale(0.65);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pay-success-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.pay-success-sub {
+  font-size: 13.5px;
+  color: #4b5563;
+  max-width: 360px;
+  line-height: 1.45;
+  margin: 0 0 22px;
+}
+
+/* ─── Ticket Voucher Card (Reference Images 2 & 3) ────────────────────────── */
+.pay-ticket-voucher {
+  position: relative;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 22px 20px;
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.06);
+  border: 1px solid #edf2f7;
+  text-align: left;
+  overflow: hidden;
+}
+
+/* Top bar of ticket */
+.pay-ticket-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.pay-ticket-station-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+
+.pay-badge-car-icon {
+  font-size: 18px;
+  color: #0f172a;
+}
+
+.pay-ticket-code {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.04em;
+}
+
+.pay-ticket-date-tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4b5563;
+  letter-spacing: 0.03em;
+}
+
+/* Parking Station & Location Block */
+.pay-ticket-station-block {
+  margin-bottom: 16px;
+}
+
+.pay-station-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pay-micro-tag {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: #6b7280;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.pay-station-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 19px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pay-status-confirmed-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #065f46;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
+
+.pay-pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.35);
+  animation: payPulse 1.8s infinite;
+}
+
+@keyframes payPulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 5px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.pay-station-loc-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 6px;
+  color: #4b5563;
+}
+
+.pay-loc-pin {
+  font-size: 17px;
+  color: #ea580c;
+  flex-shrink: 0;
+}
+
+.pay-station-loc-text {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ─── Timeline Box: Entry ── [Duration] ── Exit (Reference Image 3) ───────── */
+.pay-ticket-timeline-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 16px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.pay-timeline-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.pay-timeline-entry {
+  text-align: left;
+}
+
+.pay-timeline-exit {
+  text-align: right;
+}
+
+.pay-timeline-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pay-time-big-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  margin: 3px 0 2px;
+}
+
+.pay-timeline-exit .pay-time-big-wrap {
+  justify-content: flex-end;
+}
+
+.pay-time-big {
+  font-family: 'Outfit', sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.pay-time-ampm {
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.pay-timeline-sub {
+  font-size: 11px;
+  font-weight: 600;
+  color: #059669;
+}
+
+.pay-timeline-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.pay-timeline-track {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pay-timeline-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #64748b;
+  flex-shrink: 0;
+}
+
+.pay-timeline-dashed-line {
+  flex: 1;
+  height: 0;
+  border-top: 1.5px dashed #cbd5e1;
+}
+
+.pay-timeline-duration-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+  margin: 0 3px;
+}
+
+.pay-timeline-duration-pill span.material-symbols-outlined {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.pay-timeline-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.pay-dot-green {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+/* ─── Ticket Perforated Divider with Cutout Notches (Reference Image 2) ─── */
+.pay-ticket-perforation-wrap {
+  position: relative;
+  height: 28px;
+  margin: 12px -20px;
+  display: flex;
+  align-items: center;
+}
+
+.pay-ticket-notch {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #f4f6fa;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  z-index: 2;
+}
+
+.pay-ticket-notch.left {
+  left: -12px;
+}
+
+.pay-ticket-notch.right {
+  right: -12px;
+}
+
+.pay-ticket-perforation-line {
+  width: 100%;
+  border-top: 2px dashed #cbd5e1;
+}
+
+/* ─── Details Grid ────────────────────────────────────────────────────────── */
+.pay-ticket-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pay-detail-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pay-detail-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pay-detail-val {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.pay-detail-val.font-mono {
+  font-family: 'Outfit', monospace;
+  letter-spacing: 0.06em;
+}
+
+/* Realistic Mini HSRP License Plate */
+.pay-mini-hsrp-plate {
+  display: inline-flex;
+  align-items: stretch;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  height: 24px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  align-self: flex-end;
+}
+
+.pay-mini-hsrp-ind {
+  background: #003399;
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 7.5px;
+  font-weight: 900;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.04em;
+}
+
+.pay-mini-hsrp-num {
+  font-family: 'Outfit', monospace;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.08em;
+  padding: 0 7px;
+  display: flex;
+  align-items: center;
+}
+
+/* Total Amount Paid Highlight Row */
+.pay-amount-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pay-amount-lbl {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pay-amount-tax-hint {
+  display: block;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+.pay-amount-price-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.pay-currency-sym {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.pay-amount-price {
+  font-family: 'Outfit', sans-serif;
+  font-size: 26px;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Payment Method Box (Reference Image 2) ──────────────────────────────── */
+.pay-method-receipt-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 14px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pay-method-receipt-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pay-method-lbl {
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.pay-method-verified-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #059669;
+}
+
+.pay-method-verified-tag span {
+  font-size: 14px;
+}
+
+.pay-method-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pay-method-badge-icon {
+  flex-shrink: 0;
+}
+
+.pay-method-badge-text {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.pay-pill-card {
+  background: #1e3a8a;
+  color: #ffffff;
+}
+
+.pay-pill-upi {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+.pay-pill-wallet {
+  background: #d97706;
+  color: #ffffff;
+}
+
+.pay-pill-fastag {
+  background: #7c3aed;
+  color: #ffffff;
+}
+
+.pay-method-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pay-method-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.pay-method-sub {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 1px;
+}
+
+/* ─── Barrier Access & QR Code Box (Reference Images 1 & 3) ──────────────── */
+.pay-barrier-access-block {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pay-barrier-info-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pay-barrier-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(254, 203, 53, 0.2);
+  color: #78350f;
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  align-self: flex-start;
+}
+
+.pay-barrier-pill span.material-symbols-outlined {
+  font-size: 14px;
+}
+
+.pay-barrier-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 2px 0 0;
+}
+
+.pay-barrier-desc {
+  font-size: 11.5px;
+  color: #4b5563;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.pay-qr-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.pay-qr-card {
+  padding: 8px;
+  background: #ffffff;
+  border: 1.5px solid #0f172a;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.pay-qr-caption {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4b5563;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/* ─── Bottom Actions ──────────────────────────────────────────────────────── */
+.pay-success-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pay-btn-primary {
+  width: 100%;
+  height: 52px;
+  border-radius: 16px;
+  background: #fecb35;
+  color: #010102;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 18px rgba(254, 203, 53, 0.4);
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.pay-btn-primary:hover {
+  background: #f5be1c;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(254, 203, 53, 0.5);
+}
+
+.pay-btn-primary:active {
+  transform: translateY(0);
+}
+
+.pay-btn-secondary {
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #0f172a;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px solid #e2e8f0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.pay-btn-secondary:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.pay-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.pay-btn-map {
+  background: #f8fafc;
+}
+
+/* ─── Responsive Adjustments ─────────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .pay-ticket-voucher {
+    padding: 18px 16px;
+    border-radius: 24px;
+  }
+
+  .pay-ticket-perforation-wrap {
+    margin: 12px -16px;
+  }
+
+  .pay-barrier-access-block {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .pay-barrier-pill {
+    align-self: center;
+  }
+
+  .pay-station-header-row {
+    flex-direction: column;
+  }
+
+  .pay-time-big {
+    font-size: 18px;
+  }
+
+  .pay-timeline-duration-pill {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+}

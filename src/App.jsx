@@ -5,6 +5,7 @@ import { useAuth } from './context/useAuth';
 import ProtectedRoute from './routes/ProtectedRoute';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingScreen from './components/LoadingScreen';
+import UnserviceableAreaView from './components/user/UnserviceableAreaView';
 import Login from './pages/Login';
 import Home from './pages/Home';
 
@@ -31,8 +32,6 @@ import NotFound from './pages/NotFound';
 import './App.css';
 
 import UserParkingInfo from './pages/user/UserParkingInfo';
-import UserPaymentPage from './pages/user/UserPaymentPage';
-import UserPaymentSuccess from './pages/user/UserPaymentSuccess';
 
 function UserRoute({ children }) {
   return <ProtectedRoute role="user">{children}</ProtectedRoute>;
@@ -65,12 +64,14 @@ function App() {
             <Routes>
               {/* Public & Root Routes */}
               <Route path="/login" element={<Login />} />
+              <Route path="/loading" element={<LoadingScreen />} />
+              <Route path="/unserviceable" element={<UnserviceableAreaView />} />
               <Route path="/" element={<RootRoute />} />
 
               {/* User Side Responsive Pages */}
               <Route path="/user" element={<UserLayout><UserParkingInfo /></UserLayout>} />
-              <Route path="/user/payment" element={<UserPaymentPage />} />
-              <Route path="/user/payment/success" element={<UserPaymentSuccess />} />
+              <Route path="/user/payment" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/user/payment/success" element={<Navigate to="/dashboard" replace />} />
 
               {/* User Pages */}
               <Route element={<UserRoute><UserLayout /></UserRoute>}>

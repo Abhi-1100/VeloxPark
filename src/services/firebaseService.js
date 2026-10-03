@@ -34,6 +34,7 @@ import { signOut } from 'firebase/auth';
 import { auth, database } from '../config/firebase';
 import { processParkingData } from '../utils/parkingUtils';
 import { getRateForVehicleType } from './settingsService';
+import { validateLicensePlate } from '../utils/validation';
 
 /**
  * Normalises a raw Firebase entry from EITHER schema into a flat object.
@@ -48,9 +49,18 @@ import { getRateForVehicleType } from './settingsService';
  */
 const normaliseEntry = (key, entry) => {
     // Support both schema field names for the plate number
-    const plateVal =
+    const rawPlate =
         entry.plate || entry.number_plate || entry.numberPlate || '';
-    if (!plateVal || plateVal === 'NULL') return null;
+    if (!rawPlate || rawPlate === 'NULL') return null;
+
+    // Validate standard number plate format — ignore incomplete/invalid plates from dashboard
+    const validation = validateLicensePlate(rawPlate);
+    if (!validation.valid) {
+        console.warn(`[firebaseService] Filtered invalid/incomplete plate "${rawPlate}" (${key}): ${validation.message}`);
+        return null;
+    }
+
+    const plateVal = validation.cleaned;
 
     // Entry time — PRD uses `inTime` (ISO), legacy uses `date_time`
     const inTime =
@@ -245,6 +255,13 @@ export const pushManualEntry = async (plate, type, zone) => {
     try {
         if (!database) throw new Error('Firebase database is not initialized');
 
+        // Strictly enforce standard number plate format before adding to database
+        const plateCheck = validateLicensePlate(plate);
+        if (!plateCheck.valid) {
+            throw new Error(plateCheck.message || 'Invalid number plate format');
+        }
+
+        const cleanPlateStr = plateCheck.cleaned;
         const parkingLogsRef = ref(database, 'parkingLogs');
         const vehicleType    = type || 'Car';
 
@@ -258,7 +275,7 @@ export const pushManualEntry = async (plate, type, zone) => {
         }
 
         const payload = {
-            plate:       plate.toUpperCase().trim(),
+            plate:       cleanPlateStr,
             inTime:      new Date().toISOString(),  // ISO — reliable parseToDate target
             outTime:     null,
             duration:    null,

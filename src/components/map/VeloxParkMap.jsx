@@ -4,6 +4,9 @@ import * as maplibregl from 'maplibre-gl';
 import { getParkingStations } from '../../data/parkingStations';
 import { useUserLocation } from '../../hooks/useUserLocation';
 import { geocodeAddress } from '../../services/geoapifyService';
+import { checkLocationServiceability, SERVICEABLE_CITIES, getEnterpriseStationsForCity } from '../../data/serviceableCities';
+import { calculateRealisticDrivingTime } from '../../utils/travelTimeUtils';
+import UnserviceableAreaView from '../user/UnserviceableAreaView';
 import parkingSlotThumb from '../../assets/parking-slot.jpg';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './VeloxParkMap.css';
@@ -45,26 +48,31 @@ const LIGHT_MAP_STYLE = {
 
 const KNOWN_LOCATIONS = {
   anand: { lat: 22.5645, lng: 72.9289, name: 'Anand Smart Parking', address: 'Vallabh Vidyanagar, Anand', street: 'Station Rd' },
-  vidyanagar: { lat: 22.5539, lng: 72.9242, name: 'Anand Smart Parking', address: 'Vallabh Vidyanagar, Anand', street: 'Station Rd' },
-  vallabh: { lat: 22.5539, lng: 72.9242, name: 'Anand Smart Parking', address: 'Vallabh Vidyanagar, Anand', street: 'Station Rd' },
-  changa: { lat: 22.5996, lng: 72.8205, name: 'Charusat Campus Parking', address: 'Charusat Highway Rd, Changa, Anand', street: 'Campus Gate' },
-  charusat: { lat: 22.5996, lng: 72.8205, name: 'Charusat Campus Parking', address: 'Charusat Highway Rd, Changa, Anand', street: 'Campus Gate' },
-  ahmedabad: { lat: 23.0225, lng: 72.5714, name: 'Ahmedabad Riverfront Parking', address: 'Sabarmati Riverfront, Ahmedabad, Gujarat', street: 'Riverfront' },
-  vadodara: { lat: 22.3072, lng: 73.1812, name: 'Sayaji Baug Parking Hub', address: 'Sayaji Baug, Vadodara, Gujarat', street: 'Sayaji Rd' },
-  surat: { lat: 21.1702, lng: 72.8311, name: 'Surat Ring Road Parking', address: 'Ring Road, Surat, Gujarat', street: 'Ring Rd' },
-  rajkot: { lat: 22.3039, lng: 70.8022, name: 'Rajkot Central Lot', address: 'Dr Yagnik Rd, Rajkot, Gujarat', street: 'Yagnik Rd' },
-  gandhinagar: { lat: 23.2156, lng: 72.6369, name: 'Gandhinagar Sector 11 Lot', address: 'Sector 11, Gandhinagar, Gujarat', street: 'Sector 11' },
+  vidyanagar: { lat: 22.5539, lng: 72.9242, name: 'Central Campus Lot A', address: 'Shastri Maidan Marg, VV Nagar, Anand', street: 'Shastri Maidan Marg' },
+  vallabh: { lat: 22.5539, lng: 72.9242, name: 'Central Campus Lot A', address: 'Shastri Maidan Marg, VV Nagar, Anand', street: 'Shastri Maidan Marg' },
+  nadiad: { lat: 22.6916, lng: 72.8634, name: 'Nadiad Junction Smart Bay', address: 'Station Rd, Nadiad, Gujarat', street: 'Station Rd' },
+  surat: { lat: 21.1702, lng: 72.8311, name: 'Surat Ring Road Parking Hub', address: 'Ring Road, Surat, Gujarat', street: 'Ring Rd' },
+  ahmedabad: { lat: 23.0225, lng: 72.5714, name: 'Sabarmati Riverfront Smart Bay', address: 'Sabarmati Riverfront, Ahmedabad, Gujarat', street: 'Riverfront' },
+  ahmadabad: { lat: 23.0225, lng: 72.5714, name: 'Sabarmati Riverfront Smart Bay', address: 'Sabarmati Riverfront, Ahmedabad, Gujarat', street: 'Riverfront' },
+  vadodara: { lat: 22.3072, lng: 73.1812, name: 'Sayaji Baug Central Deck', address: 'Sayaji Baug, Vadodara, Gujarat', street: 'Sayaji Rd' },
+  bangalore: { lat: 12.9716, lng: 77.5946, name: 'Koramangala 80ft Road Hub', address: '80 Feet Road, Koramangala, Bengaluru', street: '80 Feet Rd' },
+  bengaluru: { lat: 12.9716, lng: 77.5946, name: 'Koramangala 80ft Road Hub', address: '80 Feet Road, Koramangala, Bengaluru', street: '80 Feet Rd' },
+  benglor: { lat: 12.9716, lng: 77.5946, name: 'Koramangala 80ft Road Hub', address: '80 Feet Road, Koramangala, Bengaluru', street: '80 Feet Rd' },
+  mumbai: { lat: 19.0760, lng: 72.8777, name: 'BKC Corporate Plaza Bay', address: 'Bandra Kurla Complex, Mumbai', street: 'BKC Avenue' },
+  delhi: { lat: 28.6139, lng: 77.2090, name: 'Connaught Place Smart Underground', address: 'Connaught Place, New Delhi', street: 'Connaught Place' },
+  gurgaon: { lat: 28.4950, lng: 77.0890, name: 'Cyber City DLF Smart Deck', address: 'DLF Cyber City, Gurugram', street: 'Cyber City Rd' },
 };
 
 const POPULAR_SUGGESTIONS = [
-  { name: 'Vallabh Vidyanagar', address: 'Mota Bazaar, VV Nagar, Anand', lat: 22.5539, lng: 72.9242, street: 'Mota Bazaar' },
+  { name: 'Vallabh Vidyanagar', address: 'Shastri Maidan Marg, VV Nagar, Anand', lat: 22.5539, lng: 72.9242, street: 'Shastri Maidan Marg' },
   { name: 'Anand Railway Station', address: 'Station Rd, Anand, Gujarat', lat: 22.5645, lng: 72.9289, street: 'Station Rd' },
-  { name: 'Charusat Campus, Changa', address: 'Highway Rd, Changa, Anand', lat: 22.5996, lng: 72.8205, street: 'Campus Gate' },
-  { name: 'Amul Dairy Hub, Anand', address: 'Amul Dairy Rd, Anand', lat: 22.5610, lng: 72.9320, street: 'Dairy Rd' },
+  { name: 'Nadiad Junction', address: 'Station Rd, Nadiad, Gujarat', lat: 22.6916, lng: 72.8634, street: 'Station Rd' },
   { name: 'Sabarmati Riverfront', address: 'Riverfront Rd, Ahmedabad', lat: 23.0225, lng: 72.5714, street: 'Riverfront' },
-  { name: 'Sayaji Baug, Vadodara', address: 'Sayaji Rd, Vadodara', lat: 22.3072, lng: 73.1812, street: 'Sayaji Rd' },
   { name: 'Surat Ring Road', address: 'Ring Road, Surat, Gujarat', lat: 21.1702, lng: 72.8311, street: 'Ring Rd' },
-  { name: 'Gandhinagar Sector 11', address: 'Sector 11, Gandhinagar', lat: 23.2156, lng: 72.6369, street: 'Sector 11' },
+  { name: 'Koramangala, Bengaluru', address: '80ft Road, Bengaluru, Karnataka', lat: 12.9345, lng: 77.6265, street: '80 Feet Rd' },
+  { name: 'BKC, Mumbai', address: 'Bandra Kurla Complex, Mumbai', lat: 19.0657, lng: 72.8688, street: 'BKC Avenue' },
+  { name: 'Connaught Place, Delhi', address: 'CP Inner Circle, New Delhi', lat: 28.6327, lng: 77.2195, street: 'Connaught Place' },
+  { name: 'Sayaji Baug, Vadodara', address: 'Sayaji Rd, Vadodara', lat: 22.3072, lng: 73.1812, street: 'Sayaji Rd' },
 ];
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -81,15 +89,15 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-function generatePinsForLocation(centerLat, centerLng, centerName, centerAddress, centerStreet, sym = '₹') {
+function generateDynamicEnterpriseStations(centerLat, centerLng, centerName, centerAddress, centerStreet, sym = '₹') {
   const primary = {
     id: 'primary_center',
-    name: centerName,
+    name: centerName.toLowerCase().includes('parking') ? centerName : `${centerName} Smart Hub`,
     address: centerAddress,
     slots: 40,
-    rate: 6,
-    priceStr: `${sym}6.00/h`,
-    pinPrice: 'P',
+    rate: 40,
+    priceStr: `${sym}40.00/h`,
+    pinPrice: `${sym}40`,
     lng: centerLng,
     lat: centerLat,
     street: centerStreet,
@@ -97,11 +105,11 @@ function generatePinsForLocation(centerLat, centerLng, centerName, centerAddress
   };
 
   const offsets = [
-    { dLat: 0.0035, dLng: -0.0028, name: `${centerStreet} North Lot`, pinPrice: `${sym}3`, rate: 3, slots: 18, street: `${centerStreet} North` },
-    { dLat: 0.0048, dLng: 0.0032, name: `${centerStreet} East Bay`, pinPrice: `${sym}4`, rate: 4, slots: 12, street: `${centerStreet} East` },
-    { dLat: -0.0032, dLng: -0.0038, name: `${centerStreet} West Plaza`, pinPrice: `${sym}5`, rate: 5, slots: 8, street: `${centerStreet} West` },
-    { dLat: -0.0046, dLng: 0.0022, name: `${centerStreet} Central Hub`, pinPrice: `${sym}3`, rate: 3, slots: 30, street: centerStreet },
-    { dLat: 0.0018, dLng: 0.0052, name: `${centerStreet} Commercial Lot`, pinPrice: `${sym}2`, rate: 2, slots: 25, street: `${centerStreet} Outer` },
+    { dLat: 0.0035, dLng: -0.0028, name: `${centerStreet} North Lot`, pinPrice: `${sym}35`, rate: 35, slots: 24, street: `${centerStreet} North` },
+    { dLat: 0.0048, dLng: 0.0032, name: `${centerStreet} Commercial Deck`, pinPrice: `${sym}45`, rate: 45, slots: 32, street: `${centerStreet} Commercial` },
+    { dLat: -0.0032, dLng: -0.0038, name: `${centerStreet} West Plaza`, pinPrice: `${sym}30`, rate: 30, slots: 18, street: `${centerStreet} West` },
+    { dLat: -0.0046, dLng: 0.0022, name: `${centerStreet} Central Hub`, pinPrice: `${sym}40`, rate: 40, slots: 50, street: centerStreet },
+    { dLat: 0.0025, dLng: 0.0055, name: `${centerStreet} Express Bay`, pinPrice: `${sym}25`, rate: 25, slots: 22, street: `${centerStreet} Outer` },
   ];
 
   const nearby = offsets.map((o, idx) => ({
@@ -121,14 +129,17 @@ function generatePinsForLocation(centerLat, centerLng, centerName, centerAddress
   return [primary, ...nearby];
 }
 
-const DEFAULT_PINS = generatePinsForLocation(
-  ANAND_DEFAULT.lat,
-  ANAND_DEFAULT.lng,
-  ANAND_DEFAULT.name,
-  ANAND_DEFAULT.address,
-  ANAND_DEFAULT.street,
-  '₹'
-);
+export function resolveCityEnterpriseStations(queryOrCity, lat = null, lng = null, sym = '₹') {
+  const check = checkLocationServiceability(typeof queryOrCity === 'string' ? queryOrCity : '', lat, lng);
+  if (check.city) {
+    return getEnterpriseStationsForCity(check.city, lat, lng, sym);
+  }
+  const qStr = typeof queryOrCity === 'string' ? queryOrCity : '';
+  const street = qStr ? qStr.split(',')[0].trim() : 'Station Rd';
+  const name = qStr.toLowerCase().includes('parking') ? qStr : `${street} Parking Hub`;
+  return generateDynamicEnterpriseStations(lat || 22.5645, lng || 72.9289, name, qStr || 'Station Rd', street, sym);
+}
+
 
 function resolveInitialLocation(routeState) {
   const query = (
@@ -220,18 +231,82 @@ export default function VeloxParkMap() {
 
   const initialResolved = useMemo(() => resolveInitialLocation(routeLocation.state), [routeLocation.state]);
   const initialPins = useMemo(() => {
-    return generatePinsForLocation(
+    // 1. If station passed in state
+    if (routeLocation.state?.station) {
+      const st = routeLocation.state.station;
+      const sLat = st.latitude || st.lat || routeLocation.state?.lat || initialResolved.lat;
+      const sLng = st.longitude || st.lng || routeLocation.state?.lon || initialResolved.lng;
+      const cityStations = resolveCityEnterpriseStations(
+        routeLocation.state?.city || targetQuery || st.address || 'anand',
+        sLat,
+        sLng,
+        currencySymbol
+      );
+
+      const existingIdx = cityStations.findIndex(
+        (cs) => cs.id === st.id || cs.name.toLowerCase() === (st.name || '').toLowerCase()
+      );
+
+      if (existingIdx >= 0) {
+        const matched = cityStations[existingIdx];
+        const rest = cityStations.filter((_, idx) => idx !== existingIdx);
+        return [matched, ...rest];
+      }
+
+      const formatted = {
+        id: st.id || 'selected_station',
+        name: st.name || 'Selected Parking',
+        address: st.address || 'Smart Parking Hub',
+        street: (st.address || st.name || 'Station Rd').split(',')[0],
+        lat: sLat,
+        lng: sLng,
+        slots: st.availableSlots || st.slots || 30,
+        totalSlots: st.totalSlots || 50,
+        rate: st.pricePerHour || st.rate || 35,
+        priceStr: `${currencySymbol}${st.pricePerHour || st.rate || 35}.00/h`,
+        pinPrice: `${currencySymbol}${st.pricePerHour || st.rate || 35}`,
+        tag: st.tag || 'ANPR',
+        feature: st.feature || 'Fast Gate',
+        isPrimary: true,
+      };
+
+      return [formatted, ...cityStations.slice(0, 5)];
+    }
+
+    return resolveCityEnterpriseStations(
+      targetQuery || routeLocation.state?.city || 'anand',
       initialResolved.lat,
       initialResolved.lng,
-      initialResolved.name,
-      initialResolved.address,
-      initialResolved.street,
       currencySymbol
     );
-  }, [initialResolved, currencySymbol]);
+  }, [routeLocation.state, targetQuery, initialResolved, currencySymbol]);
+
+  const serviceCheck = useMemo(() => {
+    if (routeLocation.state?.isServiceable === false) {
+      return {
+        isServiceable: false,
+        formattedLocation: targetQuery || routeLocation.state?.address || routeLocation.state?.location || 'Changa, Gujarat, 388421, India',
+      };
+    }
+    const query = targetQuery || routeLocation.state?.address || routeLocation.state?.location || '';
+    const lat = routeLocation.state?.lat ?? initialResolved.lat;
+    const lng = routeLocation.state?.lon ?? routeLocation.state?.lng ?? initialResolved.lng;
+    return checkLocationServiceability(query, lat, lng);
+  }, [targetQuery, routeLocation.state, initialResolved]);
+
+  const [activeServiceCheck, setActiveServiceCheck] = useState(serviceCheck);
+
+  useEffect(() => {
+    setActiveServiceCheck(serviceCheck);
+  }, [serviceCheck]);
 
   const [stations, setStations] = useState(initialPins);
   const [selectedStation, setSelectedStation] = useState(initialPins[0]);
+
+  useEffect(() => {
+    setStations(initialPins);
+    setSelectedStation(initialPins[0]);
+  }, [initialPins]);
   const [isPopupOpen, setIsPopupOpen] = useState(Boolean(routeLocation.state?.openPopup));
   const [durationHours, setDurationHours] = useState(routeLocation.state?.durationHours || 2);
   const [entryTime, setEntryTime] = useState(routeLocation.state?.entryTime || '10:00 AM');
@@ -300,19 +375,20 @@ export default function VeloxParkMap() {
     setIsSearchFocused(false);
     setSearchQuery(cleanText);
 
-    const lower = cleanText.toLowerCase();
+    // Validate location serviceability
+    const check = checkLocationServiceability(cleanText);
+    if (!check.isServiceable) {
+      setActiveServiceCheck(check);
+      return;
+    }
+    setActiveServiceCheck(check);
 
-    // 1. Check known locations dictionary
-    const matchedKey = Object.keys(KNOWN_LOCATIONS).find((key) => lower.includes(key));
-    if (matchedKey) {
-      const known = KNOWN_LOCATIONS[matchedKey];
-      const street = known.street;
-      const name = lower.includes('parking') ? cleanText : known.name;
-      const address = cleanText.length > 5 ? cleanText : known.address;
-      const generated = generatePinsForLocation(known.lat, known.lng, name, address, street, currencySymbol);
-      setStations(generated);
-      setSelectedStation(generated[0]);
-      flyToCoords(known.lng, known.lat);
+    // 1. If matched city from check
+    if (check.city) {
+      const newStations = resolveCityEnterpriseStations(check.city, check.city.center.lat, check.city.center.lng, currencySymbol);
+      setStations(newStations);
+      setSelectedStation(newStations[0]);
+      flyToCoords(newStations[0].lng, newStations[0].lat);
       return;
     }
 
@@ -320,21 +396,22 @@ export default function VeloxParkMap() {
     geocodeAddress(cleanText)
       .then((geo) => {
         if (!geo) return;
-        const street = geo.street || geo.city || cleanText.split(',')[0].trim() || 'Station Rd';
-        const name = cleanText.toLowerCase().includes('parking')
-          ? cleanText
-          : (lower.includes('anand') || lower.includes('vidyanagar') ? 'Anand Smart Parking' : `${street} Parking`);
-        const generated = generatePinsForLocation(geo.lat, geo.lon, name, geo.formatted || cleanText, street, currencySymbol);
-        setStations(generated);
-        setSelectedStation(generated[0]);
+        const subCheck = checkLocationServiceability(cleanText, geo.lat, geo.lon);
+        if (!subCheck.isServiceable) {
+          setActiveServiceCheck(subCheck);
+          return;
+        }
+        setActiveServiceCheck(subCheck);
+        const newStations = resolveCityEnterpriseStations(subCheck.city || cleanText, geo.lat, geo.lon, currencySymbol);
+        setStations(newStations);
+        setSelectedStation(newStations[0]);
         flyToCoords(geo.lon, geo.lat);
       })
       .catch(() => {
-        const fallback = KNOWN_LOCATIONS.anand;
-        const generated = generatePinsForLocation(fallback.lat, fallback.lng, cleanText, cleanText, fallback.street, currencySymbol);
-        setStations(generated);
-        setSelectedStation(generated[0]);
-        flyToCoords(fallback.lng, fallback.lat);
+        const fallback = resolveCityEnterpriseStations('anand', 22.5645, 72.9289, currencySymbol);
+        setStations(fallback);
+        setSelectedStation(fallback[0]);
+        flyToCoords(fallback[0].lng, fallback[0].lat);
       });
   };
 
@@ -343,127 +420,18 @@ export default function VeloxParkMap() {
     setShowSuggestions(false);
     setIsSearchFocused(false);
 
-    const name = item.name.toLowerCase().includes('parking') ? item.name : `${item.name} Smart Parking`;
-    const street = item.street || item.name;
-    const generated = generatePinsForLocation(item.lat, item.lng, name, item.address, street, currencySymbol);
-    setStations(generated);
-    setSelectedStation(generated[0]);
+    const check = checkLocationServiceability(item.name, item.lat, item.lng);
+    if (!check.isServiceable) {
+      setActiveServiceCheck(check);
+      return;
+    }
+    setActiveServiceCheck(check);
+
+    const newStations = resolveCityEnterpriseStations(check.city || item.name, item.lat, item.lng, currencySymbol);
+    setStations(newStations);
+    setSelectedStation(newStations[0]);
     flyToCoords(item.lng, item.lat);
   };
-
-  // Handle station passed directly in state
-  useEffect(() => {
-    if (routeLocation.state?.station) {
-      const st = routeLocation.state.station;
-      const lat = st.latitude || st.lat || (routeLocation.state?.lat ?? initialResolved.lat);
-      const lng = st.longitude || st.lng || (routeLocation.state?.lon ?? initialResolved.lng);
-      const customStation = {
-        id: st.id || 'passed_station',
-        name: st.name || 'Selected Parking',
-        address: st.address || 'Smart Parking Hub',
-        slots: st.availableSlots || st.slots || 40,
-        rate: st.pricePerHour || st.rate || 6,
-        priceStr: `${currencySymbol}${st.pricePerHour || st.rate || 6}.00/h`,
-        pinPrice: 'P',
-        lng,
-        lat,
-        street: st.address ? st.address.split(',')[0] : 'Station Rd',
-        isPrimary: true,
-      };
-      setSelectedStation(customStation);
-      setIsPopupOpen(true);
-      if (Number.isFinite(lng) && Number.isFinite(lat)) {
-        flyToCoords(lng, lat);
-      }
-    }
-  }, [routeLocation.state?.station, currencySymbol, initialResolved, flyToCoords]);
-
-  // Resolve entered location and construct parking stations dynamically
-  useEffect(() => {
-    if (!targetQuery || routeLocation.state?.station) return;
-
-    setSearchQuery(targetQuery);
-    const lower = targetQuery.toLowerCase();
-
-    // 1. If explicit coordinates were passed from search geocoder
-    if (
-      Number.isFinite(routeLocation.state?.lat) &&
-      Number.isFinite(routeLocation.state?.lon)
-    ) {
-      const lat = routeLocation.state.lat;
-      const lng = routeLocation.state.lon;
-      const street = targetQuery.split(',')[0].trim() || 'Station Rd';
-      const name = targetQuery.toLowerCase().includes('parking')
-        ? targetQuery
-        : (lower.includes('anand') || lower.includes('vidyanagar') ? 'Anand Smart Parking' : `${street} Parking`);
-      const generated = generatePinsForLocation(lat, lng, name, targetQuery, street, currencySymbol);
-      setStations(generated);
-      setSelectedStation(generated[0]);
-      flyToCoords(lng, lat);
-      return;
-    }
-
-    // 2. Check offline known location dictionary (e.g. Anand, Changa, Vidyanagar, Ahmedabad, etc.)
-    const matchedKey = Object.keys(KNOWN_LOCATIONS).find((key) => lower.includes(key));
-    if (matchedKey) {
-      const known = KNOWN_LOCATIONS[matchedKey];
-      const street = known.street;
-      const name = targetQuery.toLowerCase().includes('parking') ? targetQuery : known.name;
-      const address = targetQuery.length > 5 ? targetQuery : known.address;
-      const generated = generatePinsForLocation(known.lat, known.lng, name, address, street, currencySymbol);
-      setStations(generated);
-      setSelectedStation(generated[0]);
-      flyToCoords(known.lng, known.lat);
-      return;
-    }
-
-    // 3. Geocode with Geoapify service
-    let isMounted = true;
-    geocodeAddress(targetQuery)
-      .then((geo) => {
-        if (!isMounted || !geo) return;
-        const street = geo.street || geo.city || targetQuery.split(',')[0].trim() || 'Station Rd';
-        const name = targetQuery.toLowerCase().includes('parking')
-          ? targetQuery
-          : (lower.includes('anand') || lower.includes('vidyanagar') ? 'Anand Smart Parking' : `${street} Parking`);
-        const generated = generatePinsForLocation(geo.lat, geo.lon, name, geo.formatted || targetQuery, street, currencySymbol);
-        setStations(generated);
-        setSelectedStation(generated[0]);
-        flyToCoords(geo.lon, geo.lat);
-      })
-      .catch(() => {});
-
-    return () => {
-      isMounted = false;
-    };
-  }, [targetQuery, routeLocation.state, currencySymbol, flyToCoords]);
-
-  // Load real stations if no custom query
-  useEffect(() => {
-    if (targetQuery) return;
-
-    getParkingStations()
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          const mapped = data.map((s, idx) => ({
-            id: s.id || `station_${idx}`,
-            name: s.name,
-            address: s.address || 'Station Rd, Anand',
-            slots: s.availableSlots || 40,
-            rate: s.pricePerHour || 30,
-            priceStr: `${currencySymbol}${s.pricePerHour || 30}.00/h`,
-            pinPrice: idx === 0 ? 'P' : `${currencySymbol}${Math.round(s.pricePerHour || 30)}`,
-            lng: s.longitude || 72.9289,
-            lat: s.latitude || 22.5645,
-            street: s.address ? s.address.split(',')[0] : 'Station Rd',
-            isPrimary: idx === 0,
-          }));
-          setStations(mapped);
-          setSelectedStation(mapped[0]);
-        }
-      })
-      .catch(() => {});
-  }, [targetQuery, currencySymbol]);
 
   // Initialize Map
   useEffect(() => {
@@ -497,7 +465,7 @@ export default function VeloxParkMap() {
     };
   }, [initialResolved]);
 
-  // Render Map Markers
+  // Render Map Markers (whichever location hook is selected turns into bright yellow P marker)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return undefined;
@@ -507,22 +475,32 @@ export default function VeloxParkMap() {
       markersRef.current = [];
 
       stations.forEach((st) => {
-        const isSelected = st.id === selectedStation?.id;
+        const isSelected = Boolean(
+          selectedStation && (
+            (st.id && selectedStation.id && String(st.id) === String(selectedStation.id)) ||
+            (st.name && selectedStation.name && st.name === selectedStation.name) ||
+            (Number.isFinite(st.lat) && Number.isFinite(selectedStation.lat) &&
+             Math.abs(st.lat - selectedStation.lat) < 0.0008 &&
+             Math.abs(st.lng - selectedStation.lng) < 0.0008)
+          )
+        );
+
         const el = document.createElement('div');
         el.className = `cal-pin-anchor ${isSelected ? 'active-p-pin' : 'dark-price-pin'}`;
+        el.style.cursor = 'pointer';
 
         if (isSelected) {
           el.innerHTML = `
-            <div class="cal-yellow-p-marker">
+            <div class="cal-yellow-p-marker big">
               <span class="cal-p-letter">P</span>
-              <div class="cal-p-tail"></div>
+              <div class="cal-p-tail big"></div>
             </div>
-            <span class="cal-pin-street-label">${st.street || 'Jackson St'}</span>
+            <span class="cal-pin-street-label">${st.street || st.name}</span>
           `;
         } else {
           el.innerHTML = `
             <div class="cal-black-price-bubble">
-              <span>${st.pinPrice || '$3'}</span>
+              <span>${st.pinPrice || `${currencySymbol}${st.rate}`}</span>
               <div class="cal-black-tail"></div>
             </div>
           `;
@@ -538,7 +516,7 @@ export default function VeloxParkMap() {
           });
         });
 
-        const marker = new maplibregl.Marker({ element: el })
+        const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
           .setLngLat([st.lng, st.lat])
           .addTo(map);
 
@@ -546,11 +524,17 @@ export default function VeloxParkMap() {
       });
     };
 
-    if (map.loaded()) renderMarkers();
-    else map.once('load', renderMarkers);
+    if (map.isStyleLoaded() || map.loaded()) {
+      renderMarkers();
+    } else {
+      map.once('load', renderMarkers);
+    }
 
-    return () => map.off('load', renderMarkers);
-  }, [stations, selectedStation]);
+    return () => {
+      // Clean up previous markers if needed
+    };
+  }, [stations, selectedStation, currencySymbol]);
+
 
   // Mini Map inside Popup Sheet: renders live route from Current Location to Selected Station
   useEffect(() => {
@@ -572,14 +556,14 @@ export default function VeloxParkMap() {
         miniMapRef.current = null;
       }
 
-      // Determine origin: user's location if available and reasonably close, else realistic local origin
+      // Determine origin: use user's GPS location if available or passed state, otherwise fallback to local relative origin
       let originLngLat = null;
       if (location?.longitude && location?.latitude) {
-        const dLat = Math.abs(location.latitude - selectedStation.lat);
-        const dLng = Math.abs(location.longitude - selectedStation.lng);
-        if (dLat < 0.25 && dLng < 0.25) {
-          originLngLat = [location.longitude, location.latitude];
-        }
+        originLngLat = [location.longitude, location.latitude];
+      } else if (routeLocation.state?.userOriginLng && routeLocation.state?.userOriginLat) {
+        originLngLat = [routeLocation.state.userOriginLng, routeLocation.state.userOriginLat];
+      } else if (routeLocation.state?.lat && routeLocation.state?.lon) {
+        originLngLat = [routeLocation.state.lon, routeLocation.state.lat];
       }
 
       if (!originLngLat) {
@@ -612,17 +596,19 @@ export default function VeloxParkMap() {
           const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${originLngLat[1]},${originLngLat[0]}&destination=${destLngLat[1]},${destLngLat[0]}&travelmode=driving`;
 
           if (route) {
-            const distKm = (route.distance / 1000).toFixed(1);
-            const durationMin = Math.max(1, Math.round(route.duration / 60));
+            const distKm = parseFloat((route.distance / 1000).toFixed(1));
+            const durationText = calculateRealisticDrivingTime(distKm, route.duration);
             setMiniRouteInfo({
-              distance: `${distKm} km`,
-              duration: `${durationMin} min`,
+              distance: `${distKm.toFixed(1)} km`,
+              duration: durationText,
               googleMapsUrl,
             });
           } else {
+            const distKm = parseFloat((getDistanceFromLatLonInKm(originLngLat[1], originLngLat[0], destLngLat[1], destLngLat[0]) * 1.3).toFixed(1));
+            const durationText = calculateRealisticDrivingTime(distKm);
             setMiniRouteInfo({
-              distance: '1.8 km',
-              duration: '5 min',
+              distance: `${distKm.toFixed(1)} km`,
+              duration: durationText,
               googleMapsUrl,
             });
           }
@@ -638,9 +624,11 @@ export default function VeloxParkMap() {
             destLngLat,
           ];
           const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${originLngLat[1]},${originLngLat[0]}&destination=${destLngLat[1]},${destLngLat[0]}&travelmode=driving`;
+          const distKm = parseFloat((getDistanceFromLatLonInKm(originLngLat[1], originLngLat[0], destLngLat[1], destLngLat[0]) * 1.3).toFixed(1));
+          const durationText = calculateRealisticDrivingTime(distKm);
           setMiniRouteInfo({
-            distance: '1.8 km',
-            duration: '5 min',
+            distance: `${distKm.toFixed(1)} km`,
+            duration: durationText,
             googleMapsUrl,
           });
           renderMiniMap(originLngLat, destLngLat, fallbackCoords);
@@ -876,6 +864,33 @@ export default function VeloxParkMap() {
       }
     } catch {}
   };
+
+  // If the location is outside our service area, render the UnserviceableAreaView (Matching Image 3)
+  if (!activeServiceCheck?.isServiceable) {
+    return (
+      <UnserviceableAreaView
+        locationName={activeServiceCheck?.formattedLocation || 'Changa, Gujarat, 388421, India'}
+        onSelectCity={(city) => {
+          setActiveServiceCheck({ isServiceable: true, city, formattedLocation: city.name });
+          const primaryStation = city.stations[0];
+          setSelectedStation(primaryStation);
+          const cityPins = generatePinsForLocation(
+            primaryStation.lat,
+            primaryStation.lng,
+            primaryStation.name,
+            primaryStation.address,
+            primaryStation.street,
+            currencySymbol
+          );
+          setStations(cityPins);
+          setSearchQuery(city.name);
+          setTimeout(() => {
+            flyToCoords(primaryStation.lng, primaryStation.lat);
+          }, 100);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="cal-map-screen-wrapper">

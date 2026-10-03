@@ -78,6 +78,42 @@ void sendDataToFirebase(String numberPlate, String dateTime, String imageBase64)
     http.end();
 }
 
+// Validate Standard Indian License Plate Format:
+// Must end with exactly 4 digits, start with 2 state letters or 2-digit BH series,
+// and have valid length (8-11 chars). Rejects incomplete plates like RJ14CV0 or missing numbers.
+bool isValidIndianPlate(String plate) {
+    String clean = "";
+    for (unsigned int i = 0; i < plate.length(); i++) {
+        char c = toupper(plate[i]);
+        if (isalnum(c)) clean += c;
+    }
+    int len = clean.length();
+    if (len < 8 || len > 11) return false;
+
+    // BH Series: YYBH####XX
+    if (len >= 9 && clean.substring(2, 4) == "BH") {
+        if (!isDigit(clean[0]) || !isDigit(clean[1])) return false;
+        for (int i = 4; i < 8; i++) {
+            if (!isDigit(clean[i])) return false;
+        }
+        for (int i = 8; i < len; i++) {
+            if (!isAlpha(clean[i])) return false;
+        }
+        return true;
+    }
+
+    // Standard State format: State(2 letters) + RTO(1-2 digits) + Series(0-3 letters) + Number(exactly 4 digits)
+    if (!isAlpha(clean[0]) || !isAlpha(clean[1])) return false;
+    if (!isDigit(clean[2])) return false;
+
+    // Must end with exactly 4 digits
+    for (int i = len - 4; i < len; i++) {
+        if (!isDigit(clean[i])) return false;
+    }
+
+    return true;
+}
+
 // Function to Detect Vehicle Number Plate
 void detectNumberPlate() {
 
@@ -164,8 +200,9 @@ void detectNumberPlate() {
     String plateNumber = doc["results"][0]["plate"].as<String>();
     plateNumber.toUpperCase();
 
-    if (plateNumber.length() < 3) {
-        Serial.println("[!] No valid plate detected");
+    // Enforce standard Indian license plate format (reject incomplete plates like RJ14CV0)
+    if (!isValidIndianPlate(plateNumber)) {
+        Serial.println("[!] Rejected invalid or incomplete plate: " + plateNumber);
         return;
     }
 

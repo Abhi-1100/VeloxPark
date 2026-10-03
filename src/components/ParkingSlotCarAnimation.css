@@ -1,0 +1,306 @@
+/* ── ParkingSlotCarAnimation.css ─────────────────────────────────────────── */
+
+.psca-container {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.psca-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.7));
+}
+
+/* ── Car Assembly & Motion ── */
+.psca-car-assembly {
+    transform-origin: 0px 0px;
+    animation: psca-park-maneuver 5.2s cubic-bezier(0.42, 0, 0.58, 1) infinite;
+    will-change: transform, opacity;
+}
+
+@keyframes psca-park-maneuver {
+    0% {
+        transform: translate(50px, 202px) rotate(0deg);
+        opacity: 0;
+    }
+    5% {
+        opacity: 1;
+    }
+    18% {
+        transform: translate(145px, 202px) rotate(0deg);
+    }
+    38% {
+        transform: translate(195px, 168px) rotate(-42deg);
+    }
+    58% {
+        transform: translate(230px, 116px) rotate(-90deg);
+    }
+    72% {
+        transform: translate(230px, 80px) rotate(-90deg);
+    }
+    88% {
+        transform: translate(230px, 80px) rotate(-90deg);
+        opacity: 1;
+    }
+    97% {
+        transform: translate(230px, 80px) rotate(-90deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(50px, 202px) rotate(0deg);
+        opacity: 0;
+    }
+}
+
+/* ── Headlight Beams ── */
+.psca-headlight-beams {
+    opacity: 0.7;
+    animation: psca-headlight-pulse 5.2s ease-in-out infinite;
+}
+
+@keyframes psca-headlight-pulse {
+    0%, 20% { opacity: 0.75; }
+    50% { opacity: 0.9; }
+    72%, 88% { opacity: 0.6; }
+    95%, 100% { opacity: 0; }
+}
+
+/* ── Brake Lights ── */
+.psca-brake-light {
+    fill: #8a1f1f;
+    transition: fill 0.2s ease;
+    animation: psca-brake-trigger 5.2s ease infinite;
+}
+
+.psca-brake-glow {
+    opacity: 0;
+    animation: psca-brake-glow-trigger 5.2s ease infinite;
+}
+
+@keyframes psca-brake-trigger {
+    0%, 65% {
+        fill: #991b1b;
+    }
+    68% {
+        fill: #ff2a2a;
+    }
+    72%, 88% {
+        fill: #ff2222;
+    }
+    92%, 100% {
+        fill: #991b1b;
+    }
+}
+
+@keyframes psca-brake-glow-trigger {
+    0%, 68% {
+        opacity: 0;
+    }
+    72%, 88% {
+        opacity: 0.85;
+    }
+    92%, 100% {
+        opacity: 0;
+    }
+}
+
+/* ── Left Turn Signal ── */
+.psca-turn-signal-left {
+    opacity: 0;
+    animation: psca-turn-signal 5.2s steps(1) infinite;
+}
+
+@keyframes psca-turn-signal {
+    0%, 15% { opacity: 0; }
+    18%, 22% { opacity: 1; }
+    23%, 26% { opacity: 0; }
+    27%, 30% { opacity: 1; }
+    31%, 34% { opacity: 0; }
+    35%, 38% { opacity: 1; }
+    39%, 42% { opacity: 0; }
+    43%, 46% { opacity: 1; }
+    47%, 100% { opacity: 0; }
+}
+
+/* ── Roof LiDAR Sensor Wave ── */
+.psca-lidar-ring {
+    transform-origin: 2px 0px;
+    animation: psca-lidar-wave 1.6s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+
+.psca-lidar-ring-delayed {
+    transform-origin: 2px 0px;
+    animation: psca-lidar-wave 1.6s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+    animation-delay: 0.8s;
+}
+
+@keyframes psca-lidar-wave {
+    0% {
+        r: 3px;
+        opacity: 0.9;
+        stroke-width: 1.5;
+    }
+    100% {
+        r: 26px;
+        opacity: 0;
+        stroke-width: 0.5;
+    }
+}
+
+/* ── Trajectory Guidance Laser Line ── */
+.psca-trajectory-path {
+    stroke-dasharray: 6 5;
+    animation: psca-dash-flow 1.2s linear infinite, psca-traj-opacity 5.2s ease infinite;
+}
+
+@keyframes psca-dash-flow {
+    0% { stroke-dashoffset: 22; }
+    100% { stroke-dashoffset: 0; }
+}
+
+@keyframes psca-traj-opacity {
+    0%, 10% { opacity: 0.3; }
+    20%, 65% { opacity: 0.9; }
+    75%, 90% { opacity: 0.2; }
+    95%, 100% { opacity: 0.3; }
+}
+
+/* ── Target Bay Brackets & Lock Glow ── */
+.psca-bay-brackets {
+    animation: psca-bay-lock 5.2s ease infinite;
+}
+
+@keyframes psca-bay-lock {
+    0%, 65% {
+        stroke: #f5c518;
+        filter: drop-shadow(0 0 2px rgba(245, 197, 24, 0.4));
+    }
+    72%, 88% {
+        stroke: #38bdf8;
+        filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8));
+    }
+    93%, 100% {
+        stroke: #f5c518;
+        filter: drop-shadow(0 0 2px rgba(245, 197, 24, 0.4));
+    }
+}
+
+/* ── Bay Status Dot ── */
+.psca-bay-status-dot {
+    animation: psca-dot-state 5.2s ease infinite;
+}
+
+@keyframes psca-dot-state {
+    0%, 65% {
+        fill: #f5c518;
+    }
+    72%, 88% {
+        fill: #38bdf8;
+    }
+    93%, 100% {
+        fill: #f5c518;
+    }
+}
+
+/* ── Bay Docking Reticle ── */
+.psca-dock-reticle {
+    transform-origin: 230px 80px;
+    animation: psca-reticle-spin 12s linear infinite, psca-reticle-pulse 5.2s ease infinite;
+}
+
+@keyframes psca-reticle-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes psca-reticle-pulse {
+    0%, 65% {
+        stroke: rgba(245, 197, 24, 0.3);
+    }
+    72%, 88% {
+        stroke: rgba(56, 189, 248, 0.7);
+    }
+    93%, 100% {
+        stroke: rgba(245, 197, 24, 0.3);
+    }
+}
+
+/* ── Live HUD Telemetry Bar ── */
+.psca-hud-bar {
+    margin-top: 14px;
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(26, 25, 20, 0.75);
+    border: 1px solid rgba(245, 197, 24, 0.18);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.psca-hud-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.psca-hud-label {
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    color: #9a9078;
+    text-transform: uppercase;
+}
+
+.psca-hud-value {
+    font-size: 11px;
+    font-weight: 600;
+    color: #f5c518;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.psca-hud-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #f5c518;
+    box-shadow: 0 0 6px #f5c518;
+    animation: psca-live-pulse 1.4s ease-in-out infinite;
+}
+
+.psca-hud-value.is-locked {
+    color: #38bdf8;
+}
+.psca-hud-value.is-locked .psca-hud-indicator {
+    background: #38bdf8;
+    box-shadow: 0 0 6px #38bdf8;
+}
+
+@keyframes psca-live-pulse {
+    0%, 100% { opacity: 0.4; transform: scale(0.85); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+@media (max-width: 480px) {
+    .psca-hud-bar {
+        padding: 6px 10px;
+    }
+    .psca-hud-label {
+        font-size: 7px;
+    }
+    .psca-hud-value {
+        font-size: 10px;
+    }
+}

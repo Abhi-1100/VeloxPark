@@ -19,14 +19,18 @@
  */
 
 import { formatDateTime, formatDuration } from '../../utils/parkingUtils';
+import { isValidPlate } from '../../utils/validation';
 
 const VehicleTable = ({
-    visibleData,
+    visibleData = [],
     loading,
     stats,
     dateFilter,
     onExportPDF,
-}) => (
+}) => {
+    const validRecords = (visibleData || []).filter(v => v && isValidPlate(v.plate));
+
+    return (
     <div className="pf-records-card">
         {/* Header row */}
         <div className="pf-records-header">
@@ -50,8 +54,8 @@ const VehicleTable = ({
                         )}
                     </h2>
                     <p className="pf-section-sub">
-                        {visibleData.length} record
-                        {visibleData.length !== 1 ? 's' : ''}&nbsp;·&nbsp;
+                        {validRecords.length} record
+                        {validRecords.length !== 1 ? 's' : ''}&nbsp;·&nbsp;
                         {stats.parked} parked&nbsp;·&nbsp;{stats.exited} exited
                     </p>
                 </div>
@@ -76,7 +80,7 @@ const VehicleTable = ({
                     </span>
                     <p>Loading parking data...</p>
                 </div>
-            ) : visibleData.length > 0 ? (
+            ) : validRecords.length > 0 ? (
                 <table className="pf-records-table">
                     <thead>
                         <tr>
@@ -89,7 +93,7 @@ const VehicleTable = ({
                         </tr>
                     </thead>
                     <tbody>
-                        {visibleData.map((vehicle, index) => (
+                        {validRecords.map((vehicle, index) => (
                             <tr key={index} className="pf-rec-row">
                                 <td>
                                     <span className="pf-rec-plate">
@@ -139,6 +143,7 @@ const VehicleTable = ({
             )}
         </div>
     </div>
-);
+    );
+};
 
 export default VehicleTable;

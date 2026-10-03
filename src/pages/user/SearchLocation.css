@@ -135,6 +135,23 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  box-sizing: border-box;
+}
+
+/* ─── Smooth Transition from Dashboard ────────────────────────────────────── */
+.sl-content-wrapper > *:not(.sl-search-wrap) {
+  animation: slContentFadeSlide 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes slContentFadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ─── Page Head / Subheader ───────────────────────────────────────────────── */
@@ -142,7 +159,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 0 8px;
+  height: 52px;
+  min-height: 52px;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .sl-round-btn {
@@ -1021,6 +1042,18 @@
   right: 0;
   z-index: 40;
   padding: 10px 0 0;
+  animation: sl-fade-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes sl-fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .sl-launch-map-btn {
@@ -1048,4 +1081,238 @@
 
 .sl-launch-map-btn span.material-symbols-outlined {
   font-size: 22px;
+}
+
+/* ─── Desktop Header Navigation & FASTag Capsule ─────────────────────────── */
+.sl-desktop-nav {
+  display: none;
+}
+
+.sl-desk-fastag-pill {
+  display: none;
+}
+
+.sl-desktop-reserve-btn {
+  display: none;
+}
+
+/* ─── Mobile Preservation (Screens < 1024px) ─────────────────────────────── */
+@media (max-width: 1023px) {
+  .sl-grid-layout,
+  .sl-grid-controls,
+  .sl-grid-results {
+    display: contents !important;
+  }
+
+  .sl-desktop-reserve-btn {
+    display: none !important;
+  }
+
+  .sl-sticky-bottom-action {
+    order: 99;
+  }
+}
+
+/* ─── Desktop Modern Layout (Screens >= 1024px) ───────────────────────────── */
+@media (min-width: 1024px) {
+  .sl-top-bar-inner {
+    max-width: 1240px;
+    padding: 0 32px;
+  }
+
+  .sl-desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(240, 243, 248, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 9999px;
+    padding: 4px 6px;
+  }
+
+  .sl-desk-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    border: none;
+    background: transparent;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #46464a;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .sl-desk-nav-link .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  .sl-desk-nav-link:hover:not(.active) {
+    color: #010102;
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .sl-desk-nav-link.active {
+    background: #010102;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+
+  .sl-desk-nav-link.active .material-symbols-outlined {
+    color: #fecb35;
+  }
+
+  /* Desktop FASTag pill */
+  .sl-desk-fastag-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f2f4f8;
+    border: 1px solid rgba(199, 198, 202, 0.4);
+    border-radius: 9999px;
+    padding: 4px 12px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  }
+
+  .sl-desk-fastag-pill .wallet-icon {
+    font-size: 16px;
+    color: #009944;
+  }
+
+  .sl-desk-fastag-pill .stitch-fastag-text {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    line-height: 1;
+  }
+
+  .sl-desk-fastag-pill .stitch-fastag-lbl {
+    font-size: 9px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #46464a;
+    letter-spacing: 0.06em;
+  }
+
+  .sl-desk-fastag-pill .stitch-fastag-amt {
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #010102;
+    margin-top: 1px;
+  }
+
+  .sl-main-scroll {
+    padding-top: 84px;
+    padding-bottom: 64px;
+  }
+
+  .sl-content-wrapper {
+    max-width: 1240px;
+    padding: 0 32px;
+    gap: 24px;
+  }
+
+  .sl-page-head {
+    height: 56px;
+    margin-bottom: 4px;
+  }
+
+  .sl-headline {
+    font-size: 24px;
+  }
+
+  .sl-search-pill {
+    height: 60px;
+    padding: 0 12px 0 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  }
+
+  .sl-search-input {
+    font-size: 16px;
+  }
+
+  /* Two Column Grid: Controls (Filters, Timing, Recents) on Left, Results on Right */
+  .sl-grid-layout {
+    display: grid;
+    grid-template-columns: 420px 1fr;
+    gap: 32px;
+    align-items: start;
+    width: 100%;
+  }
+
+  .sl-grid-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: sticky;
+    top: 88px;
+    z-index: 10;
+  }
+
+  .sl-sticky-bottom-action {
+    position: static;
+    padding: 0;
+    box-shadow: none;
+    z-index: auto;
+  }
+
+  .sl-launch-map-btn {
+    box-shadow: 0 4px 16px rgba(254, 203, 53, 0.3);
+  }
+
+  .sl-launch-map-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(254, 203, 53, 0.45);
+  }
+
+  .sl-grid-results {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 0;
+  }
+
+  .sl-station-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .sl-station-card {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .sl-station-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .sl-desktop-reserve-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    background: #010102;
+    color: #fecb35;
+    border-radius: 9999px;
+    border: none;
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: auto;
+    transition: all 0.15s ease;
+  }
+
+  .sl-desktop-reserve-btn:hover {
+    background: #fecb35;
+    color: #010102;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(254, 203, 53, 0.35);
+  }
 }

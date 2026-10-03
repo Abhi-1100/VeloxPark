@@ -4,6 +4,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { db } from '../../config/firebase';
 import { useBooking } from '../../hooks/useUserBookings';
+import ParkingPassReceipt from '../../components/user/ParkingPassReceipt';
 import './Payment.css';
 
 /* ─── Vector SVG Icons ─────────────────────────────────────────────────────── */
@@ -245,89 +246,13 @@ function Payment() {
         </div>
 
         {paid ? (
-          /* ── Post-Payment Confirmation Pass Screen ── */
-          <div className="pay-success-container">
-
-            <div className="pay-success-header">
-              <div className="pay-success-icon-wrap">
-                <IconCheck />
-              </div>
-              <h2 className="pay-success-title">Payment Confirmed!</h2>
-              <p className="pay-success-sub">
-                Your parking reservation is locked. Barrier gate access has been authorized.
-              </p>
-            </div>
-
-            {/* Boarding-Pass Style Ticket Card */}
-            <div className="pay-pass-card">
-              <div className="pay-pass-top">
-                <div>
-                  <span className="pay-pass-lbl">ACTIVE GATE PASS</span>
-                  <h3 className="pay-pass-slot">{slotName}</h3>
-                </div>
-                <div className="pay-pass-status-pill">
-                  CONFIRMED
-                </div>
-              </div>
-
-              <div className="pay-pass-divider"></div>
-
-              <div className="pay-pass-info-grid">
-                <div>
-                  <span className="pay-pass-lbl">LOCATION</span>
-                  <span className="pay-pass-val">{activeBooking.address || 'California Parking'}</span>
-                </div>
-                <div className="text-right">
-                  <span className="pay-pass-lbl">AMOUNT PAID</span>
-                  <span className="pay-pass-val-gold">₹{amountDisplay}</span>
-                </div>
-              </div>
-
-              <div className="pay-pass-times-box">
-                <div className="pay-pass-time-col">
-                  <span className="pay-pass-lbl">ENTRY</span>
-                  <span className="pay-pass-time">{activeBooking.entryTime || '10:00 AM'}</span>
-                </div>
-                <span className="pay-pass-arrow">→</span>
-                <div className="pay-pass-time-col text-right">
-                  <span className="pay-pass-lbl">EXIT</span>
-                  <span className="pay-pass-time">{activeBooking.exitTime || '02:00 PM'}</span>
-                </div>
-              </div>
-
-              {/* QR Code */}
-              <div className="pay-qr-center">
-                <div className="pay-qr-frame">
-                  <QRCodeSVG
-                    value={`VELOXPARK-PASS:${activeBooking.id || 'VX-PASS'}:${activeBooking.slotId || 'H1237'}`}
-                    size={168}
-                    level="H"
-                    includeMargin={false}
-                  />
-                </div>
-                <p className="pay-qr-hint">Scan at entry barrier scanner</p>
-              </div>
-            </div>
-
-            {/* Success Actions */}
-            <div className="pay-success-actions">
-              <button
-                type="button"
-                className="pay-btn-primary"
-                onClick={() => navigate('/dashboard')}
-              >
-                Return to Dashboard
-              </button>
-
-              <button
-                type="button"
-                className="pay-btn-secondary"
-                onClick={() => navigate('/map')}
-              >
-                View on Live Map
-              </button>
-            </div>
-          </div>
+          /* ── Post-Payment Confirmation Pass Screen (Voucher Style) ── */
+          <ParkingPassReceipt
+            booking={activeBooking}
+            selectedMethod={selectedMethod}
+            onReturn={() => navigate('/dashboard')}
+            onViewMap={() => navigate('/map')}
+          />
         ) : (
           /* ── Checkout Screen ── */
           <div className="pay-checkout-container">

@@ -5,6 +5,7 @@ import { signOut } from 'firebase/auth';
 import { db, auth } from '../../config/firebase';
 import { useAuth } from '../../context/useAuth';
 import avatarJack from '../../assets/avatar-jack.jpg';
+import { validateLicensePlate } from '../../utils/validation';
 import './Profile.css';
 
 function Profile() {
@@ -14,6 +15,10 @@ function Profile() {
   const [form, setForm] = useState({ name: '', phone: '' });
   const [plates, setPlates] = useState(['GJ 23 AB 1234', 'GJ 07 CD 5678']);
   const [newPlate, setNewPlate] = useState('');
+  const [selectedVehType, setSelectedVehType] = useState('car');
+  const [vehicleNickname, setVehicleNickname] = useState('');
+  const [vehicleMeta, setVehicleMeta] = useState({});
+  const [addingVehicle, setAddingVehicle] = useState(false);
   const [showAddPlateModal, setShowAddPlateModal] = useState(false);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [anprActive, setAnprActive] = useState(true);
@@ -24,6 +29,7 @@ function Profile() {
   const [toastVisible, setToastVisible] = useState(false);
 
   const toastTimer = useRef(null);
+  const plateInputRef = useRef(null);
 
   const showToast = (msg) => {
     setToast(msg);
@@ -32,6 +38,15 @@ function Profile() {
     toastTimer.current = setTimeout(() => {
       setToastVisible(false);
     }, 2800);
+  };
+
+  const focusPlateInput = () => {
+    if (plateInputRef.current) {
+      plateInputRef.current.focus();
+      plateInputRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      setShowAddPlateModal(true);
+    }
   };
 
   useEffect(() => {
@@ -50,6 +65,9 @@ function Profile() {
         });
         if (Array.isArray(data.vehiclePlates) && data.vehiclePlates.length > 0) {
           setPlates(data.vehiclePlates);
+        }
+        if (data.vehicleMeta) {
+          setVehicleMeta(data.vehicleMeta);
         }
       } else {
         setForm({
@@ -88,24 +106,52 @@ function Profile() {
       .catch(() => {});
   }, [user]);
 
-  const handleAddPlate = () => {
-    const clean = newPlate.trim().toUpperCase();
-    if (!clean) return;
+  const handleAddPlate = async (customPlate) => {
+    const raw = typeof customPlate === 'string' ? customPlate : newPlate;
+    const plateCheck = validateLicensePlate(raw);
+    if (!plateCheck.valid) {
+      showToast(plateCheck.message || 'Invalid plate format');
+      return;
+    }
+    const clean = plateCheck.cleaned;
     if (plates.includes(clean)) {
       showToast('Plate already exists in your garage');
       return;
     }
+    setAddingVehicle(true);
     const updated = [...plates, clean];
+    const defaultLabels = {
+      car: 'Personal Car',
+      bike: 'Royal Enfield / Two-Wheeler',
+      ev: 'Electric Vehicle',
+      truck: 'Commercial Vehicle',
+    };
+    const updatedMeta = {
+      ...vehicleMeta,
+      [clean]: {
+        type: selectedVehType,
+        nickname: vehicleNickname.trim() || defaultLabels[selectedVehType] || 'Personal Vehicle',
+      },
+    };
+
     setPlates(updated);
+    setVehicleMeta(updatedMeta);
     setNewPlate('');
+    setVehicleNickname('');
     setShowAddPlateModal(false);
 
     if (user?.uid) {
-      updateDoc(doc(db, 'users', user.uid), {
-        vehiclePlates: updated,
-      }).catch(() => {});
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          vehiclePlates: updated,
+          vehicleMeta: updatedMeta,
+        });
+      } catch {
+        // Handled silently
+      }
     }
-    showToast('✓ Vehicle added successfully');
+    setAddingVehicle(false);
+    showToast(`✓ Vehicle ${clean} added successfully`);
   };
 
   const handleSetDefaultPlate = (idx) => {
@@ -271,10 +317,10 @@ function Profile() {
               <button
                 type="button"
                 className="stitch-sec-action-link"
-                onClick={() => setShowAddPlateModal(true)}
+                onClick={focusPlateInput}
               >
-                <span>Manage</span>
-                <span className="material-symbols-outlined">chevron_right</span>
+                <span>+ Add</span>
+                <span className="material-symbols-outlined">add</span>
               </button>
             </div>
 
@@ -282,15 +328,18 @@ function Profile() {
             <div className="stitch-vehicles-snap-strip">
               {plates.map((plate, index) => {
                 const isDefault = index === 0;
-                const isBike = index === 1;
+                const meta = vehicleMeta[plate];
+                const isBike = meta ? meta.type === 'bike' : index === 1;
+                const isEv = meta ? meta.type === 'ev' : false;
+                const isTruck = meta ? meta.type === 'truck' : false;
+                const iconName = isBike ? 'two_wheeler' : isEv ? 'electric_car' : isTruck ? 'local_shipping' : 'directions_car';
+                const modelName = meta?.nickname || (isBike ? 'Royal Enfield Hunter 350' : 'Hyundai Creta • White');
 
                 return (
                   <div key={plate} className="stitch-vehicle-card">
                     <div className="stitch-veh-card-top">
                       <div className="stitch-veh-icon-box">
-                        <span className="material-symbols-outlined">
-                          {isBike ? 'two_wheeler' : 'directions_car'}
-                        </span>
+                        <span className="material-symbols-outlined">{iconName}</span>
                       </div>
                       {isDefault ? (
                         <span className="stitch-veh-default-tag">
@@ -318,9 +367,7 @@ function Profile() {
                     </div>
 
                     <div className="stitch-veh-card-footer">
-                      <span className="stitch-veh-model-name">
-                        {isBike ? 'Royal Enfield Hunter 350' : 'Hyundai Creta • White'}
-                      </span>
+                      <span className="stitch-veh-model-name">{modelName}</span>
                       <span
                         className={`material-symbols-outlined ${
                           isDefault ? 'filled text-success' : 'text-muted'
@@ -336,7 +383,7 @@ function Profile() {
               {/* Add Vehicle CTA Card */}
               <div
                 className="stitch-vehicle-add-card"
-                onClick={() => setShowAddPlateModal(true)}
+                onClick={focusPlateInput}
               >
                 <div className="stitch-veh-add-icon-circle">
                   <span className="material-symbols-outlined">add</span>
@@ -347,53 +394,133 @@ function Profile() {
             </div>
           </section>
 
-          {/* Standard VeloxPark Rates Compact Module */}
-          <section className="stitch-rates-card">
+          {/* Add Vehicle Box Section (In place of Standard VeloxPark Rates) */}
+          <section className="stitch-add-vehicle-card" id="add-vehicle-section">
             <div className="stitch-sec-head">
               <div className="stitch-sec-title-wrap">
-                <span className="material-symbols-outlined stitch-rates-icon">payments</span>
-                <h3 className="stitch-sec-title">Standard VeloxPark Rates</h3>
+                <span className="material-symbols-outlined stitch-add-veh-header-icon">add_circle</span>
+                <h3 className="stitch-sec-title">Add Vehicle</h3>
               </div>
-              <span className="stitch-live-pricing-tag">Live Slot Pricing</span>
+              <span className="stitch-anpr-ready-tag">
+                <span className="stitch-pulse-micro" />
+                ANPR &amp; FASTag Ready
+              </span>
             </div>
 
-            {/* 4-item grid */}
-            <div className="stitch-rates-grid">
-              <div className="stitch-rate-box">
+            {/* Vehicle Type Selector Tabs */}
+            <div className="stitch-veh-type-pills">
+              <button
+                type="button"
+                className={`stitch-veh-type-btn ${selectedVehType === 'car' ? 'active' : ''}`}
+                onClick={() => setSelectedVehType('car')}
+              >
                 <span className="material-symbols-outlined">directions_car</span>
-                <span className="stitch-rate-type">Car</span>
-                <span className="stitch-rate-cost">
-                  ₹20<small>/hr</small>
-                </span>
-              </div>
-              <div className="stitch-rate-box">
+                <span>Car</span>
+              </button>
+              <button
+                type="button"
+                className={`stitch-veh-type-btn ${selectedVehType === 'bike' ? 'active' : ''}`}
+                onClick={() => setSelectedVehType('bike')}
+              >
                 <span className="material-symbols-outlined">two_wheeler</span>
-                <span className="stitch-rate-type">Bike</span>
-                <span className="stitch-rate-cost">
-                  ₹10<small>/hr</small>
-                </span>
-              </div>
-              <div className="stitch-rate-box">
+                <span>Bike</span>
+              </button>
+              <button
+                type="button"
+                className={`stitch-veh-type-btn ${selectedVehType === 'ev' ? 'active' : ''}`}
+                onClick={() => setSelectedVehType('ev')}
+              >
+                <span className="material-symbols-outlined">electric_car</span>
+                <span>EV</span>
+              </button>
+              <button
+                type="button"
+                className={`stitch-veh-type-btn ${selectedVehType === 'truck' ? 'active' : ''}`}
+                onClick={() => setSelectedVehType('truck')}
+              >
                 <span className="material-symbols-outlined">local_shipping</span>
-                <span className="stitch-rate-type">Truck</span>
-                <span className="stitch-rate-cost">
-                  ₹50<small>/hr</small>
-                </span>
-              </div>
-              <div className="stitch-rate-box">
-                <span className="material-symbols-outlined text-secondary">electric_car</span>
-                <span className="stitch-rate-type">EV</span>
-                <span className="stitch-rate-cost">
-                  ₹20<small>/hr</small>
-                </span>
-              </div>
+                <span>Commercial</span>
+              </button>
             </div>
 
-            {/* Free 30min Promo Highlight Chip */}
-            <div className="stitch-promo-highlight">
-              <span className="stitch-promo-emoji">🎉</span>
-              <span className="stitch-promo-text">
-                First 30 minutes free at all Gujarat partner hubs
+            {/* Inline Add Vehicle Form */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAddPlate();
+              }}
+              className="stitch-inline-add-form"
+            >
+              {/* Realistic Indian HSRP Plate Input */}
+              <div className="stitch-form-field-wrap">
+                <label className="stitch-field-label">INDIAN HSRP REGISTRATION NUMBER</label>
+                <div className="stitch-inline-hsrp-input-group">
+                  <div className="stitch-inline-hsrp-badge">
+                    <div className="stitch-hsrp-chakra" />
+                    <span>IND</span>
+                  </div>
+                  <input
+                    ref={plateInputRef}
+                    type="text"
+                    className="stitch-inline-hsrp-input"
+                    placeholder="GJ 23 AB 1234"
+                    value={newPlate}
+                    onChange={(e) => setNewPlate(e.target.value.toUpperCase())}
+                    maxLength={16}
+                    aria-label="Vehicle Plate Number"
+                  />
+                  {newPlate && (
+                    <button
+                      type="button"
+                      className="stitch-inline-clear-btn"
+                      onClick={() => setNewPlate('')}
+                      aria-label="Clear input"
+                    >
+                      <span className="material-symbols-outlined">close</span>
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Vehicle Nickname / Model */}
+              <div className="stitch-form-field-wrap">
+                <label className="stitch-field-label">VEHICLE MODEL / NICKNAME (OPTIONAL)</label>
+                <div className="stitch-inline-model-input-group">
+                  <span className="material-symbols-outlined stitch-model-input-icon">
+                    {selectedVehType === 'bike'
+                      ? 'two_wheeler'
+                      : selectedVehType === 'ev'
+                      ? 'electric_car'
+                      : selectedVehType === 'truck'
+                      ? 'local_shipping'
+                      : 'directions_car'}
+                  </span>
+                  <input
+                    type="text"
+                    className="stitch-inline-model-input"
+                    placeholder="e.g. Hyundai Creta, Tata Nexon EV, Activa 6G"
+                    value={vehicleNickname}
+                    onChange={(e) => setVehicleNickname(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {/* Submit CTA */}
+              <button
+                type="submit"
+                className="stitch-inline-submit-btn"
+                disabled={!newPlate.trim() || addingVehicle}
+              >
+                <span className="material-symbols-outlined">add_circle</span>
+                <span>{addingVehicle ? 'Adding Vehicle…' : 'Add Vehicle to Garage'}</span>
+              </button>
+            </form>
+
+            {/* ANPR Auto Access Note */}
+            <div className="stitch-add-veh-info-banner">
+              <span className="material-symbols-outlined stitch-info-icon">sensor_occupied</span>
+              <span className="stitch-info-text">
+                Your plate will be auto-recognized by ANPR cameras for touchless boom barrier access.
               </span>
             </div>
           </section>

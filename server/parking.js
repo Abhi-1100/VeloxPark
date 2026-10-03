@@ -1,4 +1,4 @@
-﻿/* global process */
+/* global process */
 const MONTHS = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
 
 export function parseDate(value) {
@@ -42,9 +42,17 @@ export function findLegacySession(data, requested) {
   return null;
 }
 
+const INDIAN_PLATE_REGEX = /^([A-Z]{2}[0-9]{1,2}[A-Z]{0,3}[0-9]{4}|[0-9]{2}BH[0-9]{4}[A-Z]{1,2})$/;
+
+export function isValidPlate(plate) {
+  const clean = String(plate || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+  return INDIAN_PLATE_REGEX.test(clean);
+}
+
 export async function findParkingSession(db, requested) {
-  const plate = String(requested?.plate || '').trim().toUpperCase();
+  const plate = String(requested?.plate || '').replace(/[^A-Za-z0-9]/g, '').toUpperCase();
   if (!plate || !requested?.entry) throw new Error('A parking session is required');
+  if (!isValidPlate(plate)) throw new Error('Invalid number plate format');
   const logs = (await db.ref('parkingLogs').once('value')).val() || {};
   if (requested.sessionId && logs[requested.sessionId]) {
     const r = logs[requested.sessionId];

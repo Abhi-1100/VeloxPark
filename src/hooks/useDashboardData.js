@@ -21,6 +21,7 @@ import {
     subscribeToNumberplates,
     loadLocalFallback,
 } from '../services/firebaseService';
+import { isValidPlate } from '../utils/validation';
 
 const useDashboardData = () => {
     // ── State ──────────────────────────────────────────────────────────────────
@@ -43,9 +44,11 @@ const useDashboardData = () => {
         console.log('useDashboardData: Setting up Firebase subscription...');
 
         const handleSuccess = ({ rawData, processedData: pd }) => {
-            console.log('Data loaded:', rawData.length, 'raw \u2192', pd.length, 'sessions');
-            setParkingData(rawData);
-            setProcessedData(pd);
+            const validRaw = (rawData || []).filter(r => r && isValidPlate(r.plate));
+            const validPd = (pd || []).filter(v => v && isValidPlate(v.plate));
+            console.log('Data loaded:', validRaw.length, 'raw valid →', validPd.length, 'valid sessions');
+            setParkingData(validRaw);
+            setProcessedData(validPd);
             setLoading(false);
         };
 
@@ -53,9 +56,11 @@ const useDashboardData = () => {
             console.error('Firebase subscription failed:', error);
             loadLocalFallback(
                 ({ rawData, processedData: pd }) => {
-                    console.log('Local fallback loaded:', pd.length, 'sessions');
-                    setParkingData(rawData);
-                    setProcessedData(pd);
+                    const validRaw = (rawData || []).filter(r => r && isValidPlate(r.plate));
+                    const validPd = (pd || []).filter(v => v && isValidPlate(v.plate));
+                    console.log('Local fallback loaded:', validPd.length, 'valid sessions');
+                    setParkingData(validRaw);
+                    setProcessedData(validPd);
                     setLoading(false);
                 },
                 (fallbackError) => {

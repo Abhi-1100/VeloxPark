@@ -1,18 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ref, get } from 'firebase/database';
 import { database } from '../../config/firebase';
-import { useNavigate } from 'react-router-dom';
 import {
   calculateDuration,
   calculateAmount,
-  generateUPILink,
 } from '../../utils/parkingUtils';
+import { validateLicensePlate } from '../../utils/validation';
 import Dashboard from './Dashboard';
-import UserParkingInfoDesktop from '../../components/user/UserParkingInfoDesktop';
 
 const UserParkingInfo = () => {
-  const navigate = useNavigate();
-
   const [plateInput, setPlateInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -114,8 +110,12 @@ const UserParkingInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const plate = plateInput.trim().toUpperCase();
-    if (!plate) return;
+    const plateCheck = validateLicensePlate(plateInput);
+    if (!plateCheck.valid) {
+      setError(plateCheck.message || 'Invalid license plate format.');
+      return;
+    }
+    const plate = plateCheck.cleaned;
     setLoading(true);
     setError('');
     setVehicleData(null);
@@ -131,16 +131,6 @@ const UserParkingInfo = () => {
     }
   };
 
-  const handlePayNow = () => {
-    const upiLink = generateUPILink(
-      upiConfig.upiId,
-      upiConfig.upiName,
-      vehicleData?.amount || 0,
-      vehicleData?.plate || ''
-    );
-    navigate('/user/payment', { state: { vehicleData, upiConfig, upiLink } });
-  };
-
   const sharedProps = {
     plateInput,
     setPlateInput,
@@ -149,22 +139,9 @@ const UserParkingInfo = () => {
     vehicleData,
     upiConfig,
     onSubmit: handleSubmit,
-    onPayNow: handlePayNow,
   };
 
-  return (
-    <>
-      {/* Mobile Dashboard (< 1024px) */}
-      <div className="block lg:hidden">
-        <Dashboard />
-      </div>
-
-      {/* Desktop Dashboard (>= 1024px) */}
-      <div className="hidden lg:block">
-        <UserParkingInfoDesktop {...sharedProps} />
-      </div>
-    </>
-  );
+  return <Dashboard {...sharedProps} />;
 };
 
 export default UserParkingInfo;
