@@ -47,9 +47,10 @@ End-user guide for using VeloxPark parking system.
    - Confirm payment in UPI app
 
 3. **Payment Confirmation**
-   - After payment, click "I've Paid"
-   - See success message
-   - Return home
+   - Select “Pay with UPI app” or scan the QR code.
+   - Enter the 12-digit UPI transaction/reference ID and submit it for verification.
+   - The page shows “Waiting for verification” and changes to Paid automatically after staff approval.
+   - Paid sessions include a downloadable receipt and gate-pass message.
 
 ---
 
@@ -93,7 +94,10 @@ A: Check with parking management for specific policies.
 A: No ticket needed - system is automatic via license plate recognition.
 
 **Q: Can I get a receipt?**
-A: UPI payment confirmation serves as receipt. Save in UPI app.
+A: After verification, open View receipt and select Download receipt.
+
+**Q: What does Offline mean?**
+A: The app is showing cached fallback data. Reconnect before relying on payment status.
 
 ---
 

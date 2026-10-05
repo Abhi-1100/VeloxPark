@@ -7,13 +7,10 @@ import { getGeoapifyApiKey } from '../../services/geoapifyService';
 import { checkLocationServiceability, SERVICEABLE_CITIES } from '../../data/serviceableCities';
 import avatarJack from '../../assets/avatar-jack.jpg';
 import WheelTimePickerModal from '../../components/user/WheelTimePickerModal';
+import { useAuth } from '../../context/useAuth';
 import './SearchLocation.css';
 
-const DEFAULT_RECENTS = [
-  { id: '1', title: 'Central Campus Lot A', subtitle: 'Shastri Maidan Marg, VV Nagar • 1.2 km' },
-  { id: '2', title: 'Anand Railway Station Parking', subtitle: 'Station Rd, Anand • 4.1 km' },
-  { id: '3', title: 'Nadiad Junction Smart Bay', subtitle: 'Station Rd, Nadiad • Active Hub' },
-];
+
 
 const FILTER_TAGS = [
   { id: 'near_me', label: 'Near me', icon: 'near_me' },
@@ -99,6 +96,7 @@ function calcHoursDifference(entryStr, exitStr) {
 function SearchLocation() {
   const navigate = useNavigate();
   const routeLocation = useLocation();
+  const { user } = useAuth();
   const searchContainerRef = useRef(null);
   const [location, setLocation] = useState(routeLocation.state?.prefill || '');
   const [isLocating, setIsLocating] = useState(false);
@@ -108,7 +106,23 @@ function SearchLocation() {
   const [durationHours, setDurationHours] = useState(2);
   const [entryTime, setEntryTime] = useState(() => getNowTimeString());
   const [exitTime, setExitTime] = useState(() => addHoursToTime(getNowTimeString(), 2));
-  const [recentSearches, setRecentSearches] = useState(DEFAULT_RECENTS);
+  const [recentSearches, setRecentSearches] = useState(() => {
+    try {
+      localStorage.removeItem('velox_user_recent_searches');
+      const key = user?.uid ? `velox_user_${user.uid}_recent_searches` : 'velox_guest_recent_searches';
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      const key = user?.uid ? `velox_user_${user.uid}_recent_searches` : 'velox_guest_recent_searches';
+      localStorage.setItem(key, JSON.stringify(recentSearches));
+    } catch {}
+  }, [recentSearches, user]);
   const [stations, setStations] = useState([]);
 
   // Drum Roller Wheel Time Picker modal state (Reference Image match)
@@ -911,7 +925,14 @@ function SearchLocation() {
                     <button
                       type="button"
                       className="sl-clear-recent-btn"
-                      onClick={() => setRecentSearches([])}
+                      onClick={() => {
+                        setRecentSearches([]);
+                        try {
+                          const key = user?.uid ? `velox_user_${user.uid}_recent_searches` : 'velox_guest_recent_searches';
+                          localStorage.removeItem(key);
+                          localStorage.removeItem('velox_user_recent_searches');
+                        } catch {}
+                      }}
                     >
                       Clear all
                     </button>

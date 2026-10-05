@@ -50,6 +50,10 @@ const [error, setError] = useState('');
 const [vehicleData, setVehicleData] = useState(null);
 ```
 
+The user lookup now uses explicit `idle`, `loading`, `notFound`, `error`, `offline`, `parked`, `exitedFree`, `exitedUnpaid`, and `paid` states. Firebase access lives in `userParkingService.js`; the component subscribes to both schemas and never calls the SDK directly.
+
+`UserPaymentPage` reloads the session by plate/session id, recomputes the amount from the normalized session, creates the UPI link/QR from `public/config.json`, and submits references to `paymentSubmissions`. `UserPaymentSuccess` reads the verified session and generates a PDF receipt.
+
 **Usage:**
 ```jsx
 <Route path="/user" element={<UserParkingInfo />} />

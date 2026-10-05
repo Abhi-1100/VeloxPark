@@ -171,3 +171,7 @@ VeloxPark follows [Semantic Versioning](https://semver.org/):
 
 **Last Updated**: March 19, 2026
 **Current Version**: 4.0.0
+# 4.1.0 - User flow wiring
+
+- Added live dual-schema lookup, explicit user states, offline fallback, legacy pairing, recent searches, and previous visits.
+- Added UPI QR/deep-link payment submission, live verification state, receipt download, payment fields, rules, and seed fixtures.

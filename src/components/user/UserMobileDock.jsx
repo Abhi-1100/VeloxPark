@@ -5,7 +5,6 @@ import './UserMobileDock.css';
 const DOCK_ITEMS = [
   { id: 'home', label: 'Home', path: '/dashboard', matches: ['/dashboard', '/user'], icon: 'home' },
   { id: 'find', label: 'Find', path: '/search', matches: ['/search', '/book'], icon: 'search' },
-  { id: 'map', label: 'Map', path: '/map', matches: ['/map'], icon: 'near_me' },
   { id: 'bookings', label: 'Bookings', path: '/history', matches: ['/history'], icon: 'event_available' },
   { id: 'profile', label: 'Profile', path: '/profile', matches: ['/profile'], icon: 'person' },
 ];

@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -32,6 +33,8 @@ import NotFound from './pages/NotFound';
 import './App.css';
 
 import UserParkingInfo from './pages/user/UserParkingInfo';
+const UserPaymentPage = lazy(() => import('./pages/user/UserPaymentPage'));
+const UserPaymentSuccess = lazy(() => import('./pages/user/UserPaymentSuccess'));
 
 function UserRoute({ children }) {
   return <ProtectedRoute role="user">{children}</ProtectedRoute>;
@@ -70,8 +73,8 @@ function App() {
 
               {/* User Side Responsive Pages */}
               <Route path="/user" element={<UserLayout><UserParkingInfo /></UserLayout>} />
-              <Route path="/user/payment" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/user/payment/success" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/user/payment" element={<Suspense fallback={<LoadingScreen />}><UserLayout><UserPaymentPage /></UserLayout></Suspense>} />
+              <Route path="/user/payment/success" element={<Suspense fallback={<LoadingScreen />}><UserLayout><UserPaymentSuccess /></UserLayout></Suspense>} />
 
               {/* User Pages */}
               <Route element={<UserRoute><UserLayout /></UserRoute>}>

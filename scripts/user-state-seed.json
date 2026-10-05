@@ -1,0 +1,13 @@
+{
+  "parkingLogs": {
+    "seed_parked": { "plate": "TS15EL5671", "inTime": "2026-10-03T05:00:00.000Z", "outTime": null, "status": "parked", "vehicleType": "Car", "zone": "Zone A", "rateAtEntry": 20, "schemaVersion": 2 },
+    "seed_exited_free": { "plate": "MH12AB1234", "inTime": "2026-10-03T04:00:00.000Z", "outTime": "2026-10-03T04:20:00.000Z", "status": "exited", "vehicleType": "Car", "zone": "Zone B", "rateAtEntry": 20, "schemaVersion": 2 },
+    "seed_exited_unpaid": { "plate": "DL01A1234", "inTime": "2026-10-03T01:00:00.000Z", "outTime": "2026-10-03T03:15:00.000Z", "status": "exited", "vehicleType": "Car", "zone": "Zone C", "rateAtEntry": 20, "schemaVersion": 2 },
+    "seed_paid": { "plate": "GJ05SD1930", "inTime": "2026-10-03T00:00:00.000Z", "outTime": "2026-10-03T02:15:00.000Z", "status": "exited", "vehicleType": "Car", "zone": "Zone A", "rateAtEntry": 20, "paymentStatus": "paid", "paymentMethod": "upi", "paymentRef": "123456789012", "paidAt": "2026-10-03T02:20:00.000Z", "paidAmount": 40, "receiptNo": "VP-SEED-1", "schemaVersion": 2 }
+  },
+  "numberplate": {
+    "legacy_odd_1": { "number_plate": "TS15UV7890", "date_time": "03/10/26 10:00" },
+    "legacy_even_1": { "number_plate": "RJ14CV0002", "date_time": "03/10/26 08:00" },
+    "legacy_even_2": { "number_plate": "RJ14CV0002", "date_time": "03/10/26 09:45" }
+  }
+}

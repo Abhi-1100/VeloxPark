@@ -24,6 +24,12 @@ export const UNIFIED_SCHEMA = {
   createdBy: ['createdBy', 'created_by'],
   lastModified: ['lastModified', 'last_modified'],
   schemaVersion: ['schemaVersion', 'schema_version']
+  ,paymentStatus: ['paymentStatus', 'payment_status']
+  ,paymentMethod: ['paymentMethod', 'payment_method']
+  ,paymentRef: ['paymentRef', 'payment_ref', 'transactionId']
+  ,paidAt: ['paidAt', 'paid_at']
+  ,paidAmount: ['paidAmount', 'paid_amount']
+  ,receiptNo: ['receiptNo', 'receipt_no']
 };
 
 /**

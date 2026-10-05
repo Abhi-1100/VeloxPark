@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { ref, get, set, update } from 'firebase/database';
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -9,7 +9,7 @@ import {
   signOut,
   updateProfile,
 } from 'firebase/auth';
-import { auth, db } from '../config/firebase';
+import { auth, database } from '../config/firebase';
 import { AuthContext } from './AuthContextValue';
 
 export function AuthProvider({ children }) {
@@ -49,18 +49,19 @@ export function AuthProvider({ children }) {
       }
 
       try {
-        const userSnapshot = await getDoc(doc(db, 'users', firebaseUser.uid));
-        const profile = userSnapshot.exists() ? userSnapshot.data() : { role: initialRole };
+        const userRef = ref(database, `users/${firebaseUser.uid}`);
+        const userSnapshot = await get(userRef);
+        const profile = userSnapshot.exists() ? userSnapshot.val() : { role: initialRole };
         const userRole = profile.role || initialRole;
 
         if (!userSnapshot.exists()) {
-          await setDoc(doc(db, 'users', firebaseUser.uid), {
+          await set(userRef, {
             uid: firebaseUser.uid,
             email: firebaseUser.email || '',
             name: firebaseUser.displayName || '',
             role: userRole,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
           });
         }
         if (mounted) {
@@ -68,14 +69,14 @@ export function AuthProvider({ children }) {
           setRole(userRole);
         }
       } catch (error) {
-        console.error('Could not load Firestore profile:', error);
+        console.error('Could not load Realtime Database profile:', error);
       } finally { finishStartup(); }
     };
 
     startupTimer = setTimeout(() => {
       console.warn('Firebase auth startup timed out; showing the public app.');
       finishStartup();
-    }, 8000);
+    }, 4000);
     let unsubscribe;
     try { unsubscribe = onAuthStateChanged(auth, hydrateUser); }
     catch (error) { console.error('Firebase Auth failed to initialize:', error); finishStartup(); }
@@ -83,19 +84,34 @@ export function AuthProvider({ children }) {
   }, []);
 
   const ensureUserDoc = async (firebaseUser, extra = {}) => {
-    const existing = await getDoc(doc(db, 'users', firebaseUser.uid));
-    const email = (firebaseUser.email || '').toLowerCase();
-    const isAdmin = email.includes('admin') || email.endsWith('@veloxpark.com');
-    const assignedRole = existing.exists() ? (existing.data().role || (isAdmin ? 'admin' : 'user')) : (isAdmin ? 'admin' : 'user');
+    try {
+      const userRef = ref(database, `users/${firebaseUser.uid}`);
+      const existing = await get(userRef);
+      const email = (firebaseUser.email || '').toLowerCase();
+      const isAdmin = email.includes('admin') || email.endsWith('@veloxpark.com');
+      const existingData = existing.exists() ? existing.val() : null;
+      const assignedRole = existingData?.role || (isAdmin ? 'admin' : 'user');
 
-    await setDoc(doc(db, 'users', firebaseUser.uid), {
-      uid: firebaseUser.uid,
-      email: firebaseUser.email || '',
-      name: firebaseUser.displayName || extra.name || '',
-      role: assignedRole,
-      updatedAt: serverTimestamp(),
-      ...extra,
-    }, { merge: true });
+      const updateData = {
+        uid: firebaseUser.uid,
+        email: firebaseUser.email || '',
+        name: firebaseUser.displayName || extra.name || '',
+        role: assignedRole,
+        updatedAt: new Date().toISOString(),
+        ...extra,
+      };
+
+      if (existing.exists()) {
+        await update(userRef, updateData);
+      } else {
+        await set(userRef, {
+          ...updateData,
+          createdAt: new Date().toISOString(),
+        });
+      }
+    } catch (e) {
+      console.warn('ensureUserDoc notice:', e);
+    }
   };
 
   const value = useMemo(() => ({

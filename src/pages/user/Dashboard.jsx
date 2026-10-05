@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ref, onValue } from 'firebase/database';
+import { database } from '../../config/firebase';
 import { useAuth } from '../../context/useAuth';
 import { useUserBookings } from '../../hooks/useUserBookings';
 import avatarJack from '../../assets/avatar-jack.jpg';
@@ -11,12 +13,6 @@ const QUICK_ACTIONS = [
   { id: 'book', label: 'Pre-book Slot', icon: 'event_available', iconClass: 'text-success', path: '/search' },
   { id: 'ev', label: 'EV Charging', icon: 'electric_bolt', iconClass: 'text-secondary', path: '/map' },
   { id: 'passes', label: 'My Passes', icon: 'confirmation_number', iconClass: 'text-muted', path: '/history' },
-];
-
-const INITIAL_VEHICLES = [
-  { id: 'car', type: 'Car (SUV)', plate: 'GJ 23 AB 1234', icon: 'directions_car', tag: 'Active' },
-  { id: 'bike', type: 'Activa 6G', plate: 'GJ 23 BK 9920', icon: 'two_wheeler', tag: 'Saved' },
-  { id: 'ev', type: 'Nexon EV', plate: 'Fast-charge ready', icon: 'ev_station', tag: 'EV' },
 ];
 
 const NEARBY_HUBS = [
@@ -65,13 +61,118 @@ function Dashboard({
   const navigate = useNavigate();
   const { bookings } = useUserBookings(user?.uid);
 
-  const [activeVehicleId, setActiveVehicleId] = useState('car');
+  const loadDashboardVehicles = () => {
+    try {
+      if (!user?.uid) return [];
+      const uidKey = `velox_user_plates_${user.uid}`;
+      const metaKey = `velox_user_meta_${user.uid}`;
+      const rawPlates = localStorage.getItem(uidKey);
+      const rawMeta = localStorage.getItem(metaKey);
+      const plates = rawPlates ? JSON.parse(rawPlates) : [];
+      const meta = rawMeta ? JSON.parse(rawMeta) : {};
+      return plates.map((plate, index) => {
+        const m = meta[plate];
+        const isBike = m?.type === 'bike';
+        const isEv = m?.type === 'ev';
+        const isCommercial = m?.type === 'truck';
+        return {
+          id: plate,
+          plate: plate,
+          type: m?.nickname || (isBike ? 'Two-Wheeler' : isEv ? 'Electric Vehicle' : isCommercial ? 'Commercial' : 'Car (SUV)'),
+          icon: isBike ? 'two_wheeler' : isEv ? 'electric_car' : isCommercial ? 'local_shipping' : 'directions_car',
+          tag: isEv ? 'EV' : index === 0 ? 'ACTIVE' : 'Saved',
+        };
+      });
+    } catch {
+      return [];
+    }
+  };
+
+  const [userVehicles, setUserVehicles] = useState(loadDashboardVehicles);
+  const [activeVehicleId, setActiveVehicleId] = useState(null);
   const [internalPlateInput, setInternalPlateInput] = useState('');
   const [sessionSeconds, setSessionSeconds] = useState(5055); // 01:24:15
   const [searchQuery, setSearchQuery] = useState('');
   const [activeSession, setActiveSession] = useState(null);
 
   const activePlateText = plateInput !== undefined && plateInput !== '' ? plateInput : internalPlateInput;
+
+  // Real-time synchronization: localStorage + window events + Firestore
+  useEffect(() => {
+    // Purge legacy un-scoped localStorage items
+    try {
+      localStorage.removeItem('velox_user_name');
+      localStorage.removeItem('velox_user_phone');
+      localStorage.removeItem('velox_user_plates');
+      localStorage.removeItem('velox_user_meta');
+    } catch {}
+
+    const refresh = () => {
+      const v = loadDashboardVehicles();
+      setUserVehicles(v);
+      if (v.length > 0) {
+        setActiveVehicleId((prev) => (prev && v.some((item) => item.id === prev) ? prev : v[0].id));
+      } else {
+        setActiveVehicleId(null);
+      }
+    };
+
+    refresh();
+    window.addEventListener('velox_vehicles_updated', refresh);
+    window.addEventListener('storage', refresh);
+
+    if (!user?.uid) {
+      setUserVehicles([]);
+      setActiveVehicleId(null);
+      return () => {
+        window.removeEventListener('velox_vehicles_updated', refresh);
+        window.removeEventListener('storage', refresh);
+      };
+    }
+
+    const userRef = ref(database, `users/${user.uid}`);
+    const unsub = onValue(userRef, (snap) => {
+      if (snap.exists()) {
+        const data = snap.val();
+        const plates = Array.isArray(data.vehiclePlates) ? data.vehiclePlates : [];
+        const meta = data.vehicleMeta || {};
+        try {
+          localStorage.setItem(`velox_user_plates_${user.uid}`, JSON.stringify(plates));
+          localStorage.setItem(`velox_user_meta_${user.uid}`, JSON.stringify(meta));
+        } catch {}
+
+        if (plates.length > 0) {
+          const mapped = plates.map((plate, index) => {
+            const m = meta[plate];
+            const isBike = m?.type === 'bike';
+            const isEv = m?.type === 'ev';
+            const isCommercial = m?.type === 'truck';
+            return {
+              id: plate,
+              plate: plate,
+              type: m?.nickname || (isBike ? 'Two-Wheeler' : isEv ? 'Electric Vehicle' : isCommercial ? 'Commercial' : 'Car (SUV)'),
+              icon: isBike ? 'two_wheeler' : isEv ? 'electric_car' : isCommercial ? 'local_shipping' : 'directions_car',
+              tag: isEv ? 'EV' : index === 0 ? 'ACTIVE' : 'Saved',
+            };
+          });
+          setUserVehicles(mapped);
+          setActiveVehicleId((prev) => (prev && mapped.some((v) => v.id === prev) ? prev : mapped[0].id));
+        } else {
+          setUserVehicles([]);
+          setActiveVehicleId(null);
+        }
+      } else {
+        setUserVehicles([]);
+        setActiveVehicleId(null);
+      }
+    });
+
+    return () => {
+      unsub();
+      window.removeEventListener('velox_vehicles_updated', refresh);
+      window.removeEventListener('storage', refresh);
+    };
+  }, [user]);
 
   const handlePlateChange = (e) => {
     const val = e.target.value.toUpperCase();
@@ -81,36 +182,32 @@ function Dashboard({
 
   const handleVehicleSelect = (veh) => {
     setActiveVehicleId(veh.id);
-    if (veh.plate && veh.plate.startsWith('GJ')) {
+    if (veh.plate) {
       setInternalPlateInput(veh.plate);
       if (setPlateInput) setPlateInput(veh.plate);
     }
   };
 
-  const name = user?.profile?.name || user?.displayName || 'Parth Patel';
+  const name = user?.displayName || user?.name || user?.profile?.name || (user?.email ? user.email.split('@')[0] : 'Driver');
 
   // Check if user is currently inside a park station / has active session
   useEffect(() => {
+    if (!user?.uid) {
+      setActiveSession(null);
+      return;
+    }
+
     // 1. Check real bookings for active/parked session
     const parkedBooking = bookings?.find((b) =>
       ['active', 'parked', 'checked-in', 'in-station'].includes(b.status)
     );
 
-    // 2. Check localStorage for session or simulation state
+    // 2. Check localStorage for session or simulation state scoped to user
     let localSess = null;
     try {
-      const stored = localStorage.getItem('velox_active_session');
+      const stored = localStorage.getItem(`velox_active_session_${user.uid}`);
       if (stored) {
         localSess = JSON.parse(stored);
-      }
-      if (!localSess && localStorage.getItem('velox_user_in_station') === 'true') {
-        localSess = {
-          lotName: 'Charusat Lot 2',
-          bay: 'Bay B-14',
-          plate: 'GJ 23 AB 1234',
-          status: 'parked',
-          isParked: true,
-        };
       }
     } catch {
       // ignore JSON errors
@@ -120,7 +217,7 @@ function Dashboard({
       setActiveSession({
         lotName: parkedBooking.address || 'Charusat Lot 2',
         bay: parkedBooking.slotLabel || parkedBooking.slotId || 'Bay B-14',
-        plate: parkedBooking.plate || 'GJ 23 AB 1234',
+        plate: parkedBooking.plate || '',
         bookingId: parkedBooking.id,
         status: parkedBooking.status,
       });
@@ -130,7 +227,7 @@ function Dashboard({
       // Default: User is NOT in the park station -> live session box is hidden
       setActiveSession(null);
     }
-  }, [bookings]);
+  }, [bookings, user]);
 
   // Live timer for active session (only counts when user is in park station)
   useEffect(() => {
@@ -559,38 +656,63 @@ function Dashboard({
                   <button
                     type="button"
                     className="stitch-add-veh-link"
-                    onClick={() => navigate('/profile')}
+                    onClick={() => navigate('/profile', { state: { openAddVehicle: true } })}
                   >
                     + Add New
                   </button>
                 </div>
 
-                <div className="stitch-vehicles-grid">
-                  {INITIAL_VEHICLES.map((veh) => {
-                    const isActive = activeVehicleId === veh.id;
-                    return (
-                      <button
-                        key={veh.id}
-                        type="button"
-                        className={`stitch-veh-box ${isActive ? 'active' : ''}`}
-                        onClick={() => handleVehicleSelect(veh)}
-                      >
-                        <div className="stitch-veh-box-top">
-                          <div className="stitch-veh-icon-bg">
-                            <span className="material-symbols-outlined filled">{veh.icon}</span>
+                {userVehicles.length > 0 ? (
+                  <div className="stitch-vehicles-grid">
+                    {userVehicles.map((veh, idx) => {
+                      const isActive = (activeVehicleId || userVehicles[0]?.id) === veh.id;
+                      return (
+                        <button
+                          key={veh.id}
+                          type="button"
+                          className={`stitch-veh-box ${isActive ? 'active' : ''}`}
+                          onClick={() => handleVehicleSelect(veh)}
+                        >
+                          <div className="stitch-veh-box-top">
+                            <div className="stitch-veh-icon-bg">
+                              <span className="material-symbols-outlined filled">{veh.icon}</span>
+                            </div>
+                            <span className={`stitch-veh-tag ${isActive ? 'active' : ''}`}>
+                              {veh.tag === 'EV' ? 'EV' : isActive ? 'ACTIVE' : 'Saved'}
+                            </span>
                           </div>
-                          <span className={`stitch-veh-tag ${isActive ? 'active' : ''}`}>
-                            {veh.tag}
-                          </span>
-                        </div>
-                        <div className="stitch-veh-box-info">
-                          <span className="stitch-veh-box-type">{veh.type}</span>
-                          <span className="stitch-veh-box-plate">{veh.plate}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
+                          <div className="stitch-veh-box-info">
+                            <span className="stitch-veh-box-type">{veh.type}</span>
+                            <span className="stitch-veh-box-plate">{veh.plate}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div
+                    className="stitch-dash-empty-veh-card"
+                    onClick={() => navigate('/profile', { state: { openAddVehicle: true } })}
+                  >
+                    <div className="stitch-dash-empty-veh-icon">
+                      <span className="material-symbols-outlined">directions_car</span>
+                    </div>
+                    <div className="stitch-dash-empty-veh-text">
+                      <span className="stitch-dash-empty-veh-title">No vehicles added yet</span>
+                      <span className="stitch-dash-empty-veh-sub">Add your vehicle for touchless ANPR boom barrier entry</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="stitch-dash-empty-veh-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate('/profile', { state: { openAddVehicle: true } });
+                      }}
+                    >
+                      <span>+ Add Vehicle</span>
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* ANPR Vehicle Telemetry & Fast Checkout Card (Desktop) */}
@@ -676,7 +798,7 @@ function Dashboard({
                       <div className="metric-box">
                         <span className="metric-lbl">Accrued Amount</span>
                         <span className="metric-val highlight">
-                          ₹{vehicleData.amount != null ? vehicleData.amount : 40}
+                          ₹{vehicleData.amount != null ? vehicleData.amount : 0}
                         </span>
                       </div>
                     </div>
@@ -686,6 +808,12 @@ function Dashboard({
                       <span>Exit Recorded · Session Finalized</span>
                     </div>
                   </div>
+                )}
+
+                {vehicleData?.status === 'Exited' && Number(vehicleData.amount) > 0 && (
+                  <button type="button" className="stitch-telemetry-submit-btn" style={{ marginTop: '12px', width: '100%' }} onClick={() => navigate(`/user/payment?plate=${encodeURIComponent(vehicleData.plate)}&sessionId=${encodeURIComponent(vehicleData.sessionId || '')}`)}>
+                    Proceed to payment · ₹{vehicleData.amount}
+                  </button>
                 )}
 
                 <div className="stitch-telemetry-badges">

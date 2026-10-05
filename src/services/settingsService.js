@@ -31,8 +31,6 @@ export const getCurrentRates = async () => {
         if (snapshot.exists()) {
             return snapshot.val();
         } else {
-            // Initialize with default rates if not exists
-            await set(ratesRef, DEFAULT_RATES);
             return DEFAULT_RATES;
         }
     } catch (error) {

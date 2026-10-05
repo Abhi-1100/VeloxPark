@@ -1,0 +1,15 @@
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import { formatDateTime, formatDuration } from '../../utils/parkingUtils';
+import { loadVehicleSession, listenPaymentStatus } from '../../services/userParkingService';
+
+export default function UserPaymentSuccess() {
+  const location = useLocation(); const navigate = useNavigate(); const query = new URLSearchParams(location.search); const plate = query.get('plate'); const sessionId = query.get('sessionId'); const [session, setSession] = useState(null); const [loading, setLoading] = useState(true);
+  useEffect(() => { if (!plate || !sessionId) { navigate('/user', { replace: true }); return undefined; } return loadVehicleSession(plate, sessionId, (value) => { if (value.paymentStatus === 'paid') { setSession(value); setLoading(false); } }, () => navigate('/user', { replace: true })); }, [plate, sessionId, navigate]);
+  useEffect(() => { if (!sessionId) return undefined; return listenPaymentStatus(sessionId, (value) => { if (value?.paymentStatus === 'paid') setSession((old) => ({ ...old, ...value })); }); }, [sessionId]);
+  const download = () => { const doc = new jsPDF(); doc.setFontSize(20); doc.text('VeloxPark receipt', 20, 24); doc.setFontSize(12); doc.text(`Plate: ${session.plate}`, 20, 42); doc.text(`Amount paid: Rs. ${session.paidAmount ?? session.amount}`, 20, 52); doc.text(`Payment ID: ${session.paymentRef || '—'}`, 20, 62); doc.text(`Paid at: ${formatDateTime(session.paidAt)}`, 20, 72); doc.text(`Duration: ${formatDuration(session.duration)}`, 20, 82); doc.save(`veloxpark-receipt-${session.plate}.pdf`); };
+  if (loading) return <main className="vp-success"><h1>Checking receipt…</h1></main>;
+  if (!session) return null;
+  return <main className="vp-success"><section><p className="vp-eyebrow">PAYMENT CONFIRMED</p><h1>Paid. You’re all set.</h1><p className="vp-gate">Show this at the gate.</p><div className="vp-receipt"><p><b>{session.plate}</b></p><p>Amount paid: ₹{session.paidAmount ?? session.amount}</p><p>Payment time: {formatDateTime(session.paidAt)}</p><p>Payment ID: {session.paymentRef || '—'}</p><p>Duration: {formatDuration(session.duration)}</p></div><button type="button" onClick={download}>Download receipt</button><button className="vp-secondary" type="button" onClick={() => navigate('/user')}>Back to vehicle status</button></section><style>{`.vp-success{min-height:100vh;background:#0A0A0A;color:#fff;padding:48px 16px}.vp-success section{max-width:560px;margin:auto;text-align:center}.vp-success h1{font:48px/1 'Barlow Condensed',Arial Narrow,sans-serif}.vp-eyebrow{color:#00FF88;letter-spacing:.14em;font-size:11px}.vp-gate{color:#FFD700}.vp-receipt{background:#161616;border:1px solid #2b2b2b;border-radius:14px;text-align:left;padding:20px;margin:24px 0}.vp-success button{min-height:44px;background:#FFD700;color:#0A0A0A;border:0;border-radius:10px;padding:0 16px;font:inherit;font-weight:700;margin:6px}.vp-secondary{background:transparent!important;color:#FFD700!important;border:1px solid #544d20!important}`}</style></main>;
+}

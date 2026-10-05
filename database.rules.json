@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "numberplate": { ".read": true, ".write": "auth != null", ".indexOn": ["number_plate", "date_time"] },
+    "parkingLogs": { ".read": true, ".write": "auth != null", ".indexOn": ["plate", "inTime", "status", "paymentStatus"] },
+    "paymentSubmissions": {
+      ".read": "auth != null",
+      "$submissionId": {
+        ".write": "auth != null || (!data.exists() && newData.exists())",
+        ".validate": "auth != null || (newData.hasChildren(['sessionId','plate','amount','txnRef','submittedAt','status']) && newData.child('txnRef').isString() && newData.child('txnRef').val().matches(/^[0-9]{12}$/) && newData.child('amount').isNumber() && newData.child('amount').val() >= 0 && newData.child('status').val() == 'pending_verification')"
+      }
+    },
+    "settings": { ".read": true, ".write": "auth != null" },
+    "users": {
+      ".read": true,
+      "$uid": {
+        ".write": true
+      }
+    }
+  }
+}

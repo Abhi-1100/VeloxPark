@@ -52,6 +52,10 @@ firebase-root/
 
 ## Legacy Schema (`numberplate/`)
 
+### Payment fields (optional, PRD sessions)
+
+`paymentStatus` is `none`, `awaiting_payment`, `pending_verification`, `paid`, or `failed`. Optional fields are `paymentMethod`, `paymentRef`, `paidAt`, `paidAmount`, and `receiptNo`. Legacy scans do not contain these fields; user payment references are stored in `paymentSubmissions/<pushKey>` until an admin mirrors approval onto a PRD session.
+
 ### Entry Structure
 
 ```json

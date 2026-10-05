@@ -934,6 +934,14 @@ For more information:
 
 ## Map APIs
 
+## User parking and payment services
+
+`subscribeToVehicle(plate, onData, onError)` subscribes to `numberplate` and `parkingLogs`, normalizes both schemas, pairs legacy scans, calculates the current amount, and returns the current session plus five previous visits.
+
+`loadLocalVehicle(plate)` loads the two public JSON caches for offline display. `submitPaymentReference({ sessionId, plate, amount, paymentRef })` appends a validated pending-verification submission. `listenPaymentStatus(sessionId, callback, onError)` listens for admin approval. `createPaymentOrder(sessionId)` is the Razorpay/Cloud Function seam and intentionally throws until a trusted backend is configured.
+
+Payment fields are optional: `paymentStatus`, `paymentMethod`, `paymentRef`, `paidAt`, `paidAmount`, and `receiptNo`.
+
 ### getParkingStations()
 
 Location: src/data/parkingStations.js

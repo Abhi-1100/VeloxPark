@@ -9,6 +9,7 @@
     "start:server": "node server/index.js",
     "build": "vite build",
     "lint": "eslint .",
+    "test": "vitest run",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -41,6 +42,10 @@
     "globals": "^16.5.0",
     "tailwindcss": "^4.1.18",
     "vite": "^8.0.0-beta.13"
+    ,"@testing-library/jest-dom": "^6.6.3"
+    ,"@testing-library/react": "^16.3.0"
+    ,"jsdom": "^26.0.0"
+    ,"vitest": "^3.2.4"
   },
   "overrides": {
     "vite": "^8.0.0-beta.13"

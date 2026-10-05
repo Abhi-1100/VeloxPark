@@ -69,7 +69,14 @@ export const parseToDate = (dateTimeStr) => {
 
   try {
     // ── 1. ISO / standard formats (most entries after the schema fix) ──────────
-    const iso = new Date(dateTimeStr);
+    const raw = String(dateTimeStr).trim();
+    // ESP32 writes UTC without a timezone: YYYY-MM-DD HH:MM:SS.
+    const espUtc = raw.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?$/);
+    if (espUtc) {
+      const utc = Date.UTC(+espUtc[1], +espUtc[2] - 1, +espUtc[3], +espUtc[4], +espUtc[5], +(espUtc[6] || 0));
+      return new Date(utc);
+    }
+    const iso = new Date(raw);
     if (!isNaN(iso)) return iso;
 
     // ── 2. "DD Mon YYYY HH:MM am/pm" — en-IN locale output ("03 Mar 2026 10:30 am") ──
@@ -91,9 +98,7 @@ export const parseToDate = (dateTimeStr) => {
     }
 
     // ── 3. "DD/MM/YY HH:MM" or "DD-MM-YYYY HH:MM" — hardware / local JSON ────
-    const numM = String(dateTimeStr).match(
-      /^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})(?:[ T](\d{1,2}):(\d{2}))?/
-    );
+    const numM = String(dateTimeStr).match(new RegExp('^(\\d{1,2})[/-](\\d{1,2})[/-](\\d{2,4})(?:[ T](\\d{1,2}):(\\d{2}))?'));
     if (numM) {
       let year = parseInt(numM[3], 10);
       if (year < 100) year += 2000;

@@ -451,6 +451,39 @@
   background: #e6e8ec;
 }
 
+.stitch-veh-card-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stitch-veh-delete-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: #fdf2f2;
+  border: 1px solid #fee2e2;
+  color: #dc2626;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.stitch-veh-delete-btn:hover {
+  background: #dc2626;
+  color: #ffffff;
+  border-color: #dc2626;
+  transform: scale(1.05);
+}
+
+.stitch-veh-delete-btn span {
+  font-size: 16px;
+}
+
 /* Realistic Indian HSRP Full License Plate */
 .stitch-hsrp-full-plate {
   background: #ffffff;
@@ -562,6 +595,101 @@
   font-size: 11px;
   color: #46464a;
   margin-top: 2px;
+}
+
+/* ─── Empty Vehicles State (Fresh Users) ─────────────────────────────────── */
+.stitch-empty-vehicles-box {
+  background: #ffffff;
+  border: 2px dashed #d8dade;
+  border-radius: 24px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+}
+
+.stitch-empty-vehicles-box:hover {
+  border-color: #fecb35;
+  background: #fffdf5;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(254, 203, 53, 0.15);
+}
+
+.stitch-empty-veh-icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: #f2f4f8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5c5f65;
+  transition: all 0.2s ease;
+}
+
+.stitch-empty-vehicles-box:hover .stitch-empty-veh-icon-wrap {
+  background: #fecb35;
+  color: #010102;
+}
+
+.stitch-empty-veh-icon-wrap span {
+  font-size: 30px;
+}
+
+.stitch-empty-veh-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stitch-empty-veh-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #010102;
+  margin: 0;
+}
+
+.stitch-empty-veh-desc {
+  font-size: 13px;
+  color: #76767a;
+  margin: 0;
+  line-height: 1.45;
+  max-width: 360px;
+}
+
+.stitch-empty-veh-cta-btn {
+  margin-top: 6px;
+  height: 42px;
+  padding: 0 22px;
+  border-radius: 9999px;
+  background: #fecb35;
+  color: #010102;
+  border: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(254, 203, 53, 0.35);
+  transition: all 0.15s ease;
+}
+
+.stitch-empty-veh-cta-btn:hover {
+  transform: scale(1.04);
+  background: #ffd554;
+}
+
+.stitch-empty-veh-cta-btn span {
+  font-size: 18px;
 }
 
 /* ─── Add Vehicle Box Section (In place of Standard Rates) ───────────────── */
@@ -1105,6 +1233,59 @@
   border-color: #010102;
 }
 
+/* Indian Phone Number Input Group with Default +91 Badge */
+.stitch-phone-input-group {
+  display: flex;
+  align-items: stretch;
+  background: #ffffff;
+  border: 1px solid #d8dade;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 48px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stitch-phone-input-group:focus-within {
+  border-color: #010102;
+  box-shadow: 0 0 0 3px rgba(254, 203, 53, 0.35);
+}
+
+.stitch-phone-prefix-badge {
+  background: #f2f4f8;
+  border-right: 1px solid #d8dade;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #191c1f;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.stitch-phone-prefix-badge .stitch-flag-icon {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.stitch-phone-input-group input {
+  flex: 1;
+  border: none !important;
+  border-radius: 0 !important;
+  height: 100% !important;
+  padding: 0 14px !important;
+  font-size: 15px !important;
+  font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+  letter-spacing: 0.05em !important;
+  font-weight: 600 !important;
+  color: #010102 !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .stitch-modal-actions {
   display: flex;
   align-items: center;
@@ -1269,5 +1450,139 @@
 
   .stitch-profile-toast {
     bottom: 32px;
+  }
+}
+
+/* ─── Profile Content Scoping & Order Enforcement ─────────────────────────── */
+.stitch-profile-content .stitch-vehicles-section {
+  order: initial !important;
+}
+
+/* ─── Add Vehicle Bottom Sheet / Modal (Matching Time Picker & Station Popup) ─ */
+.stitch-add-vehicle-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: stitchOverlayFadeIn 0.2s ease-out;
+  touch-action: pan-y;
+}
+
+@keyframes stitchOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.stitch-add-vehicle-sheet {
+  width: 100%;
+  max-width: 520px;
+  background: #ffffff;
+  border-radius: 28px 28px 0 0;
+  padding: 16px 22px 28px;
+  box-shadow: 0 -12px 48px rgba(0, 0, 0, 0.18);
+  animation: stitchSheetSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.stitch-add-vehicle-sheet::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes stitchSheetSlideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.stitch-sheet-handle-bar {
+  width: 38px;
+  height: 4.5px;
+  border-radius: 9999px;
+  background: #d8dade;
+  margin: 0 auto 4px;
+}
+
+.stitch-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stitch-sheet-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stitch-sheet-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #010102;
+  margin: 0;
+}
+
+.stitch-sheet-close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f2f4f8;
+  color: #010102;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.stitch-sheet-close-btn:hover {
+  background: #e6e8ec;
+  transform: scale(1.05);
+}
+
+@media (min-width: 640px) {
+  .stitch-add-vehicle-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+
+  .stitch-add-vehicle-sheet {
+    border-radius: 28px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+    padding: 24px 28px 28px;
+    animation: stitchSheetScaleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes stitchSheetScaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .stitch-sheet-handle-bar {
+    display: none;
   }
 }

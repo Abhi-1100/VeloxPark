@@ -460,3 +460,15 @@ For more information:
 - Run npm run lint and npm run build.
 
 See Map Feature Guide for the detailed checklist.
+# User flow manual test cases (4.1.0)
+
+1. Clear localStorage/sessionStorage and open `/user`: confirm empty state, focused input, no vehicle card, and three steps.
+2. Search an unknown valid plate: confirm not-found, retry, and contact-staff inline actions.
+3. Load a parked fixture: confirm live elapsed time, estimated fee, free-window countdown, zone, vehicle type, and no payment button.
+4. Edit the parked log to add `outTime` in Firebase: confirm the page changes without refresh.
+5. Test an exit at 30 minutes and over 30 minutes: confirm FREE/no payment versus the rounded-up amount.
+6. Submit a 12-digit UPI reference: confirm pending-verification state; approve the submission as admin and confirm live Paid state and receipt download.
+7. Open payment and success URLs directly without a valid session: confirm safe redirect to `/user`.
+8. Block Firebase network access: confirm Offline banner and cached data.
+
+The seed fixture is `scripts/user-state-seed.json`. The project currently has no test runner configured; add Vitest/RTL before running automated coverage.
