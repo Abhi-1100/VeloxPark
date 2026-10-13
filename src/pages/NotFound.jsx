@@ -10,7 +10,7 @@ function NotFound() {
       <header className="notfound-header">
         <div className="notfound-header-left">
           <div className="notfound-icon">
-            <span className="material-symbols-outlined">local_parking</span>
+            <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
           </div>
           <h2 className="notfound-title">VeloxPark Admin</h2>
         </div>

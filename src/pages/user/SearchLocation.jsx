@@ -99,6 +99,7 @@ function SearchLocation() {
   const { user } = useAuth();
   const searchContainerRef = useRef(null);
   const [location, setLocation] = useState(routeLocation.state?.prefill || '');
+  const [isLocationConfirmed, setIsLocationConfirmed] = useState(Boolean(routeLocation.state?.prefill));
   const [isLocating, setIsLocating] = useState(false);
   const [activeFilters, setActiveFilters] = useState(['near_me']);
   const [scheduleMode, setScheduleMode] = useState('now'); // 'now' | 'later'
@@ -173,6 +174,8 @@ function SearchLocation() {
   selectedDayIndexRef.current = selectedDayIndex;
   const locationRef = useRef(location);
   locationRef.current = location;
+  const isLocationConfirmedRef = useRef(isLocationConfirmed);
+  isLocationConfirmedRef.current = isLocationConfirmed;
   const selectedGeoRef = useRef(null);
   const handleSearchRef = useRef(null);
 
@@ -231,25 +234,40 @@ function SearchLocation() {
       if (e.target && e.target.value !== undefined) {
         setLocation(e.target.value);
         locationRef.current = e.target.value;
+        // Do not show the popup instantly while typing
+        setIsLocationConfirmed(false);
+        isLocationConfirmedRef.current = false;
       }
     };
 
     const handleKeyDown = (e) => {
       if (e.key === 'Enter') {
-        const val = e.target?.value || locationRef.current;
-        if (val && handleSearchRef.current) {
-          handleSearchRef.current(val);
+        const val = (e.target?.value || locationRef.current || '').trim();
+        if (val) {
+          setLocation(val);
+          locationRef.current = val;
+          if (!isLocationConfirmedRef.current) {
+            setIsLocationConfirmed(true);
+            isLocationConfirmedRef.current = true;
+            autocompleteRef.current?.close?.();
+            e.target?.blur();
+          } else {
+            if (handleSearchRef.current) {
+              handleSearchRef.current(val);
+            }
+          }
         }
       }
     };
 
     searchContainer.addEventListener('input', handleInput);
-    searchContainer.addEventListener('change', handleInput);
     searchContainer.addEventListener('keydown', handleKeyDown);
 
     autocomplete.on('clear', () => {
       setLocation('');
       locationRef.current = '';
+      setIsLocationConfirmed(false);
+      isLocationConfirmedRef.current = false;
     });
 
     autocomplete.on('select', (feature) => {
@@ -259,6 +277,8 @@ function SearchLocation() {
       const formatted = properties.formatted || properties.address_line1 || properties.city || 'Selected location';
       setLocation(formatted);
       locationRef.current = formatted;
+      setIsLocationConfirmed(true);
+      isLocationConfirmedRef.current = true;
       selectedGeoRef.current = {
         lat: properties.lat,
         lon: properties.lon,
@@ -401,6 +421,8 @@ function SearchLocation() {
   const handleClear = () => {
     setLocation('');
     locationRef.current = '';
+    setIsLocationConfirmed(false);
+    isLocationConfirmedRef.current = false;
     autocompleteRef.current?.setValue('');
     const inputEl = searchContainerRef.current?.querySelector('input');
     if (inputEl) {
@@ -548,6 +570,8 @@ function SearchLocation() {
   const handleSelectRecent = (itemTitle) => {
     setLocation(itemTitle);
     locationRef.current = itemTitle;
+    setIsLocationConfirmed(true);
+    isLocationConfirmedRef.current = true;
     autocompleteRef.current?.setValue(itemTitle);
     const inputEl = searchContainerRef.current?.querySelector('input');
     if (inputEl) {
@@ -609,8 +633,8 @@ function SearchLocation() {
     return SERVICEABLE_CITIES[0].stations;
   }, [location, stations]);
 
-  // Dynamically calculate current available slots for the active location/city
-  const availableSlotsCount = useMemo(() => {
+  // Dynamically calculate current available parking stations count for the active location/city
+  const availableStationsCount = useMemo(() => {
     const locLower = (location || '').toLowerCase().trim();
     if (!locLower) return 0;
 
@@ -622,17 +646,21 @@ function SearchLocation() {
     );
 
     if (matchedCity && matchedCity.stations?.length > 0) {
-      return matchedCity.stations.reduce((sum, s) => sum + (s.slots || 0), 0);
+      return matchedCity.stations.length;
     }
 
     // 2. If stations from database exist
     if (stations.length > 0) {
-      const sum = stations.reduce((acc, s) => acc + (Number(s.availableSlots || s.slots) || 0), 0);
-      if (sum > 0) return sum;
+      const cityStations = stations.filter((s) => {
+        const addr = `${s.address || ''} ${s.name || ''}`.toLowerCase();
+        return addr.includes(locLower) || locLower.includes(addr);
+      });
+      if (cityStations.length > 0) return cityStations.length;
+      return stations.length;
     }
 
-    // 3. Fallback to display stations sum (24 + 8 = 32 slots)
-    return displayStations.reduce((acc, s) => acc + (Number(s.availableSlots || s.slots) || 0), 0);
+    // 3. Fallback to display stations count
+    return displayStations?.length || 0;
   }, [location, stations, displayStations]);
 
   return (
@@ -641,7 +669,7 @@ function SearchLocation() {
       <header className="sl-top-bar">
         <div className="sl-top-bar-inner">
           <div className="sl-logo-group" onClick={() => navigate('/dashboard')}>
-            <div className="sl-brand-circle">P</div>
+            <img className="sl-brand-circle" src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
             <div className="sl-brand-text">
               <span className="sl-brand-name">VeloxPark</span>
               <span className="sl-brand-sub">Smart Anand</span>
@@ -737,7 +765,23 @@ function SearchLocation() {
           {/* Big Rounded Search Input Bar */}
           <div className="sl-search-wrap">
             <div className="sl-search-pill">
-              <span className="material-symbols-outlined sl-search-icon">search</span>
+              <span
+                className="material-symbols-outlined sl-search-icon"
+                role="button"
+                tabIndex={0}
+                style={{ cursor: 'pointer' }}
+                title="Search location"
+                onClick={() => {
+                  const val = (locationRef.current || location || '').trim();
+                  if (val) {
+                    setIsLocationConfirmed(true);
+                    isLocationConfirmedRef.current = true;
+                    autocompleteRef.current?.close?.();
+                  }
+                }}
+              >
+                search
+              </span>
               <div ref={searchContainerRef} className="sl-search-input sl-geo-autocomplete" />
               {location && (
                 <button
@@ -962,8 +1006,8 @@ function SearchLocation() {
                 </div>
               )}
 
-              {/* Sticky / Inline Map Launch Button - only shown when location is entered */}
-              {Boolean((location || '').trim()) && (
+              {/* Sticky / Inline Map Launch Button - only shown when location is confirmed */}
+              {isLocationConfirmed && Boolean((location || '').trim()) && (
                 <div className="sl-sticky-bottom-action">
                   <button
                     type="button"
@@ -972,7 +1016,7 @@ function SearchLocation() {
                   >
                     <span className="material-symbols-outlined filled">map</span>
                     <span>
-                      Show on map ({availableSlotsCount > 0 ? `${availableSlotsCount} slots available` : 'Explore spots'})
+                      Show on map ({availableStationsCount > 0 ? `${availableStationsCount} ${availableStationsCount === 1 ? 'parking station' : 'parking stations'} available` : 'Explore spots'})
                     </span>
                   </button>
                 </div>

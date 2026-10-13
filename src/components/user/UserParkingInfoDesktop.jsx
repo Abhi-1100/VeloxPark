@@ -211,6 +211,7 @@ const UserParkingInfoDesktop = ({
                 color: '#FFFFFF',
               }}
             >
+              <img src="/brand/digital/veloxpark-app-icon.svg" alt="" style={{ width: 32, height: 32, objectFit: 'contain', borderRadius: 8, marginRight: 10 }} />
               VELOX<span style={{ color: '#F2C230' }}>.</span>PARK
             </span>
           </div>

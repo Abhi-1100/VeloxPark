@@ -1,4 +1,4 @@
-const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_KEY;
+const GEOAPIFY_API_KEY = import.meta.env.VITE_GEOAPIFY_KEY || '31cddbdb87b646a38a8525f91fe2d718';
 const GEOAPIFY_API_BASE = 'https://api.geoapify.com';
 
 function apiUrl(path, params = {}) {

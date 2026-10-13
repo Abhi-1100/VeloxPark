@@ -67,6 +67,14 @@
     box-sizing: border-box;
 }
 
+.ls-brand-icon {
+    width: 56px;
+    height: 56px;
+    margin-bottom: 14px;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
 /* Parking Centerpiece Stage */
 .ls-parking-stage {
     position: relative;

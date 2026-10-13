@@ -69,6 +69,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/loading" element={<LoadingScreen />} />
               <Route path="/unserviceable" element={<UnserviceableAreaView />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/landing" element={<Home />} />
               <Route path="/" element={<RootRoute />} />
 
               {/* User Side Responsive Pages */}

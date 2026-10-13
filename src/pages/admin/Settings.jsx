@@ -125,7 +125,7 @@ const Settings = ({ user }) => {
                                 <span className="material-symbols-outlined">menu</span>
                             </button>
                             <div className="settings-logo">
-                                <span className="material-symbols-outlined">local_parking</span>
+                                <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
                             </div>
                             <h1 className="settings-title">
                                 VELOX<span className="settings-title-accent">PARK</span> ADMIN

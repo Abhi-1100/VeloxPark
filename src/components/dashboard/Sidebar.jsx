@@ -30,7 +30,7 @@ const Sidebar = ({
     <aside className={`pf-sidebar group/sidebar ${isMobileOpen ? 'pf-sidebar-open' : ''}`}>
         {/* Logo */}
         <div className="pf-sidebar-logo">
-            <img src="/veloxpark logo.png" alt="VeloxPark" style={{ height: '28px', marginRight: '8px' }} />
+            <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" style={{ height: '28px', width: '28px', objectFit: 'contain', borderRadius: '8px', marginRight: '8px' }} />
             <span className="pf-sidebar-label pf-logo-text">VeloxPark</span>
         </div>
 

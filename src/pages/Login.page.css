@@ -94,6 +94,14 @@
   box-shadow: 0 0 20px rgba(242, 194, 48, 0.3);
 }
 
+.vl-logo-mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: inherit;
+}
+
 /* ── Wordmark ───────────────────────────────────────────────────── */
 .vl-wordmark {
   display: flex;

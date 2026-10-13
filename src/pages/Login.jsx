@@ -105,7 +105,7 @@ function Login() {
 
         <div className="vl-hero-content">
           <div className="vl-logo-mark">
-            <span className="material-symbols-outlined" style={{ fontSize: 36, color: '#0A0A0A', fontVariationSettings: "'FILL' 1" }}>local_parking</span>
+            <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
           </div>
 
           <div className="vl-wordmark">
@@ -143,7 +143,7 @@ function Login() {
 
           <div className="vl-mobile-logo">
             <div className="vl-logo-mark vl-logo-mark-sm">
-              <span className="material-symbols-outlined" style={{ fontSize: 22, color: '#0A0A0A', fontVariationSettings: "'FILL' 1" }}>local_parking</span>
+              <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
             </div>
             <span className="vl-mobile-brand">VeloxPark</span>
           </div>

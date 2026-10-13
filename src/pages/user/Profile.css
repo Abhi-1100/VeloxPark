@@ -54,6 +54,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(254, 203, 53, 0.35);
+  object-fit: contain;
 }
 
 .stitch-brand-col {

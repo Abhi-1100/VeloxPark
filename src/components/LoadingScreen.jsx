@@ -20,6 +20,7 @@ const LoadingScreen = ({ statusText = "SYSTEM: INITIALIZING..." }) => (
 
             {/* Branding */}
             <div className="ls-branding-wrap">
+                <img className="ls-brand-icon" src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
                 <h1 className="ls-title">
                     <span className="ls-velox">VELOX</span>
                     <span className="ls-park">PARK</span>

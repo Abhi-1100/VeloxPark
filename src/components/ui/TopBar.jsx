@@ -81,7 +81,7 @@ function TopBar({ userName, onSignOut }) {
         <div className="vp-page-container vp-topbar-inner vp-desktop-header">
           {/* ── Brand Logo ──────────────────────────────────────────────────── */}
           <Link to="/" className="vp-brand-link" style={{ gap: '12px', paddingLeft: '8px' }}>
-            <img src="/veloxpark logo.png" alt="VeloxPark Logo" style={{ height: '36px', width: 'auto' }} />
+            <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark Logo" style={{ height: '36px', width: '36px', objectFit: 'contain', borderRadius: '10px' }} />
           </Link>
 
           {/* ── Center Section Pill Tabs ───────────────────────────────────── */}

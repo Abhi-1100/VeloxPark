@@ -1,0 +1,16 @@
+{
+  "name": "VeloxPark",
+  "short_name": "VeloxPark",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#F2C230",
+  "icons": [
+    {
+      "src": "/brand/digital/veloxpark-app-icon.svg",
+      "sizes": "256x256",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

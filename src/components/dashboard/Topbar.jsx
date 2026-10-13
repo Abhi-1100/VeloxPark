@@ -32,6 +32,7 @@ const Topbar = ({
 
         {/* Brand pill */}
         <div className="pf-brand-pill">
+            <img src="/brand/digital/veloxpark-app-icon.svg" alt="" style={{ width: 28, height: 28, objectFit: 'contain', borderRadius: 7 }} />
             <span className="pf-brand-name">VeloxPark</span>
             <span className="pf-brand-dot" />
             <span className="pf-brand-version">Enterprise v2.0</span>

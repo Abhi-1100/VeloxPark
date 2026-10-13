@@ -290,7 +290,7 @@ function Dashboard({
       <header className="stitch-dash-header">
         <div className="stitch-dash-header-inner">
           <div className="stitch-dash-brand" onClick={() => navigate('/dashboard')}>
-            <div className="stitch-brand-logo-icon">P</div>
+            <img className="stitch-brand-logo-icon" src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
             <div className="stitch-brand-titles">
               <span className="stitch-brand-heading">
                 Velox<span className="gold-text">Park</span>

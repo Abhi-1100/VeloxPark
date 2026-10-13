@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">VeloxPark favicon</title>
+  <rect width="256" height="256" rx="56" fill="#F2C230"/>
+  <path fill="#0A0A0A" d="M42 36h42l44 84 44-84h42l-65 126-21 42h-42l21-42L42 36Z"/>
+  <path fill="#F2C230" d="M105 160h38l-12 23h-38l12-23Z"/>
+  <path fill="#F2C230" d="M122 127h38l-12 23h-38l12-23Z"/>
+  <path fill="#F2C230" d="M139 94h38l-12 23h-38l12-23Z"/>
+</svg>

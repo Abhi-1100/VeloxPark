@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">VeloxPark Network symbol — black</title>
+  <path fill="#0A0A0A" fill-rule="evenodd" d="M128 28 218 80v96l-90 52-90-52V80l90-52Zm0 42-54 31v62l54 31 54-31v-62l-54-31Z"/>
+  <path fill="#F5F5F0" d="m128 58 13 23-13 23-13-23 13-23ZM69 166l27-1 14 23-27 1-14-23Zm118 0-27-1-14 23 27 1 14-23Z"/>
+  <circle cx="128" cy="74" r="15" fill="#0A0A0A"/>
+  <circle cx="82" cy="174" r="15" fill="#0A0A0A"/>
+  <circle cx="174" cy="174" r="15" fill="#0A0A0A"/>
+</svg>

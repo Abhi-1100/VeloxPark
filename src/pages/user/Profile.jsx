@@ -396,7 +396,7 @@ function Profile() {
       <header className="stitch-profile-top-bar">
         <div className="stitch-profile-top-inner">
           <div className="stitch-logo-group" onClick={() => navigate('/dashboard')}>
-            <div className="stitch-logo-p">P</div>
+            <img className="stitch-logo-p" src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
             <div className="stitch-brand-col">
               <span className="stitch-brand-name">VeloxPark</span>
               <span className="stitch-brand-sub">Profile</span>

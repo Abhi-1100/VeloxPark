@@ -62,7 +62,8 @@ const UserNavbar = ({ onShowRates }) => {
               userSelect: 'none',
             }}
           >
-            VELOX<span style={{ color: '#FFD700' }}>.</span>PARK
+            <img src="/brand/digital/veloxpark-app-icon.svg" alt="" style={{ width: 32, height: 32, objectFit: 'contain', borderRadius: 8 }} />
+            <span>VELOX<span style={{ color: '#FFD700' }}>.</span>PARK</span>
           </div>
 
           {/* Links */}
