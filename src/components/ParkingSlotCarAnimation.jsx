@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './ParkingSlotCarAnimation.css';
 
 /**
@@ -8,12 +8,21 @@ import './ParkingSlotCarAnimation.css';
  */
 const ParkingSlotCarAnimation = ({ slotName = 'BAY A-01' }) => {
     const [cycleStep, setCycleStep] = useState(0);
+    const cycleStartedAt = useRef(0);
 
     // Sync telemetry readouts with the 5.2s CSS parking animation cycle
     useEffect(() => {
+        const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+        if (motionPreference.matches) setCycleStep(3);
+        else cycleStartedAt.current = Date.now();
+
         const updateCycle = () => {
-            const now = Date.now();
-            const elapsed = (now % 5200) / 5200;
+            if (motionPreference.matches) {
+                setCycleStep(3);
+                return;
+            }
+            if (!cycleStartedAt.current) cycleStartedAt.current = Date.now();
+            const elapsed = ((Date.now() - cycleStartedAt.current) % 5200) / 5200;
 
             if (elapsed < 0.22) {
                 setCycleStep(0); // Approaching & Seeking
@@ -27,8 +36,20 @@ const ParkingSlotCarAnimation = ({ slotName = 'BAY A-01' }) => {
         };
 
         const interval = setInterval(updateCycle, 150);
+        const handleMotionPreference = (event) => {
+            if (event.matches) {
+                setCycleStep(3);
+            } else {
+                cycleStartedAt.current = Date.now();
+                setCycleStep(0);
+            }
+        };
+        motionPreference.addEventListener('change', handleMotionPreference);
         updateCycle();
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+            motionPreference.removeEventListener('change', handleMotionPreference);
+        };
     }, []);
 
     const telemetryData = [
@@ -273,7 +294,7 @@ const ParkingSlotCarAnimation = ({ slotName = 'BAY A-01' }) => {
             <div className="psca-hud-bar">
                 <div className="psca-hud-col">
                     <span className="psca-hud-label">OS Telemetry</span>
-                    <span className={`psca-hud-value ${currentTelemetry.stateClass}`}>
+                    <span className={`psca-hud-value ${currentTelemetry.stateClass}`} role="status" aria-live="polite">
                         <span className="psca-hud-indicator" />
                         {currentTelemetry.status}
                     </span>

@@ -304,3 +304,20 @@
         font-size: 10px;
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .psca-container *,
+    .psca-container *::before,
+    .psca-container *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
+    .psca-car-assembly { transform: translate(230px, 80px) rotate(-90deg); opacity: 1; }
+    .psca-headlight-beams { opacity: 0.6; }
+    .psca-brake-glow { opacity: 0.2; }
+    .psca-brake-light { fill: #ff2222; }
+    .psca-bay-brackets { stroke: #38bdf8; }
+    .psca-bay-status-dot { fill: #38bdf8; }
+    .psca-dock-reticle { stroke: rgba(56, 189, 248, 0.7); }
+}

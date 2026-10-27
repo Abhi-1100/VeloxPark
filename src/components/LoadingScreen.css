@@ -1,236 +1,160 @@
 /* ── LoadingScreen.css ─────────────────────────────────────────────────────── */
 
-/* Root — full viewport */
 .ls-root {
-    position: fixed;
-    inset: 0;
-    background: #090906; /* deeper dark carbon */
-    color: #e7e2d9; /* on-surface */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    overflow: hidden;
-    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  position: fixed;
+  inset: 0;
+  background-color: #0a0a0a;
+  color: #f5f5f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
 }
 
-/* Ambient Grid Overlay */
-.ls-grid-stitch {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.04;
-    background-image: radial-gradient(#f5c518 1px, transparent 1px);
-    background-size: 36px 36px;
+/* Subtle ambient glow behind center */
+.ls-ambient-glow {
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 194, 48, 0.08) 0%, rgba(242, 194, 48, 0.02) 40%, transparent 70%);
+  pointer-events: none;
+  animation: ls-glow-pulse 4s ease-in-out infinite alternate;
 }
 
-/* Texture Overlays */
-.ls-texture-overlay {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+/* Central Content Container */
+.ls-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  max-width: 420px;
+  text-align: center;
+  z-index: 1;
 }
 
-.ls-tonal-shift {
-    position: absolute;
-    top: 0; 
-    left: 0;
-    width: 100%;
-    height: 40%;
-    background: linear-gradient(to bottom, rgba(245, 197, 24, 0.04), transparent);
+/* Brand Section */
+.ls-brand-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.ls-scanlines {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    opacity: 0.035;
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 2px,
-        rgba(245, 197, 24, 0.2) 2px,
-        rgba(245, 197, 24, 0.2) 4px
-    );
+.ls-logo-badge {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  border-radius: 18px;
+  background: rgba(242, 194, 48, 0.06);
+  border: 1px solid rgba(242, 194, 48, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(242, 194, 48, 0.08);
+  transition: transform 0.3s ease;
 }
 
-.ls-main-container {
-    position: relative;
-    height: 100vh;
-    width: 100%;
-    max-width: 800px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    box-sizing: border-box;
+.ls-app-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: contain;
 }
 
-.ls-brand-icon {
+.ls-brand-text {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ls-brand-velox {
+  color: #f5f5f0;
+}
+
+.ls-brand-park {
+  color: #f2c230;
+}
+
+/* Status Pill with Typing Dots */
+.ls-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.ls-typing-dots {
+  width: 24px;
+  height: 8px;
+  color: #f2c230; /* Signal Gold */
+}
+
+.ls-status-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #a3a3a3;
+  letter-spacing: 0.2px;
+}
+
+/* Footer */
+.ls-footer {
+  position: absolute;
+  bottom: 28px;
+  font-size: 11px;
+  color: #525252;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+/* Ambient glow subtle pulse */
+@keyframes ls-glow-pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .ls-brand-text {
+    font-size: 22px;
+  }
+
+  .ls-logo-badge {
     width: 56px;
     height: 56px;
-    margin-bottom: 14px;
-    object-fit: contain;
-    border-radius: 12px;
-}
+  }
 
-/* Parking Centerpiece Stage */
-.ls-parking-stage {
-    position: relative;
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+  .ls-app-icon {
+    width: 42px;
+    height: 42px;
+  }
 
-/* Branding */
-.ls-branding-wrap {
-    margin-top: 24px;
-    text-align: center;
-}
-
-.ls-title {
-    font-family: 'Space Grotesk', 'Barlow Condensed', sans-serif;
-    font-size: 34px;
-    font-weight: 800;
-    letter-spacing: -1.5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    margin: 0;
-}
-
-.ls-velox { 
-    color: #e7e2d9; 
-    text-shadow: 0 2px 12px rgba(231, 226, 217, 0.2);
-}
-
-.ls-park { 
-    color: #f5c518; 
-    text-shadow: 0 0 20px rgba(245, 197, 24, 0.4);
-}
-
-.ls-brand-sub {
-    font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 3px;
-    color: #9a9078;
-    margin-top: 6px;
-    text-transform: uppercase;
-    opacity: 0.8;
-}
-
-/* Metadata / Status */
-.ls-meta-wrap {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-}
-
-.ls-status-line {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(26, 25, 20, 0.6);
-    border: 1px solid rgba(245, 197, 24, 0.15);
-    padding: 6px 14px;
-    border-radius: 9999px;
-}
-
-.ls-status-pulse {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #38bdf8;
-    box-shadow: 0 0 10px #38bdf8;
-    animation: ls-single-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.ls-status-text {
-    font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
+  .ls-footer {
+    bottom: 20px;
     font-size: 10px;
-    letter-spacing: 2px;
-    color: #f5c518;
-    animation: pulse-text 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-    margin: 0;
-}
-
-.ls-node-status {
-    display: flex;
-    gap: 18px;
-    margin-top: 20px;
-    opacity: 0.45;
-    font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
-    font-size: 9px;
-    letter-spacing: 0.5px;
-}
-
-.ls-node-status span {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.ls-sm-icon { 
-    font-size: 12px; 
-    color: #f5c518;
-}
-
-@keyframes pulse-text {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
-}
-
-@keyframes ls-single-pulse {
-    0%, 100% { opacity: 0.4; transform: scale(0.85); }
-    50% { opacity: 1; transform: scale(1.2); }
-}
-
-/* Bottom elements */
-.ls-bottom-left {
-    position: fixed;
-    bottom: 36px;
-    left: 40px;
-    font-family: 'JetBrains Mono', 'Share Tech Mono', monospace;
-    font-size: 8px;
-    color: #79715d;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    line-height: 1.6;
-}
-
-.ls-bottom-right {
-    position: fixed;
-    bottom: 36px;
-    right: 40px;
-    text-align: right;
-    font-family: 'Space Grotesk', 'Barlow Condensed', sans-serif;
-    font-weight: 400;
-    font-size: 10px;
-    color: #9a9078;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin: 0;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .ls-bottom-left, .ls-bottom-right {
-        display: none;
-    }
-    
-    .ls-title {
-        font-size: 28px;
-    }
-    
-    .ls-node-status {
-        gap: 10px;
-        font-size: 8px;
-    }
+  }
 }

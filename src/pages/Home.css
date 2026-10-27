@@ -38,6 +38,33 @@ html {
   padding: 0 24px;
 }
 
+/* Parking workflow figure */
+.vl-parking-flow-section { padding: 56px 0 88px; background: #f1f3f6; }
+.vl-parking-flow-heading { max-width: 720px; margin: 0 auto 32px; text-align: center; }
+.vl-parking-flow-eyebrow { color: #8a6a08; font: 700 11px/1.4 'Share Tech Mono', monospace; letter-spacing: .16em; }
+.vl-parking-flow-heading h2 { margin: 10px 0; color: #111827; font: 700 clamp(28px, 3.5vw, 42px)/1.12 'Plus Jakarta Sans', sans-serif; letter-spacing: -.04em; }
+.vl-parking-flow-heading p { max-width: 590px; margin: 0 auto; color: #667085; font-size: 15px; line-height: 1.7; }
+.vl-parking-flow-panel { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr); align-items: center; gap: clamp(28px, 5vw, 72px); padding: clamp(24px, 4vw, 48px); overflow: hidden; border: 1px solid #25271f; border-radius: 24px; background: radial-gradient(ellipse at 19% 50%, rgba(245,197,24,.09), transparent 48%), #0d0c08; box-shadow: 0 22px 55px rgba(17,24,39,.14); }
+.vl-parking-flow-machine { min-width: 0; }
+.vl-parking-flow-machine .psca-container { max-width: 520px; }
+.vl-parking-flow-machine .psca-svg { filter: drop-shadow(0 14px 28px rgba(0,0,0,.48)); }
+.vl-parking-flow-steps { display: grid; }
+.vl-parking-flow-step { display: grid; grid-template-columns: 32px 38px 1fr; align-items: start; gap: 12px; padding: 17px 0; border-bottom: 1px solid rgba(255,255,255,.1); }
+.vl-parking-flow-index { padding-top: 4px; color: #9a9078; font: 11px 'Share Tech Mono', monospace; }
+.vl-parking-flow-step-icon { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid rgba(245,197,24,.25); border-radius: 10px; background: rgba(245,197,24,.08); color: #f5c518; font-size: 18px; }
+.vl-parking-flow-step h3 { margin: 0 0 4px; color: #f8fafc; font-size: 14px; font-weight: 700; }
+.vl-parking-flow-step p { margin: 0; color: #aaa99f; font-size: 12px; line-height: 1.6; }
+.vl-parking-flow-cta { display: inline-flex; align-items: center; justify-content: center; gap: 10px; justify-self: start; margin-top: 23px; padding: 12px 18px; border: 0; border-radius: 999px; background: #f2c230; color: #141414; font: 700 13px 'Plus Jakarta Sans', sans-serif; cursor: pointer; transition: transform .2s ease, background .2s ease; }
+.vl-parking-flow-cta:hover { transform: translateY(-2px); background: #ffda58; }
+.vl-parking-flow-cta .material-symbols-outlined { font-size: 17px; }
+
+@media (max-width: 760px) {
+  .vl-parking-flow-section { padding: 42px 0 64px; }
+  .vl-parking-flow-panel { grid-template-columns: 1fr; gap: 25px; padding: 20px 16px 24px; border-radius: 18px; }
+  .vl-parking-flow-machine { width: 100%; }
+  .vl-parking-flow-steps { padding: 0 5px; }
+}
+
 /* ─── RESTORED OLD FLOATING PILL NAVBAR ─── */
 .nav-wrapper {
   position: fixed;
@@ -80,14 +107,14 @@ html {
   gap: 10px;
 }
 
-.nav-logo > img {
+.nav-logo>img {
   width: 32px;
   height: 32px;
   object-fit: contain;
   border-radius: 8px;
 }
 
-.nav-logo-wordmark > span {
+.nav-logo-wordmark>span {
   color: var(--velox-gold);
 }
 
@@ -186,17 +213,21 @@ html {
   .nav-wrapper {
     padding: 12px 16px;
   }
+
   .nav-inner {
     width: 100%;
     justify-content: space-between;
   }
+
   .nav-links,
   .nav-right-actions {
     display: none;
   }
+
   .nav-toggle {
     display: flex;
   }
+
   .nav-mobile.is-open {
     display: flex;
     flex-direction: column;
@@ -214,6 +245,7 @@ html {
     pointer-events: auto;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   }
+
   .nav-mobile button {
     background: none;
     border: none;
@@ -226,6 +258,7 @@ html {
     cursor: pointer;
     padding: 8px 0;
   }
+
   .nav-mobile .btn-connect {
     text-align: center;
     margin-top: 10px;
@@ -324,7 +357,7 @@ html {
 .vl-hero-map-bg {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -425,8 +458,13 @@ html {
 }
 
 @keyframes roadDashMove {
-  from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: -48; }
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: -48;
+  }
 }
 
 .vl-car-beacon {
@@ -488,8 +526,15 @@ html {
 }
 
 @keyframes radarWave {
-  0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0.9; }
-  100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+  0% {
+    transform: translate(-50%, -50%) scale(0.3);
+    opacity: 0.9;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1.6);
+    opacity: 0;
+  }
 }
 
 .vl-telemetry-pill {
@@ -611,7 +656,7 @@ html {
   flex-direction: column;
 }
 
-.vl-stat-num {
+.vl-stats-card .vl-stat-num {
   font-family: 'Outfit', sans-serif;
   font-size: clamp(40px, 3.8vw, 52px);
   font-weight: 800;
@@ -621,7 +666,7 @@ html {
   margin-bottom: 8px;
 }
 
-.vl-stat-label {
+.vl-stats-card .vl-stat-label {
   font-size: 13.5px;
   color: var(--velox-text-muted);
   font-weight: 500;
@@ -974,7 +1019,7 @@ html {
   position: relative;
   overflow: hidden;
   margin-bottom: 10px;
-  background-image: 
+  background-image:
     linear-gradient(#CBD5E1 1px, transparent 1px),
     linear-gradient(90deg, #CBD5E1 1px, transparent 1px);
   background-size: 20px 20px;
@@ -1287,7 +1332,7 @@ html {
 .vl-map-grid-layer {
   position: absolute;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   background-size: 44px 44px;
@@ -1324,10 +1369,25 @@ html {
   box-shadow: 0 8px 24px rgba(242, 194, 48, 0.5);
 }
 
-.vl-map-spot-pin-1 { top: 28%; left: 22%; }
-.vl-map-spot-pin-2 { top: 58%; left: 48%; }
-.vl-map-spot-pin-3 { top: 38%; left: 74%; }
-.vl-map-spot-pin-4 { top: 72%; left: 82%; }
+.vl-map-spot-pin-1 {
+  top: 28%;
+  left: 22%;
+}
+
+.vl-map-spot-pin-2 {
+  top: 58%;
+  left: 48%;
+}
+
+.vl-map-spot-pin-3 {
+  top: 38%;
+  left: 74%;
+}
+
+.vl-map-spot-pin-4 {
+  top: 72%;
+  left: 82%;
+}
 
 /* Map Detail Floating Box */
 .vl-map-detail-card {
@@ -2115,44 +2175,55 @@ html {
   .vl-split-grid {
     grid-template-columns: 1fr;
   }
+
   .vl-solution-grid,
   .vl-challenges-grid {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+
   .vl-filter-card {
     grid-template-columns: 1fr 1fr;
   }
+
   .vl-filter-divider {
     display: none;
   }
+
   .vl-testimonials-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .vl-cta-banner-card {
     grid-template-columns: 1fr;
     gap: 40px;
   }
+
   .vl-cta-phone-wrapper {
     justify-content: center;
   }
+
   .contact-full-container {
     grid-template-columns: 1fr;
     gap: 50px;
   }
+
   .site-footer .footer-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
 
 @media (max-width: 768px) {
+
   .vl-nav-menu,
   .vl-nav-actions {
     display: none;
   }
+
   .vl-mobile-toggle {
     display: flex;
   }
+
   .vl-mobile-menu.is-open {
     display: flex;
     flex-direction: column;
@@ -2164,25 +2235,33 @@ html {
     border-bottom: 1px solid #E5E7EB;
     padding: 20px;
     gap: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   }
+
   .vl-stats-card {
     grid-template-columns: 1fr;
     gap: 24px;
   }
+
   .vl-testimonials-grid {
     grid-template-columns: 1fr;
   }
+
   .vl-filter-card {
     grid-template-columns: 1fr;
   }
+
   .contact-full-section {
     padding: 70px 20px 90px;
   }
+
   .contact-matrix-row {
     grid-template-columns: 1fr;
   }
+
   .footer-main {
     padding: 42px 24px 0;
   }
 }
+
+

@@ -6,54 +6,54 @@ import './Login.page.css';
 /* ─── Google SVG icon ─────────────────────────────── */
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M47.532 24.552c0-1.636-.145-3.2-.415-4.695H24.48v8.879h12.984c-.56 3.015-2.248 5.569-4.79 7.284v6.053h7.755c4.538-4.18 7.103-10.336 7.103-17.52z" fill="#4285F4"/>
-    <path d="M24.48 48c6.517 0 11.987-2.162 15.984-5.853l-7.756-6.053c-2.155 1.445-4.912 2.297-8.228 2.297-6.328 0-11.684-4.27-13.593-10.01H2.87v6.248C6.845 42.892 15.063 48 24.48 48z" fill="#34A853"/>
-    <path d="M10.887 28.38A14.44 14.44 0 0 1 10.13 24c0-1.52.26-2.997.757-4.38V13.37H2.869A23.97 23.97 0 0 0 .48 24c0 3.867.927 7.527 2.389 10.629l8.018-6.249z" fill="#FBBC05"/>
-    <path d="M24.48 9.607c3.563 0 6.76 1.225 9.278 3.629l6.958-6.957C36.46 2.384 30.994 0 24.48 0 15.063 0 6.845 5.107 2.87 13.37l8.018 6.248c1.91-5.74 7.265-10.01 13.593-10.01z" fill="#EA4335"/>
+    <path d="M47.532 24.552c0-1.636-.145-3.2-.415-4.695H24.48v8.879h12.984c-.56 3.015-2.248 5.569-4.79 7.284v6.053h7.755c4.538-4.18 7.103-10.336 7.103-17.52z" fill="#4285F4" />
+    <path d="M24.48 48c6.517 0 11.987-2.162 15.984-5.853l-7.756-6.053c-2.155 1.445-4.912 2.297-8.228 2.297-6.328 0-11.684-4.27-13.593-10.01H2.87v6.248C6.845 42.892 15.063 48 24.48 48z" fill="#34A853" />
+    <path d="M10.887 28.38A14.44 14.44 0 0 1 10.13 24c0-1.52.26-2.997.757-4.38V13.37H2.869A23.97 23.97 0 0 0 .48 24c0 3.867.927 7.527 2.389 10.629l8.018-6.249z" fill="#FBBC05" />
+    <path d="M24.48 9.607c3.563 0 6.76 1.225 9.278 3.629l6.958-6.957C36.46 2.384 30.994 0 24.48 0 15.063 0 6.845 5.107 2.87 13.37l8.018 6.248c1.91-5.74 7.265-10.01 13.593-10.01z" fill="#EA4335" />
   </svg>
 );
 
 /* ─── Parking lot SVG illustration ────────────────── */
 const ParkingIllustration = () => (
   <svg viewBox="0 0 360 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="vl-hero-svg">
-    <rect x="20" y="60" width="320" height="160" rx="4" fill="#1A1A0A" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.3"/>
-    <line x1="20" y1="140" x2="340" y2="140" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.4" strokeDasharray="8 6"/>
-    <line x1="120" y1="60" x2="120" y2="220" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.3"/>
-    <line x1="240" y1="60" x2="240" y2="220" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.3"/>
-    {[30,65,100].map(x => (
-      <rect key={x} x={x} y="68" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.35" fill="none"/>
+    <rect x="20" y="60" width="320" height="160" rx="4" fill="#1A1A0A" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.3" />
+    <line x1="20" y1="140" x2="340" y2="140" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.4" strokeDasharray="8 6" />
+    <line x1="120" y1="60" x2="120" y2="220" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.3" />
+    <line x1="240" y1="60" x2="240" y2="220" stroke="#F2C230" strokeWidth="0.5" strokeOpacity="0.3" />
+    {[30, 65, 100].map(x => (
+      <rect key={x} x={x} y="68" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.35" fill="none" />
     ))}
-    <rect x="33" y="78" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.7"/>
-    <rect x="35" y="82" width="18" height="16" rx="2" fill="#2A2A18" stroke="#F2C230" strokeWidth="0.4" strokeOpacity="0.5"/>
-    <circle cx="36" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
-    <circle cx="52" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
-    <rect x="68" y="78" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.4"/>
-    <rect x="70" y="82" width="18" height="16" rx="2" fill="#2A2A18" stroke="#F2C230" strokeWidth="0.4" strokeOpacity="0.3"/>
-    <circle cx="71" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.5"/>
-    <circle cx="87" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.5"/>
-    <rect x="103" y="68" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.6" fill="rgba(242,194,48,0.04)"/>
-    <circle cx="117" cy="97" r="6" fill="#F2C230" fillOpacity="0.15"/>
-    <circle cx="117" cy="97" r="3" fill="#F2C230" fillOpacity="0.6"/>
-    {[30,65,100].map(x => (
-      <rect key={x} x={x} y="148" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.35" fill="none"/>
+    <rect x="33" y="78" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.7" />
+    <rect x="35" y="82" width="18" height="16" rx="2" fill="#2A2A18" stroke="#F2C230" strokeWidth="0.4" strokeOpacity="0.5" />
+    <circle cx="36" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
+    <circle cx="52" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
+    <rect x="68" y="78" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.4" />
+    <rect x="70" y="82" width="18" height="16" rx="2" fill="#2A2A18" stroke="#F2C230" strokeWidth="0.4" strokeOpacity="0.3" />
+    <circle cx="71" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.5" />
+    <circle cx="87" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.5" />
+    <rect x="103" y="68" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.6" fill="rgba(242,194,48,0.04)" />
+    <circle cx="117" cy="97" r="6" fill="#F2C230" fillOpacity="0.15" />
+    <circle cx="117" cy="97" r="3" fill="#F2C230" fillOpacity="0.6" />
+    {[30, 65, 100].map(x => (
+      <rect key={x} x={x} y="148" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.35" fill="none" />
     ))}
-    <rect x="33" y="156" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.5"/>
-    <rect x="35" y="160" width="18" height="16" rx="2" fill="#2A2A18" stroke="#F2C230" strokeWidth="0.4" strokeOpacity="0.4"/>
-    <circle cx="36" cy="196" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
-    <circle cx="52" cy="196" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
-    {[150,185,220].map(x => (
-      <rect key={x} x={x} y="68" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.3" fill="none"/>
+    <rect x="33" y="156" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.5" />
+    <rect x="35" y="160" width="18" height="16" rx="2" fill="#2A2A18" stroke="#F2C230" strokeWidth="0.4" strokeOpacity="0.4" />
+    <circle cx="36" cy="196" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
+    <circle cx="52" cy="196" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
+    {[150, 185, 220].map(x => (
+      <rect key={x} x={x} y="68" width="28" height="58" rx="2" stroke="#F2C230" strokeWidth="0.6" strokeOpacity="0.3" fill="none" />
     ))}
-    <rect x="153" y="78" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
-    <circle cx="154" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
-    <circle cx="172" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6"/>
+    <rect x="153" y="78" width="22" height="40" rx="4" fill="#1E1E10" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
+    <circle cx="154" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
+    <circle cx="172" cy="118" r="4" fill="#0A0A0A" stroke="#F2C230" strokeWidth="0.8" strokeOpacity="0.6" />
     <g className="vl-moving-car">
-      <rect x="270" y="148" width="26" height="44" rx="5" fill="#F2C230" fillOpacity="0.9"/>
-      <rect x="273" y="153" width="20" height="18" rx="3" fill="#0A0A05" fillOpacity="0.7"/>
-      <circle cx="273" cy="192" r="5" fill="#0A0A0A" stroke="#fff" strokeWidth="1" strokeOpacity="0.5"/>
-      <circle cx="293" cy="192" r="5" fill="#0A0A0A" stroke="#fff" strokeWidth="1" strokeOpacity="0.5"/>
+      <rect x="270" y="148" width="26" height="44" rx="5" fill="#F2C230" fillOpacity="0.9" />
+      <rect x="273" y="153" width="20" height="18" rx="3" fill="#0A0A05" fillOpacity="0.7" />
+      <circle cx="273" cy="192" r="5" fill="#0A0A0A" stroke="#fff" strokeWidth="1" strokeOpacity="0.5" />
+      <circle cx="293" cy="192" r="5" fill="#0A0A0A" stroke="#fff" strokeWidth="1" strokeOpacity="0.5" />
     </g>
-    <circle cx="283" cy="148" r="12" fill="#F2C230" fillOpacity="0.08"/>
+    <circle cx="283" cy="148" r="12" fill="#F2C230" fillOpacity="0.08" />
   </svg>
 );
 
@@ -105,7 +105,7 @@ function Login() {
 
         <div className="vl-hero-content">
           <div className="vl-logo-mark">
-            <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
+            <span className="material-symbols-outlined vl-logo-icon">local_parking</span>
           </div>
 
           <div className="vl-wordmark">
@@ -143,7 +143,7 @@ function Login() {
 
           <div className="vl-mobile-logo">
             <div className="vl-logo-mark vl-logo-mark-sm">
-              <img src="/brand/digital/veloxpark-app-icon.svg" alt="VeloxPark" />
+              <span className="material-symbols-outlined" style={{ fontSize: 22, color: '#0A0A0A', fontVariationSettings: "'FILL' 1" }}>local_parking</span>
             </div>
             <span className="vl-mobile-brand">VeloxPark</span>
           </div>
