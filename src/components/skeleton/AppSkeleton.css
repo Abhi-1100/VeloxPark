@@ -1,0 +1,681 @@
+/* ─── VeloxPark Dual-Theme Responsive Skeleton Loading System ─── */
+
+@keyframes vpShimmerLight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes vpShimmerDark {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes vpPinPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 12px rgba(242, 194, 48, 0.4);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(242, 194, 48, 0.8);
+  }
+}
+
+/* ==========================================================================
+   1. WHITE / LIGHT THEME SKELETON (Matched to Shared User Dashboard Screenshot)
+   ========================================================================== */
+
+.vp-sk-root.theme-light {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #F7F9FD;
+  color: #191C1F;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  user-select: none;
+  box-sizing: border-box;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Light Theme Shimmer Elements */
+.theme-light .vp-sk-box {
+  position: relative;
+  overflow: hidden;
+  background-color: #E6EAF2;
+  border-radius: 6px;
+}
+
+.theme-light .vp-sk-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(254, 203, 53, 0.12) 50%,
+    rgba(255, 255, 255, 0.4) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: vpShimmerLight 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-light .vp-sk-card {
+  background: #FFFFFF;
+  border: 1px solid #E9ECF2;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+}
+
+.theme-light .vp-sk-darker {
+  background-color: #DDE2EB;
+}
+
+.theme-light .vp-sk-gold {
+  background: linear-gradient(135deg, rgba(254, 203, 53, 0.25) 0%, rgba(242, 194, 48, 0.1) 100%);
+  border: 1px solid rgba(242, 194, 48, 0.4);
+}
+
+.theme-light .vp-sk-green {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+}
+
+/* Light Mobile Container (Matches 390px - 440px viewport) */
+.theme-light .vp-sk-mobile-view {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 12px 18px 110px 18px;
+  box-sizing: border-box;
+}
+
+/* Light Top Header */
+.theme-light .vp-sk-m-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 2px 16px 2px;
+}
+
+.theme-light .vp-sk-m-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vp-sk-m-logo-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.theme-light .vp-sk-m-logo {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: #010102;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FECB35;
+  font-weight: 900;
+  font-size: 18px;
+  font-family: 'Outfit', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.theme-light .vp-sk-m-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.theme-light .vp-sk-m-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.theme-light .vp-sk-m-circle-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #F2F4F8;
+  border: 1px solid #E9ECF2;
+  position: relative;
+}
+
+/* Light Greeting Section */
+.theme-light .vp-sk-greeting {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Light Search Bar Pill */
+.theme-light .vp-sk-m-search-wrap {
+  margin-bottom: 18px;
+}
+
+.theme-light .vp-sk-m-search-bar {
+  width: 100%;
+  height: 52px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px 0 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.theme-light .vp-sk-search-target-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #FEF7D9;
+  border: 1px solid rgba(242, 194, 48, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Light Quick Action Pills Carousel */
+.theme-light .vp-sk-quick-pills {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+  overflow-x: hidden;
+}
+
+.theme-light .vp-sk-pill-btn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  flex-shrink: 0;
+}
+
+/* Light My Vehicles Section */
+.theme-light .vp-sk-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.theme-light .vp-sk-vehicle-card {
+  width: 135px;
+  height: 125px;
+  border-radius: 20px;
+  background: #1C1C1E;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  margin-bottom: 22px;
+}
+
+/* Light Map Preview Card */
+.theme-light .vp-sk-map-card {
+  border-radius: 24px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF2;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  margin-bottom: 24px;
+}
+
+.theme-light .vp-sk-map-canvas {
+  height: 175px;
+  background: #F4F7FB;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-light .vp-sk-map-explore-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 9999px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 5;
+}
+
+.theme-light .vp-sk-map-pin {
+  position: absolute;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: #1C1C1E;
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: 'Outfit', sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.theme-light .vp-sk-map-pin.center-pin {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  background: #FECB35;
+  color: #010102;
+  font-size: 14px;
+  font-weight: 900;
+  justify-content: center;
+  box-shadow: 0 0 16px rgba(254, 203, 53, 0.6);
+  animation: vpPinPulse 2.4s infinite ease-in-out;
+}
+
+.theme-light .vp-sk-map-bottom-bar {
+  padding: 12px 16px;
+  background: #FFFFFF;
+  border-top: 1px solid #F0F3F8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Light Nearby Parking Hub Cards */
+.theme-light .vp-sk-hub-card {
+  border-radius: 20px;
+  background: #FFFFFF;
+  border: 1px solid #E9ECF2;
+  padding: 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.theme-light .vp-sk-hub-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.theme-light .vp-sk-hub-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #1C1C1E;
+  color: #FECB35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 17px;
+  font-family: 'Outfit', sans-serif;
+  flex-shrink: 0;
+}
+
+.theme-light .vp-sk-hub-reserve-btn {
+  height: 34px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  background: #010102;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Light Floating Bottom Pill Dock */
+.theme-light .vp-sk-m-dock-wrap {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.theme-light .vp-sk-m-dock {
+  height: 60px;
+  width: 90%;
+  max-width: 340px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 40px -4px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.theme-light .vp-sk-m-dock-tab {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Light Desktop View (Screen width >= 769px) */
+.theme-light .vp-sk-desktop-view {
+  display: none;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 32px 64px 32px;
+  box-sizing: border-box;
+}
+
+.theme-light .vp-sk-d-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0 28px 0;
+  border-bottom: 1px solid #E9ECF2;
+  margin-bottom: 28px;
+}
+
+.theme-light .vp-sk-d-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* Breakpoint switch for Light Mode */
+@media (min-width: 769px) {
+  .theme-light .vp-sk-mobile-view {
+    display: none !important;
+  }
+  .theme-light .vp-sk-desktop-view {
+    display: block !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .theme-light .vp-sk-mobile-view {
+    display: block !important;
+  }
+  .theme-light .vp-sk-desktop-view {
+    display: none !important;
+  }
+}
+
+
+/* ==========================================================================
+   2. DARK THEME SKELETON (Preserved Intact as requested)
+   ========================================================================== */
+
+.vp-sk-root.theme-dark {
+  min-height: 100vh;
+  width: 100%;
+  background-color: #0A0A0C;
+  color: #EDEDED;
+  position: relative;
+  overflow-x: hidden;
+  user-select: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+.theme-dark .vp-sk-ambient {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 900px;
+  height: 380px;
+  background: radial-gradient(circle, rgba(242, 194, 48, 0.12) 0%, rgba(242, 194, 48, 0.04) 50%, transparent 70%);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.theme-dark .vp-sk-box {
+  position: relative;
+  overflow: hidden;
+  background-color: #1A1A1D;
+  border-radius: 6px;
+}
+
+.theme-dark .vp-sk-box::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(242, 194, 48, 0.08) 35%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(242, 194, 48, 0.08) 65%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: vpShimmerDark 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-dark .vp-sk-darker {
+  background-color: #121215;
+}
+
+.theme-dark .vp-sk-gold {
+  background: linear-gradient(135deg, rgba(242, 194, 48, 0.22) 0%, rgba(232, 180, 29, 0.12) 100%);
+  border: 1px solid rgba(242, 194, 48, 0.35);
+}
+
+.theme-dark .vp-sk-mobile-view {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding: 12px 16px 110px 16px;
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.theme-dark .vp-sk-m-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 4px 16px 4px;
+}
+
+.theme-dark .vp-sk-m-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-dark .vp-sk-m-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #18181A;
+  border: 1px solid #2A2A2D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-dark .vp-sk-m-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-dark .vp-sk-m-search-wrap {
+  margin-bottom: 18px;
+}
+
+.theme-dark .vp-sk-m-search-bar {
+  width: 100%;
+  height: 52px;
+  border-radius: 18px;
+  background: #141416;
+  border: 1px solid #252528;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.theme-dark .vp-sk-m-vehicle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.theme-dark .vp-sk-m-vehicle-card {
+  height: 124px;
+  border-radius: 18px;
+  background: #131315;
+  border: 1px solid #232326;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.theme-dark .vp-sk-m-vehicle-card.active {
+  background: #17171A;
+  border-color: rgba(242, 194, 48, 0.4);
+}
+
+.theme-dark .vp-sk-m-quick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  background: #121214;
+  border: 1px solid #222225;
+  border-radius: 20px;
+  padding: 14px 10px;
+  margin-bottom: 22px;
+}
+
+.theme-dark .vp-sk-m-quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.theme-dark .vp-sk-m-quick-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #1A1A1D;
+  border: 1px solid #2E2E32;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-dark .vp-sk-m-hub-card {
+  border-radius: 20px;
+  background: #141416;
+  border: 1px solid #242427;
+  padding: 14px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.theme-dark .vp-sk-m-dock-wrap {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 999;
+  padding: 0 16px;
+  pointer-events: none;
+}
+
+.theme-dark .vp-sk-m-dock {
+  height: 64px;
+  width: 100%;
+  max-width: 360px;
+  background: rgba(20, 20, 22, 0.95);
+  backdrop-filter: blur(16px);
+  border-radius: 9999px;
+  border: 1px solid #2C2C30;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+}
+
+.theme-dark .vp-sk-desktop-view {
+  display: none;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 32px 64px 32px;
+  box-sizing: border-box;
+}
+
+@media (min-width: 769px) {
+  .theme-dark .vp-sk-mobile-view {
+    display: none !important;
+  }
+  .theme-dark .vp-sk-desktop-view {
+    display: block !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .theme-dark .vp-sk-mobile-view {
+    display: block !important;
+  }
+  .theme-dark .vp-sk-desktop-view {
+    display: none !important;
+  }
+}

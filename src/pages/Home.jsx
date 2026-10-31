@@ -518,19 +518,19 @@ const Home = () => {
                   {/* Vehicle Tabs */}
                   <div className="vl-veh-row">
                     <div className="vl-veh-chip active">
-                      <span>🚗</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>directions_car</span>
                       <div>Car</div>
                     </div>
                     <div className="vl-veh-chip">
-                      <span>🏍️</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>two_wheeler</span>
                       <div>Bike</div>
                     </div>
                     <div className="vl-veh-chip">
-                      <span>🚚</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>local_shipping</span>
                       <div>Truck</div>
                     </div>
                     <div className="vl-veh-chip">
-                      <span>🚌</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>directions_bus</span>
                       <div>Bus</div>
                     </div>
                   </div>

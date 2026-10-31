@@ -61,7 +61,7 @@ class ErrorBoundary extends React.Component {
               justifyContent: 'center',
               fontSize: '32px'
             }}>
-              ⚠️
+              <span className="material-symbols-outlined" style={{ fontSize: '32px', color: '#FF3366' }}>warning</span>
             </div>
 
             {/* Heading */}

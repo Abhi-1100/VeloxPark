@@ -5,6 +5,7 @@ import { database } from '../../config/firebase';
 import { useAuth } from '../../context/useAuth';
 import { useUserBookings } from '../../hooks/useUserBookings';
 import avatarJack from '../../assets/avatar-jack.jpg';
+import AppSkeleton from '../../components/skeleton/AppSkeleton';
 import './SearchLocation.css';
 import './Dashboard.css';
 
@@ -284,6 +285,10 @@ function Dashboard({
     });
   };
 
+  if (loading) {
+    return <AppSkeleton />;
+  }
+
   return (
     <div className="stitch-dash-root">
       {/* Top Fixed Header */}
@@ -366,7 +371,6 @@ function Dashboard({
             <div className="stitch-welcome-left">
               <div className="stitch-welcome-greeting">
                 <h1 className="stitch-welcome-name">Hi, {name}</h1>
-                <span className="stitch-wave">👋</span>
               </div>
               <div className="stitch-welcome-location">
                 <span className="material-symbols-outlined loc-arrow">near_me</span>

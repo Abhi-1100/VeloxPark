@@ -9,6 +9,46 @@ import avatarJack from '../../assets/avatar-jack.jpg';
 import WheelTimePickerModal from '../../components/user/WheelTimePickerModal';
 import { useAuth } from '../../context/useAuth';
 import './SearchLocation.css';
+import imgCentralCampus from '../../assets/stations/central-campus.jpg';
+import imgStationRoad from '../../assets/stations/station-road.jpg';
+import imgMotaBazaar from '../../assets/stations/mota-bazaar.jpg';
+import imgAmulDairy from '../../assets/stations/amul-dairy.jpg';
+import imgBhaikakaLibrary from '../../assets/stations/bhaikaka-library.jpg';
+
+const STATION_IMAGE_MAP = {
+  anand_central_lot_a: imgCentralCampus,
+  anand_station_rd: imgStationRoad,
+  anand_mota_bazaar: imgMotaBazaar,
+  anand_amul_dairy_bay: imgAmulDairy,
+  anand_bhaikaka_plaza: imgBhaikakaLibrary,
+};
+
+const DEFAULT_STATION_IMAGES = [
+  imgCentralCampus,
+  imgStationRoad,
+  imgMotaBazaar,
+  imgAmulDairy,
+  imgBhaikakaLibrary,
+];
+
+function getStationImage(st, idx = 0) {
+  if (st?.id && STATION_IMAGE_MAP[st.id]) {
+    return STATION_IMAGE_MAP[st.id];
+  }
+  if (st?.image && typeof st.image === 'string' && st.image.startsWith('/images/stations/')) {
+    const filename = st.image.split('/').pop().replace('.jpg', '');
+    if (filename === 'central-campus') return imgCentralCampus;
+    if (filename === 'station-road') return imgStationRoad;
+    if (filename === 'mota-bazaar') return imgMotaBazaar;
+    if (filename === 'amul-dairy') return imgAmulDairy;
+    if (filename === 'bhaikaka-library') return imgBhaikakaLibrary;
+    return st.image;
+  }
+  if (st?.image && !st.image.includes('aida-public/AB6AXuDiXTEhe1qZRY7qEOIb4SGgVFFocxzL1SNgLwL7WUt2SvmNC3uw0AmEkmnJeBVIrOW7NdiEXITYwsmiLHGi2R3CcWVIXlqCj976VnnSWOoXfUk4VJesiNOkjWoOnOZbD2P4aR0nEPOEcAhAlLb4aC1NSRCeVfeCFrWDz3K9vMsobgmV2We6Ds_WlRVUaD558Y8pACdaudHPs-3hJ4fH-CHSMfKX19Y1SUK4qYryyXo6yHcGNcMbTnNm')) {
+    return st.image;
+  }
+  return DEFAULT_STATION_IMAGES[idx % DEFAULT_STATION_IMAGES.length];
+}
 
 
 
@@ -16,7 +56,7 @@ const FILTER_TAGS = [
   { id: 'near_me', label: 'Near me', icon: 'near_me' },
   { id: 'cheapest', label: 'Cheapest (₹)' },
   { id: 'covered', label: 'Covered roof', icon: 'roofing' },
-  { id: 'ev', label: 'EV charging ⚡' },
+  { id: 'ev', label: 'EV charging', icon: 'electric_bolt' },
   { id: 'open_now', label: 'Open now', dot: true },
   { id: 'anpr', label: 'ANPR Express', icon: 'bolt' },
 ];
@@ -583,15 +623,21 @@ function SearchLocation() {
         totalSlots: st.totalSlots,
         tag: st.tag,
         feature: st.feature,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDiXTEhe1qZRY7qEOIb4SGgVFFocxzL1SNgLwL7WUt2SvmNC3uw0AmEkmnJeBVIrOW7NdiEXITYwsmiLHGi2R3CcWVIXlqCj976VnnSWOoXfUk4VJesiNOkjWoOnOZbD2P4aR0nEPOEcAhAlLb4aC1NSRCeVfeCFrWDz3K9vMsobgmV2We6Ds_WlRVUaD558Y8pACdaudHPs-3hJ4fH-CHSMfKX19Y1SUK4qYryyXo6yHcGNcMbTnNm',
+        image: getStationImage(st, idx),
       }));
     }
 
     if (stations.length > 0) {
-      return stations.slice(0, 6);
+      return stations.slice(0, 6).map((st, idx) => ({
+        ...st,
+        image: getStationImage(st, idx),
+      }));
     }
 
-    return SERVICEABLE_CITIES[0].stations;
+    return SERVICEABLE_CITIES[0].stations.map((st, idx) => ({
+      ...st,
+      image: getStationImage(st, idx),
+    }));
   }, [location, stations]);
 
   // Dynamically calculate current available parking stations count for the active location/city
@@ -997,7 +1043,7 @@ function SearchLocation() {
                 </div>
 
                 <div className="sl-station-grid">
-                  {displayStations.map((station) => (
+                  {displayStations.map((station, idx) => (
                     <div
                       key={station.id}
                       className="sl-station-card"
@@ -1006,12 +1052,10 @@ function SearchLocation() {
                       <div className="sl-card-body">
                         <div className="sl-thumb-wrap">
                           <img
-                            src={
-                              station.image ||
-                              'https://lh3.googleusercontent.com/aida-public/AB6AXuDiXTEhe1qZRY7qEOIb4SGgVFFocxzL1SNgLwL7WUt2SvmNC3uw0AmEkmnJeBVIrOW7NdiEXITYwsmiLHGi2R3CcWVIXlqCj976VnnSWOoXfUk4VJesiNOkjWoOnOZbD2P4aR0nEPOEcAhAlLb4aC1NSRCeVfeCFrWDz3K9vMsobgmV2We6Ds_WlRVUaD558Y8pACdaudHPs-3hJ4fH-CHSMfKX19Y1SUK4qYryyXo6yHcGNcMbTnNm'
-                            }
+                            src={getStationImage(station, idx)}
                             alt={station.name}
                             className="sl-station-img"
+                            loading="lazy"
                           />
                           <div className="sl-img-badge">
                             <span className="material-symbols-outlined badge-icon">

@@ -388,7 +388,7 @@ const UnserviceableAreaView = ({
                   onClick={() => handleCitySelect(c)}
                 >
                   <div className="unserv-modal-item-left">
-                    <span className="unserv-modal-city-pin">📍</span>
+                    <span className="material-symbols-outlined unserv-modal-city-pin" style={{ fontSize: '18px' }}>location_on</span>
                     <div>
                       <div className="unserv-modal-item-name">{c.name}</div>
                       <div className="unserv-modal-item-meta">{c.state} • {c.stations.length} Active Stations</div>

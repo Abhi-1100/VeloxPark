@@ -336,21 +336,21 @@ function Payment() {
 
                       <div className="pay-razorpay-methods-list">
                         <div className="pay-rzp-feature-item">
-                          <span className="pay-rzp-icon">⚡</span>
+                          <span className="material-symbols-outlined pay-rzp-icon">bolt</span>
                           <div className="pay-rzp-feature-text">
                             <strong>Instant UPI</strong>
                             <p>Google Pay, PhonePe, Paytm, BHIM & CRED</p>
                           </div>
                         </div>
                         <div className="pay-rzp-feature-item">
-                          <span className="pay-rzp-icon">💳</span>
+                          <span className="material-symbols-outlined pay-rzp-icon">credit_card</span>
                           <div className="pay-rzp-feature-text">
                             <strong>Debit & Credit Cards</strong>
                             <p>Visa, MasterCard, RuPay, Maestro & Corporate</p>
                           </div>
                         </div>
                         <div className="pay-rzp-feature-item">
-                          <span className="pay-rzp-icon">🏦</span>
+                          <span className="material-symbols-outlined pay-rzp-icon">account_balance</span>
                           <div className="pay-rzp-feature-text">
                             <strong>Net Banking & Wallets</strong>
                             <p>50+ Banks, Mobikwik, Airtel Money, PayLater</p>
@@ -503,14 +503,14 @@ function Payment() {
                 {/* Trust & Guarantees Card */}
                 <div className="pay-guarantees-card">
                   <div className="pay-guarantee-item">
-                    <span className="pay-guarantee-icon">🔒</span>
+                    <span className="material-symbols-outlined pay-guarantee-icon">lock</span>
                     <div>
                       <span className="pay-guarantee-title">256-Bit SSL Secured</span>
                       <p className="pay-guarantee-sub">End-to-end encrypted payment transaction</p>
                     </div>
                   </div>
                   <div className="pay-guarantee-item">
-                    <span className="pay-guarantee-icon">⚡</span>
+                    <span className="material-symbols-outlined pay-guarantee-icon">flash_on</span>
                     <div>
                       <span className="pay-guarantee-title">Instant Barrier Gate Pass</span>
                       <p className="pay-guarantee-sub">QR Code pass generated immediately</p>

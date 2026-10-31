@@ -26,6 +26,7 @@ export const SERVICEABLE_CITIES = [
         totalSlots: 50,
         tag: 'ANPR',
         feature: 'Fast Gate',
+        image: '/images/stations/central-campus.jpg',
       },
       {
         id: 'anand_station_rd',
@@ -39,6 +40,7 @@ export const SERVICEABLE_CITIES = [
         totalSlots: 40,
         tag: 'CCTV',
         feature: 'Covered Roof',
+        image: '/images/stations/station-road.jpg',
       },
       {
         id: 'anand_mota_bazaar',
@@ -52,6 +54,7 @@ export const SERVICEABLE_CITIES = [
         totalSlots: 45,
         tag: 'Live Gate',
         feature: 'Market Bay',
+        image: '/images/stations/mota-bazaar.jpg',
       },
       {
         id: 'anand_amul_dairy_bay',
@@ -64,7 +67,8 @@ export const SERVICEABLE_CITIES = [
         slots: 35,
         totalSlots: 60,
         tag: 'EV',
-        feature: 'EV Charging ⚡',
+        feature: 'EV Charging',
+        image: '/images/stations/amul-dairy.jpg',
       },
       {
         id: 'anand_bhaikaka_plaza',
@@ -78,6 +82,7 @@ export const SERVICEABLE_CITIES = [
         totalSlots: 40,
         tag: 'FastPass',
         feature: 'Express Entry',
+        image: '/images/stations/bhaikaka-library.jpg',
       },
     ],
   },
@@ -203,7 +208,7 @@ export const SERVICEABLE_CITIES = [
         slots: 38,
         totalSlots: 60,
         tag: 'EV',
-        feature: 'Supercharger ⚡',
+        feature: 'Supercharger',
       },
       {
         id: 'surat_athwa_gate',

@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -59,6 +59,15 @@ function RootRoute() {
 }
 
 function App() {
+  useEffect(() => {
+    if ('fonts' in document) {
+      Promise.all([
+        document.fonts.load('24px "Material Symbols Outlined"'),
+        document.fonts.ready,
+      ]).catch(() => {});
+    }
+  }, []);
+
   return (
     <ErrorBoundary>
       <ThemeProvider>
