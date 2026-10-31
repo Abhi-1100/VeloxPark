@@ -163,8 +163,8 @@ export const SERVICEABLE_CITIES = [
     shortName: 'Surat',
     state: 'Gujarat',
     center: { lat: 21.1702, lng: 72.8311 },
-    radiusKm: 22,
-    aliases: ['surat', 'varachha', 'adajan', 'vesu', 'dumas', 'ring road', 'athwa', 'textile market'],
+    radiusKm: 30,
+    aliases: ['surat', 'varachha', 'adajan', 'vesu', 'dumas', 'ring road', 'athwa', 'textile market', 'utran', 'utrān', 'katargam', 'amroli', 'kamrej', 'sarthana', 'motavarachha', 'piplod', 'pal', 'rander'],
     stations: [
       {
         id: 'surat_millennium_market',
@@ -841,6 +841,8 @@ export function getEnterpriseStationsForCity(cityOrQuery = 'anand', userLat = nu
     feature: st.feature,
     cityId: matchedCity.id,
     cityName: matchedCity.name,
+    city: matchedCity.shortName || matchedCity.name,
+    state: matchedCity.state || 'Gujarat',
     isPrimary: idx === 0,
   }));
 
@@ -861,3 +863,111 @@ export function getEnterpriseStationsForCity(cityOrQuery = 'anand', userLat = nu
 
   return list;
 }
+
+/**
+ * Resolves the accurate city and state for any given station or address string.
+ * Accurately maps stations like 'Varachha Diamond Bourse Bay' to 'Surat, Gujarat'.
+ */
+export function resolveStationCityDetails(stationOrAddress, lat = null, lng = null) {
+  if (!stationOrAddress && !lat && !lng) {
+    return { city: 'Surat', state: 'Gujarat', fullLocation: 'Surat, Gujarat' };
+  }
+
+  // 1. If station object has direct properties
+  if (typeof stationOrAddress === 'object' && stationOrAddress !== null) {
+    const directCity = stationOrAddress.city || stationOrAddress.cityName || stationOrAddress.shortName;
+    const directState = stationOrAddress.state || 'Gujarat';
+    const stId = (stationOrAddress.id || '').toLowerCase();
+    const stName = (stationOrAddress.name || '').toLowerCase();
+
+    // Check if station name or ID matches a known city in SERVICEABLE_CITIES
+    for (const c of SERVICEABLE_CITIES) {
+      const match = c.stations?.some((s) =>
+        (stId && s.id.toLowerCase() === stId) ||
+        (stName && s.name.toLowerCase() === stName)
+      );
+      if (match) {
+        return {
+          city: c.shortName || c.name,
+          state: c.state || 'Gujarat',
+          fullLocation: `${c.shortName || c.name}, ${c.state || 'Gujarat'}`,
+        };
+      }
+    }
+
+    if (directCity && !['vadodara', 'california'].includes(directCity.toLowerCase())) {
+      return { city: directCity, state: directState, fullLocation: `${directCity}, ${directState}` };
+    }
+  }
+
+  // 2. Text query/address matching
+  const text = (
+    typeof stationOrAddress === 'string'
+      ? stationOrAddress
+      : `${stationOrAddress?.name || ''} ${stationOrAddress?.address || ''}`
+  ).toLowerCase();
+
+  // Check known station names across all cities
+  for (const c of SERVICEABLE_CITIES) {
+    const found = c.stations?.some((s) => {
+      const sName = s.name.toLowerCase();
+      return text.includes(sName) || sName.includes(text);
+    });
+    if (found) {
+      return {
+        city: c.shortName || c.name,
+        state: c.state || 'Gujarat',
+        fullLocation: `${c.shortName || c.name}, ${c.state || 'Gujarat'}`,
+      };
+    }
+  }
+
+  // Check city aliases and names (e.g. 'varachha', 'surat', 'adajan', 'vesu')
+  for (const c of SERVICEABLE_CITIES) {
+    if (
+      c.aliases.some((alias) => text.includes(alias.toLowerCase())) ||
+      text.includes(c.name.toLowerCase()) ||
+      text.includes(c.shortName.toLowerCase())
+    ) {
+      return {
+        city: c.shortName || c.name,
+        state: c.state || 'Gujarat',
+        fullLocation: `${c.shortName || c.name}, ${c.state || 'Gujarat'}`,
+      };
+    }
+  }
+
+  // 3. Proximity check via coordinates
+  const nLat = Number(lat ?? stationOrAddress?.lat ?? stationOrAddress?.latitude);
+  const nLng = Number(lng ?? stationOrAddress?.lng ?? stationOrAddress?.longitude);
+  if (Number.isFinite(nLat) && Number.isFinite(nLng)) {
+    let closestCity = null;
+    let minD = Infinity;
+    for (const c of SERVICEABLE_CITIES) {
+      const d = getDistanceKm(nLat, nLng, c.center.lat, c.center.lng);
+      if (d < minD && d <= c.radiusKm) {
+        minD = d;
+        closestCity = c;
+      }
+    }
+    if (closestCity) {
+      return {
+        city: closestCity.shortName || closestCity.name,
+        state: closestCity.state || 'Gujarat',
+        fullLocation: `${closestCity.shortName || closestCity.name}, ${closestCity.state || 'Gujarat'}`,
+      };
+    }
+  }
+
+  // 4. Check for parentheses in text if present
+  if (typeof text === 'string' && text.includes('(')) {
+    const candidate = text.split('(')[1]?.replace(')', '').trim();
+    if (candidate && !['vadodara', 'california'].includes(candidate.toLowerCase())) {
+      const cap = candidate.charAt(0).toUpperCase() + candidate.slice(1);
+      return { city: cap, state: 'Gujarat', fullLocation: `${cap}, Gujarat` };
+    }
+  }
+
+  return { city: 'Surat', state: 'Gujarat', fullLocation: 'Surat, Gujarat' };
+}
+

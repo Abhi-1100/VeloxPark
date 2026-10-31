@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Pristine White Background Gradient -->
+    <radialGradient id="whiteBgGrad" cx="50%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="100%" stop-color="#F2F3F5"/>
+    </radialGradient>
+
+    <!-- Soft Ambient Elevation Shadow -->
+    <filter id="softShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#D4A017" flood-opacity="0.22"/>
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+
+    <!-- Warm Amber Gold Fill Gradient -->
+    <linearGradient id="goldInnerFill" x1="15%" y1="10%" x2="85%" y2="90%">
+      <stop offset="0%" stop-color="#F9E284" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#EDB82A" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#D99B16" stop-opacity="0.75"/>
+    </linearGradient>
+
+    <!-- Gold Stroke Linear Gradient for Depth -->
+    <linearGradient id="goldStrokeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFD43F"/>
+      <stop offset="50%" stop-color="#E5A610"/>
+      <stop offset="100%" stop-color="#C78703"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Base Frame -->
+  <rect width="512" height="512" rx="112" fill="url(#whiteBgGrad)" stroke="#E5E7EB" stroke-width="1.5"/>
+
+  <!-- Subtle Street / Map Grid Lines (Clean Light Theme) -->
+  <g stroke="#E0E3E8" stroke-width="5" stroke-linecap="round">
+    <!-- Horizontal street lines -->
+    <path d="M -20 150 L 532 110" />
+    <path d="M -20 340 L 532 295" />
+    <path d="M -20 440 L 532 410" />
+    <!-- Vertical street lines -->
+    <path d="M 160 -20 L 120 532" />
+    <path d="M 370 -20 L 390 532" />
+    <path d="M 270 125 L 260 300" stroke-width="4" stroke="#ECEEF2" />
+  </g>
+
+  <!-- Glowing Geometric "P" Parking Zone Polygon (With Elevated Soft Shadow) -->
+  <path 
+    d="M 160 142 L 372 120 L 392 292 L 252 312 L 210 412 L 144 394 Z" 
+    fill="url(#goldInnerFill)" 
+    stroke="url(#goldStrokeGrad)" 
+    stroke-width="18" 
+    stroke-linejoin="round" 
+    stroke-linecap="round"
+    filter="url(#softShadow)"
+  />
+
+  <!-- Inner Polished Glass Highlight Accent -->
+  <path 
+    d="M 172 154 L 358 135 L 374 278 L 256 295 L 220 380 L 160 365 Z" 
+    fill="none" 
+    stroke="#FFFFFF" 
+    stroke-width="2.5" 
+    stroke-opacity="0.6" 
+    stroke-linejoin="round"
+  />
+
+  <!-- Subtle Internal Parking Lot Divider -->
+  <path d="M 252 135 L 246 250" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.5" stroke-linecap="round" />
+</svg>

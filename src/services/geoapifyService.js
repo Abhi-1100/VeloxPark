@@ -68,3 +68,56 @@ export async function geocodeAddress(text, signal) {
   }
 }
 
+/**
+ * Returns the user's approximate real geographic coordinates and city via IP lookup.
+ * Essential fallback when browser GPS/Windows Location Service times out or is unavailable.
+ */
+export async function getIPLocation(signal) {
+  try {
+    const payload = await request('/v1/ipinfo', {}, signal);
+    const lat = payload?.location?.latitude;
+    const lng = payload?.location?.longitude;
+    const cityName =
+      payload?.city?.name ||
+      payload?.subdivisions?.[1]?.names?.en ||
+      payload?.subdivisions?.[0]?.names?.en ||
+      'Surat';
+
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      return {
+        lat,
+        lng,
+        city: cityName,
+        state: payload?.state?.name || 'Gujarat',
+        country: payload?.country?.name || 'India',
+        ip: payload?.ip,
+      };
+    }
+  } catch (err) {
+    console.warn('Geoapify IP lookup failed, trying backup...', err);
+  }
+
+  // Backup fallback IP service
+  try {
+    const res = await fetch('https://ipapi.co/json/', { signal });
+    if (res.ok) {
+      const data = await res.json();
+      if (Number.isFinite(data.latitude) && Number.isFinite(data.longitude)) {
+        return {
+          lat: data.latitude,
+          lng: data.longitude,
+          city: data.city || 'Surat',
+          state: data.region || 'Gujarat',
+          country: data.country_name || 'India',
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('Backup IP lookup failed:', err);
+  }
+
+  // Default to Surat if geolocation cannot be determined
+  return { lat: 21.2333, lng: 72.8667, city: 'Surat', state: 'Gujarat' };
+}
+
+

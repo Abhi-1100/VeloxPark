@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { GeocoderAutocomplete } from '@geoapify/geocoder-autocomplete';
 import '@geoapify/geocoder-autocomplete/styles/minimal.css';
 import { getParkingStations } from '../../data/parkingStations';
-import { getGeoapifyApiKey } from '../../services/geoapifyService';
-import { checkLocationServiceability, SERVICEABLE_CITIES } from '../../data/serviceableCities';
+import { getGeoapifyApiKey, getIPLocation } from '../../services/geoapifyService';
+import { checkLocationServiceability, SERVICEABLE_CITIES, getEnterpriseStationsForCity } from '../../data/serviceableCities';
 import avatarJack from '../../assets/avatar-jack.jpg';
 import WheelTimePickerModal from '../../components/user/WheelTimePickerModal';
 import { useAuth } from '../../context/useAuth';
@@ -431,14 +431,14 @@ function SearchLocation() {
     }
   };
 
-  const handleSetCurrentLocation = () => {
+  const handleSetCurrentLocation = async () => {
     setIsLocating(true);
 
     const onLocationFound = (lat, lon) => {
       setIsLocating(false);
 
       // Check if user's current GPS location is serviceable
-      const serviceCheck = checkLocationServiceability('', lat, lon);
+      const serviceCheck = checkLocationServiceability(detectedCityName, lat, lon);
       if (!serviceCheck.isServiceable) {
         const unservLoc = 'Changa, Gujarat, 388421, India';
         setLocation(unservLoc);
@@ -456,81 +456,18 @@ function SearchLocation() {
         return;
       }
 
-      const candidates = stations.length > 0 ? stations : [
-        {
-          id: 'station_1',
-          name: 'Central Campus Lot A',
-          address: 'Shastri Maidan Marg, VV Nagar',
-          latitude: 22.5539,
-          longitude: 72.9242,
-          pricePerHour: 40,
-          availableSlots: 24,
-          totalSlots: 50,
-          tag: 'ANPR',
-          feature: 'Fast Gate',
-        },
-        {
-          id: 'station_2',
-          name: 'Station Road Covered',
-          address: 'Near Amul Dairy, Anand',
-          latitude: 22.5645,
-          longitude: 72.9289,
-          pricePerHour: 35,
-          availableSlots: 8,
-          totalSlots: 30,
-          tag: 'CCTV',
-          feature: 'Shaded Roof',
-        },
-        {
-          id: 'station_3',
-          name: 'Anand Smart Parking Hub',
-          address: 'Station Rd, Anand',
-          latitude: 22.5610,
-          longitude: 72.9320,
-          pricePerHour: 30,
-          availableSlots: 40,
-          totalSlots: 60,
-          tag: 'ANPR',
-          feature: 'Live Gate',
-        },
-      ];
+      // Resolve stations for this specific city
+      const cityObj = serviceCheck.city || SERVICEABLE_CITIES.find((c) => c.id === 'surat') || SERVICEABLE_CITIES[0];
+      const cityEnterpriseStations = getEnterpriseStationsForCity(cityObj, lat, lon);
 
-      let nearest = null;
-      let minDistance = Infinity;
-
-      candidates.forEach((st) => {
-        const sLat = st.latitude ?? st.lat;
-        const sLng = st.longitude ?? st.lng ?? st.lon;
-        if (Number.isFinite(sLat) && Number.isFinite(sLng)) {
-          const d = getDistanceFromLatLonInKm(lat, lon, sLat, sLng);
-          if (d < minDistance) {
-            minDistance = d;
-            nearest = { ...st, distance: parseFloat(d.toFixed(1)) };
-          }
-        }
-      });
-
-      if (!nearest || minDistance > 60) {
-        nearest = {
-          id: 'nearest_local',
-          name: 'Anand Smart Parking',
-          address: 'Vallabh Vidyanagar, Anand',
-          latitude: lat,
-          longitude: lon,
-          distance: 0.2,
-          pricePerHour: 30,
-          availableSlots: 40,
-          totalSlots: 50,
-          tag: 'ANPR',
-          feature: 'Closest to you',
-        };
-      }
-
+      const nearest = cityEnterpriseStations[0];
+      const cityName = cityObj.shortName || cityObj.name;
       const locName = `Near ${nearest.name}`;
+
       setLocation(locName);
       locationRef.current = locName;
       autocompleteRef.current?.setValue(locName);
-      selectedGeoRef.current = { lat, lon, address: locName, city: 'Anand' };
+      selectedGeoRef.current = { lat, lon, address: locName, city: cityName };
       const inputEl = searchContainerRef.current?.querySelector('input');
       if (inputEl) inputEl.value = locName;
 
@@ -539,6 +476,7 @@ function SearchLocation() {
         state: {
           destination: nearest.name,
           address: nearest.address,
+          city: cityName,
           location: locName,
           station: nearest,
           lat,
@@ -552,18 +490,36 @@ function SearchLocation() {
       });
     };
 
-    if (navigator?.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          onLocationFound(pos.coords.latitude, pos.coords.longitude);
-        },
-        () => {
-          onLocationFound(22.5645, 72.9289);
-        },
-        { timeout: 5000, enableHighAccuracy: true }
-      );
+    // Try fast browser geolocation first with network/wifi lock
+    const getCoords = () =>
+      new Promise((resolve) => {
+        if (!navigator?.geolocation) return resolve(null);
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+          () => resolve(null),
+          { timeout: 4000, enableHighAccuracy: false, maximumAge: 60000 }
+        );
+      });
+
+    let coords = await getCoords();
+
+    // If browser GPS timed out or denied, use IP Geolocation
+    if (!coords) {
+      try {
+        const ipLoc = await getIPLocation();
+        if (ipLoc && Number.isFinite(ipLoc.lat) && Number.isFinite(ipLoc.lng)) {
+          coords = { lat: ipLoc.lat, lon: ipLoc.lng, city: ipLoc.city };
+        }
+      } catch (err) {
+        console.warn('IP lookup in SearchLocation note:', err);
+      }
+    }
+
+    if (coords && Number.isFinite(coords.lat) && Number.isFinite(coords.lon)) {
+      onLocationFound(coords.lat, coords.lon, coords.city || '');
     } else {
-      onLocationFound(22.5645, 72.9289);
+      // Default to Surat if user is in Surat
+      onLocationFound(21.2333, 72.8667, 'Surat');
     }
   };
 
@@ -581,9 +537,11 @@ function SearchLocation() {
   };
 
   const handleSelectStation = (station) => {
+    const resolvedCity = station.city || station.cityName || 'Surat';
     navigate('/map', {
       state: {
         station,
+        city: resolvedCity,
         address: station.address || station.name,
         destination: station.name,
         durationHours,
@@ -612,6 +570,9 @@ function SearchLocation() {
         name: st.name,
         address: st.address,
         street: st.street,
+        city: matchedCity.shortName || matchedCity.name,
+        cityName: matchedCity.name,
+        state: matchedCity.state || 'Gujarat',
         latitude: st.lat,
         longitude: st.lng,
         lat: st.lat,

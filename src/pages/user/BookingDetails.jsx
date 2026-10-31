@@ -116,7 +116,7 @@ function BookingDetails() {
 
             {/* Facility note */}
             <div className="text-xs text-muted space-y-1.5 border-t border-line pt-4">
-              <p><strong className="text-paper">Facility:</strong> {booking.address || 'California Parking (555 Jackson St, SF)'}</p>
+              <p><strong className="text-paper">Facility:</strong> {booking.address || booking.stationName || 'Varachha Diamond Bourse Bay (Surat)'}</p>
               <p><strong className="text-paper">Billed Duration:</strong> {booking.duration || 0} minutes (₹{booking.rate || 60}/hr)</p>
             </div>
           </Card>

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import jsPDF from 'jspdf';
 import { useAuth } from '../../context/useAuth';
+import { resolveStationCityDetails } from '../../data/serviceableCities';
 import './ParkingPassReceipt.css';
 
 export default function ParkingPassReceipt({
@@ -29,18 +30,29 @@ export default function ParkingPassReceipt({
       : `VX-${String(Date.now()).slice(-6)}`);
 
   // Parking station & location
-  const rawAddress = data.address || data.stationName || 'Station Road Covered Deck (Vadodara)';
+  const rawAddress = data.address || data.stationName || 'Varachha Diamond Bourse Bay (Surat)';
   let stationName = data.stationName || '';
-  let stationLocation = '';
 
   if (rawAddress.includes('(')) {
     const parts = rawAddress.split('(');
     stationName = stationName || parts[0].trim();
-    stationLocation = parts[1].replace(')', '').trim() + ', Gujarat';
   } else {
     stationName = stationName || rawAddress;
-    stationLocation = data.city ? `${data.city}, Gujarat` : 'Vadodara, Gujarat';
   }
+
+  // Accurately resolve true city & state (e.g. Varachha Diamond Bourse Bay -> Surat, Gujarat)
+  const cityDetails = resolveStationCityDetails(
+    data.station || {
+      name: stationName,
+      address: rawAddress,
+      city: data.city,
+      lat: data.lat || data.latitude,
+      lng: data.lng || data.longitude,
+    }
+  );
+
+  const stationLocation = cityDetails.fullLocation || (data.city ? `${data.city}, Gujarat` : 'Surat, Gujarat');
+
 
   // Amount
   const amountVal = Number(data.amount || 120.0).toFixed(2);

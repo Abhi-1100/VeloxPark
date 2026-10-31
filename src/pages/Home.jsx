@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/useAuth';
-import networkAccessBannerImg from '../assets/network-access-banner.jpg';
 import './Home.css';
 
 const Home = () => {
@@ -1074,15 +1073,6 @@ const Home = () => {
 
       {/* ─── 10. PRESERVED SITE FOOTER ─── */}
       <footer className="site-footer" id="footer">
-        <div className="footer-feature">
-          <img src={networkAccessBannerImg} alt="Connected urban mobility network" />
-          <div className="footer-feature-overlay"></div>
-          <div className="footer-feature-content">
-            <div className="section-badge">NETWORK ACCESS</div>
-            <h2>Parking that<br /><span>moves with you.</span></h2>
-            <p>Find your space, connect your site, and keep every journey moving.</p>
-          </div>
-        </div>
         <div className="footer-main">
           <div className="footer-grid">
             <div className="footer-brand-block">

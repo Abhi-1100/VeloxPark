@@ -1,8 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
-  <title id="title">VeloxPark symbol</title>
-  <desc id="desc">The VeloxPark V-Lane symbol in ink and signal gold.</desc>
-  <path fill="#F2C230" d="M42 36h42l44 84 44-84h42l-65 126-21 42h-42l21-42L42 36Z"/>
-  <path fill="#0A0A0A" d="M105 160h38l-12 23h-38l12-23Z"/>
-  <path fill="#0A0A0A" d="M122 127h38l-12 23h-38l12-23Z"/>
-  <path fill="#0A0A0A" d="M139 94h38l-12 23h-38l12-23Z"/>
+  <title id="title">VeloxPark Official Symbol</title>
+  <desc id="desc">The VeloxPark Geometric P Parking Symbol in signal gold.</desc>
+  <path 
+    d="M 80 71 L 186 60 L 196 146 L 126 156 L 105 206 L 72 197 Z" 
+    fill="rgba(242, 194, 48, 0.25)" 
+    stroke="#F2C230" 
+    stroke-width="12" 
+    stroke-linejoin="round" 
+    stroke-linecap="round"
+  />
+  <path d="M 126 68 L 123 125" stroke="#F2C230" stroke-width="2.5" stroke-opacity="0.35" stroke-linecap="round" />
 </svg>

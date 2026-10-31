@@ -1,11 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 256" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 256" width="100%" height="100%" role="img" aria-labelledby="title desc">
   <title id="title">VeloxPark horizontal logo</title>
-  <desc id="desc">VeloxPark V-Lane symbol with a geometric outlined wordmark.</desc>
+  <desc id="desc">VeloxPark Official Geometric P Parking Logo with wordmark.</desc>
+  <defs>
+    <radialGradient id="hBgGrad" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#181818"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </radialGradient>
+    <linearGradient id="hStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE169"/>
+      <stop offset="50%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#E5AA10"/>
+    </linearGradient>
+    <linearGradient id="hFill" x1="20%" y1="10%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#F2C230" stop-opacity="0.12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Official Geometric P Icon Symbol -->
   <g id="symbol" transform="translate(0 0)">
-    <rect x="0" y="0" width="256" height="256" rx="56" fill="#F2C230"/>
-    <path fill="#0A0A0A" d="M42 36h42l44 84 44-84h42l-65 126-21 42h-42l21-42L42 36Z"/>
-    <path fill="#F2C230" d="M105 160h38l-12 23h-38l12-23Z M122 127h38l-12 23h-38l12-23Z M139 94h38l-12 23h-38l12-23Z"/>
+    <rect x="0" y="0" width="256" height="256" rx="56" fill="url(#hBgGrad)" stroke="#222222" stroke-width="1.5"/>
+    <g stroke="#F2C230" stroke-opacity="0.10" stroke-width="2.5" stroke-linecap="round">
+      <path d="M -10 75 L 266 55" />
+      <path d="M -10 170 L 266 148" />
+      <path d="M 80 -10 L 60 266" />
+      <path d="M 185 -10 L 195 266" />
+    </g>
+    <path 
+      d="M 80 71 L 186 60 L 196 146 L 126 156 L 105 206 L 72 197 Z" 
+      fill="url(#hFill)" 
+      stroke="url(#hStroke)" 
+      stroke-width="9" 
+      stroke-linejoin="round" 
+      stroke-linecap="round"
+    />
+    <path d="M 126 68 L 123 125" stroke="#FFE169" stroke-width="2" stroke-opacity="0.28" stroke-linecap="round" />
   </g>
+
+  <!-- Wordmark -->
   <g id="wordmark" fill="#F5F5F0">
     <path d="M292 86h18l18 58 18-58h18l-26 84h-20l-26-84Z"/>
     <path d="M376 86h57v16h-39v17h35v16h-35v19h40v16h-58V86Z"/>

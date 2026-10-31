@@ -108,7 +108,9 @@ function Payment() {
     id: id || 'demo-booking-1',
     slotId: 'H1 237',
     slotLabel: 'Slot H1 237',
-    address: 'California Parking',
+    address: 'Varachha Diamond Bourse Bay (Surat)',
+    stationName: 'Varachha Diamond Bourse Bay',
+    city: 'Surat',
     amount: 240.0,
     entryTime: '10:00 AM',
     exitTime: '02:00 PM',
@@ -235,7 +237,7 @@ function Payment() {
           <div className="pay-title-group">
             <h1 className="pay-top-title">{paid ? 'Receipt & Pass' : 'Payment'}</h1>
             <span className="pay-desktop-crumb">
-              {paid ? 'Reservation Confirmed · Instant Barrier Access' : 'California Parking · Guaranteed Slot Reservation'}
+              {paid ? 'Reservation Confirmed · Instant Barrier Access' : `${activeBooking.stationName || activeBooking.address || 'Surat Parking Bay'} · Guaranteed Slot Reservation`}
             </span>
           </div>
 
@@ -475,7 +477,7 @@ function Payment() {
                     <div>
                       <span className="pay-summary-badge">SELECTED BAY</span>
                       <h2 className="pay-summary-slot">{slotName}</h2>
-                      <p className="pay-summary-loc">{activeBooking.address || 'California Parking (Brooklyn)'}</p>
+                      <p className="pay-summary-loc">{activeBooking.address || activeBooking.stationName || 'Varachha Diamond Bourse Bay (Surat)'}</p>
                     </div>
                     <div className="pay-summary-amount-box">
                       <span className="pay-summary-amount-lbl">TOTAL DUE</span>

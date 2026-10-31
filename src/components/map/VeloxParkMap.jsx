@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import * as maplibregl from 'maplibre-gl';
 import { getParkingStations } from '../../data/parkingStations';
 import { useUserLocation } from '../../hooks/useUserLocation';
-import { geocodeAddress } from '../../services/geoapifyService';
-import { checkLocationServiceability, SERVICEABLE_CITIES, getEnterpriseStationsForCity } from '../../data/serviceableCities';
+import { geocodeAddress, getIPLocation } from '../../services/geoapifyService';
+import { checkLocationServiceability, SERVICEABLE_CITIES, getEnterpriseStationsForCity, resolveStationCityDetails } from '../../data/serviceableCities';
 import { calculateRealisticDrivingTime } from '../../utils/travelTimeUtils';
 import UnserviceableAreaView from '../user/UnserviceableAreaView';
 import parkingSlotThumb from '../../assets/parking-slot.jpg';
@@ -253,11 +253,15 @@ export default function VeloxParkMap() {
         return [matched, ...rest];
       }
 
+      const cityInfo = resolveStationCityDetails(st, sLat, sLng);
       const formatted = {
         id: st.id || 'selected_station',
         name: st.name || 'Selected Parking',
         address: st.address || 'Smart Parking Hub',
         street: (st.address || st.name || 'Station Rd').split(',')[0],
+        city: st.city || st.cityName || cityInfo.city,
+        cityName: st.cityName || st.city || cityInfo.city,
+        state: st.state || cityInfo.state,
         lat: sLat,
         lng: sLng,
         slots: st.availableSlots || st.slots || 30,
@@ -761,61 +765,80 @@ export default function VeloxParkMap() {
     return `${hours} h ${mins} m`;
   }, [durationHours]);
 
-  const handleLocateMe = () => {
+  const handleLocateMe = async () => {
     if (isLocating) return;
     setIsLocating(true);
 
-    const onLocated = (lat, lng) => {
+    const onLocated = (lat, lng, cityNameHint = '') => {
       setIsLocating(false);
 
       // 1. Show the user's exact current location with a live pulsing blue marker on map
       updateUserLocationMarker(lat, lng);
 
-      // 2. Center and fly the map right to the user's current location
-      const map = mapRef.current;
-      if (map) {
-        map.flyTo({
-          center: [lng, lat],
-          zoom: 15.5,
-          speed: 1.2,
-        });
-      }
+      // 2. Validate location serviceability for these exact coordinates
+      const check = checkLocationServiceability(cityNameHint, lat, lng);
+      setActiveServiceCheck(check);
 
-      // 3. Find the nearest parking station to the user's location
-      let nearest = null;
-      let minDistance = Infinity;
-      stations.forEach((st) => {
-        const d = getDistanceFromLatLonInKm(lat, lng, st.lat, st.lng);
-        if (d < minDistance) {
-          minDistance = d;
-          nearest = st;
-        }
-      });
+      // 3. Resolve city enterprise stations for this location (sorted nearest first)
+      const targetCity = check.city || SERVICEABLE_CITIES.find((c) => c.id === 'surat') || SERVICEABLE_CITIES[0];
+      const resolvedStations = resolveCityEnterpriseStations(targetCity, lat, lng, currencySymbol);
 
+      setStations(resolvedStations);
+      const nearest = resolvedStations[0];
       if (nearest) {
         setSelectedStation(nearest);
         setSearchQuery(`Near ${nearest.name}`);
       } else {
         setSearchQuery('My Location');
       }
+
+      // 4. Center and fly the map right to the user's current location
+      const map = mapRef.current;
+      if (map) {
+        map.flyTo({
+          center: [lng, lat],
+          zoom: 15.2,
+          speed: 1.2,
+        });
+      }
     };
 
-    if (navigator?.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => onLocated(pos.coords.latitude, pos.coords.longitude),
-        () => {
-          if (location?.latitude && location?.longitude) {
-            onLocated(location.latitude, location.longitude);
-          } else {
-            onLocated(22.5645, 72.9289);
-          }
-        },
-        { timeout: 6000, enableHighAccuracy: true }
-      );
-    } else if (location?.longitude && location?.latitude) {
-      onLocated(location.latitude, location.longitude);
+    // A. Check if useUserLocation already has coordinates
+    if (location?.latitude && location?.longitude) {
+      onLocated(location.latitude, location.longitude, location.city || '');
+      return;
+    }
+
+    // B. Fast browser geolocation with network/wifi lock (enableHighAccuracy: false)
+    const getBrowserCoords = () =>
+      new Promise((resolve) => {
+        if (!navigator?.geolocation) return resolve(null);
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          () => resolve(null),
+          { timeout: 4000, enableHighAccuracy: false, maximumAge: 60000 }
+        );
+      });
+
+    let coords = await getBrowserCoords();
+
+    // C. If browser GPS timed out or was denied, use IP Geolocation (e.g. Surat)
+    if (!coords) {
+      try {
+        const ipLoc = await getIPLocation();
+        if (ipLoc && Number.isFinite(ipLoc.lat) && Number.isFinite(ipLoc.lng)) {
+          coords = { lat: ipLoc.lat, lng: ipLoc.lng, city: ipLoc.city };
+        }
+      } catch (err) {
+        console.warn('IP lookup in handleLocateMe note:', err);
+      }
+    }
+
+    if (coords && Number.isFinite(coords.lat) && Number.isFinite(coords.lng)) {
+      onLocated(coords.lat, coords.lng, coords.city || '');
     } else {
-      setIsLocating(false);
+      // Default to Surat
+      onLocated(21.2333, 72.8667, 'Surat');
     }
   };
 
@@ -828,6 +851,7 @@ export default function VeloxParkMap() {
       navigate('/book', {
         state: {
           station: selectedStation,
+          city: selectedStation?.city || selectedStation?.cityName,
           slot: slotNumber,
           durationHours,
           amount: parseFloat(totalAmount),

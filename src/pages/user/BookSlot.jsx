@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { doc, setDoc, collection, Timestamp } from 'firebase/firestore';
 import { db } from '../../config/firebase';
 import { useAuth } from '../../context/useAuth';
+import { resolveStationCityDetails } from '../../data/serviceableCities';
 import './BookSlot.css';
 
 const SLOTS_LEFT = [
@@ -68,6 +69,11 @@ function BookSlot() {
     const today = now.toISOString().slice(0, 10);
     const uid = user?.uid || 'driver_user';
 
+    const cityInfo = resolveStationCityDetails(
+      station || location.state?.address || location.state?.destination || 'Surat'
+    );
+    const cityName = station?.city || station?.cityName || location.state?.city || cityInfo.city || 'Surat';
+
     const newDocRef = doc(collection(db, 'bookings'));
     const bookingId = newDocRef.id;
 
@@ -75,7 +81,11 @@ function BookSlot() {
       userId: uid,
       slotId: selectedSlot,
       slotLabel: `Slot ${selectedSlot}`,
-      address: station?.name ? `${station.name} (${station.city || 'Vadodara'})` : 'California Parking',
+      address: station?.name ? `${station.name} (${cityName})` : `Surat Parking Hub (${cityName})`,
+      stationName: station?.name || 'Varachha Diamond Bourse Bay',
+      stationAddress: station?.address || '',
+      city: cityName,
+      state: cityInfo.state || 'Gujarat',
       date: today,
       entryTime: entryTime,
       exitTime: exitTime,
@@ -133,7 +143,7 @@ function BookSlot() {
             </button>
             <div className="bs-title-wrap">
               <h1 className="bs-title">Choose Spot</h1>
-              <span className="bs-desktop-crumb">California Parking · Floor 2</span>
+              <span className="bs-desktop-crumb">{station?.name || 'Smart Parking Hub'} · Floor 2</span>
             </div>
             <button className="bs-icon-btn" aria-label="Map search">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -230,7 +240,7 @@ function BookSlot() {
               <div className="bs-side-details">
                 <div className="bs-side-row">
                   <span className="bs-side-lbl">Facility</span>
-                  <span className="bs-side-val">California Parking</span>
+                  <span className="bs-side-val">{station?.name || 'Smart Parking Hub'}</span>
                 </div>
                 <div className="bs-side-row">
                   <span className="bs-side-lbl">Deck / Floor</span>

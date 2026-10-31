@@ -2,16 +2,18 @@
 
 ## Idea
 
-The V-Lane mark turns the first letter of Velox into a pair of forward-moving lanes. The gold lane cuts reinforce speed, navigation, and a confident arrival without drawing a literal car or parking sign.
+The official VeloxPark emblem combines a stylized geometric "P" polygon (representing smart parking slots and dynamic zones) integrated with subtle GPS street network lines. Rendered in electric Signal Gold and deep obsidian black, it symbolizes speed, intelligent navigation, and seamless arrival.
 
 ## Files
 
-- `source/veloxpark-symbol-color.svg` — primary symbol artwork.
+- `source/veloxpark-symbol-color.svg` — official geometric P symbol artwork.
 - `source/veloxpark-symbol-black.svg` — black-on-light backgrounds.
-- `source/veloxpark-symbol-white.svg` — reversed use on dark backgrounds.
-- `digital/veloxpark-logo-horizontal-color.svg` — horizontal logo lockup.
-- `digital/veloxpark-app-icon.svg` — app icon and avatar tile.
+- `source/veloxpark-symbol-white.svg` — reversed white mark for dark surfaces.
+- `digital/veloxpark-logo-horizontal-color.svg` — horizontal logo lockup with wordmark.
+- `digital/veloxpark-app-icon.svg` — official project app icon and navigation logo.
 - `digital/veloxpark-favicon.svg` — browser favicon.
+- `digital/veloxpark-map-p-gold.jpg` — high-res raster icon (Dark & Gold).
+- `digital/veloxpark-map-p-white.jpg` — high-res raster icon (Light & Ceramic White).
 
 ## Palette
 

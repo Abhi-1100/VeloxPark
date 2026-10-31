@@ -1,8 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
-  <title id="title">VeloxPark favicon</title>
-  <rect width="256" height="256" rx="56" fill="#F2C230"/>
-  <path fill="#0A0A0A" d="M42 36h42l44 84 44-84h42l-65 126-21 42h-42l21-42L42 36Z"/>
-  <path fill="#F2C230" d="M105 160h38l-12 23h-38l12-23Z"/>
-  <path fill="#F2C230" d="M122 127h38l-12 23h-38l12-23Z"/>
-  <path fill="#F2C230" d="M139 94h38l-12 23h-38l12-23Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%" role="img" aria-labelledby="title">
+  <title id="title">VeloxPark Favicon</title>
+  <defs>
+    <radialGradient id="vpFavBg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#181818"/>
+      <stop offset="100%" stop-color="#080808"/>
+    </radialGradient>
+    <linearGradient id="vpFavStroke" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE169"/>
+      <stop offset="50%" stop-color="#FFD700"/>
+      <stop offset="100%" stop-color="#E5AA10"/>
+    </linearGradient>
+    <linearGradient id="vpFavFill" x1="20%" y1="10%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#FFD700" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#F2C230" stop-opacity="0.15"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="256" height="256" rx="56" fill="url(#vpFavBg)"/>
+  
+  <!-- Map streets for favicon -->
+  <g stroke="#F2C230" stroke-opacity="0.12" stroke-width="3" stroke-linecap="round">
+    <path d="M -10 75 L 266 55" />
+    <path d="M -10 170 L 266 148" />
+    <path d="M 80 -10 L 60 266" />
+    <path d="M 185 -10 L 195 266" />
+  </g>
+
+  <!-- P Polygon Symbol -->
+  <path 
+    d="M 80 71 L 186 60 L 196 146 L 126 156 L 105 206 L 72 197 Z" 
+    fill="url(#vpFavFill)" 
+    stroke="url(#vpFavStroke)" 
+    stroke-width="12" 
+    stroke-linejoin="round" 
+    stroke-linecap="round"
+  />
 </svg>
