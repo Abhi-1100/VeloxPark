@@ -285,12 +285,23 @@ html {
 }
 
 /* The Full Map SVG Background covering the entire card */
+.vl-hero-map-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
 .vl-hero-full-map-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
+  display: none;
 }
 
 .vl-hero-center-content {
@@ -300,6 +311,7 @@ html {
   max-width: 680px;
   margin: 0 auto;
   padding: 64px 24px 0;
+  display: none;
 }
 
 .vl-hero-headline {
@@ -2263,5 +2275,4 @@ html {
     padding: 42px 24px 0;
   }
 }
-
 

@@ -137,6 +137,11 @@ const Home = () => {
       <section id="hero" className="vl-hero-section">
         <div className="velox-container">
           <div className="vl-hero-card">
+            <img
+              className="vl-hero-map-image"
+              src="/brand/hero-map-final.png"
+              alt=""
+            />
             {/* Detailed Authentic Street Map SVG Background with Cars, GPS route & HUDs */}
             <svg
               className="vl-hero-full-map-svg"
@@ -1121,4 +1126,3 @@ const Home = () => {
 };
 
 export default Home;
-
